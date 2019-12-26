@@ -1,25 +1,7 @@
 <app-header></app-header>
 <div class="container">
   <div class="row">
-    <div *ngIf="enableConsoleView" class="col-sm-12 col-md-12 col-lg-12 center-content-item">
-      <h2>
-        {{ consoleTitle }}
-        <span *ngIf="consoleLive" class="badge badge-success">Online</span>
-        <span *ngIf="!consoleLive && consoleLive !== null" class="badge badge-danger">Offline</span>
-      </h2>
-      <div class="console">
-        <div id="consoleOutput">
-          <p *ngFor="let item of consoleOutput" class="{{ item.type || 'message' }}"><span>runner@server:~$</span> {{ item.value }}</p>
-        </div>
-      </div>
-      <div class="action">
-        <button (click)="cleanConsole()" type="button" class="btn">Clear</button>
-        <button (click)="disableConsole()" type="button" class="btn btn-warning">Back to setup</button>
-        <button (click)="proceedToIntall()" type="button" class="btn btn-danger">Reload script</button>
-        <button (click)="downloadTemplate()" type="button" class="btn btn-success">Download CI template</button>
-      </div>
-    </div>
-    <div *ngIf="!enableConsoleView" class="col-sm-12 col-md-6 col-lg-6 center-content-item">
+    <div class="col-sm-12 col-md-6 col-lg-6 center-content-item">
       <h2>
         Setup new web project
       </h2>
