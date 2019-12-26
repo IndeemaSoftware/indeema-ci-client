@@ -1,0 +1,24 @@
+.center-content-item{
+  margin: 10vh auto;
+}
+.form-container{
+  margin-bottom: 0;
+  padding: 10px 0;
+}
+.form-container h3{
+  font-size: 22px;
+}
+.form-group.required > label:after {
+  content:"*";
+  color:red;
+}
+.repeated{
+  position: relative;
+}
+.remove-btn{
+  position: absolute;
+  top: 50%;
+  right: -70px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}

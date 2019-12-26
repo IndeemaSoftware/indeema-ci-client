@@ -1,0 +1,99 @@
+<app-header></app-header>
+<div class="container">
+  <div class="row">
+    <div *ngIf="enableConsoleView" class="col-sm-12 col-md-12 col-lg-12 center-content-item">
+      <h2>
+        {{ consoleTitle }}
+        <span *ngIf="consoleLive" class="badge badge-success">Online</span>
+        <span *ngIf="!consoleLive && consoleLive !== null" class="badge badge-danger">Offline</span>
+      </h2>
+      <div class="console">
+        <div id="consoleOutput">
+          <p *ngFor="let item of consoleOutput" class="{{ item.type || 'message' }}"><span>runner@server:~$</span> {{ item.value }}</p>
+        </div>
+      </div>
+      <div class="action">
+        <button (click)="cleanConsole()" type="button" class="btn">Clear</button>
+        <button (click)="disableConsole()" type="button" class="btn btn-warning">Back to setup</button>
+        <button (click)="proceedToIntall()" type="button" class="btn btn-danger">Reload script</button>
+        <button (click)="downloadTemplate()" type="button" class="btn btn-success">Download CI template</button>
+      </div>
+    </div>
+    <div *ngIf="!enableConsoleView" class="col-sm-12 col-md-6 col-lg-6 center-content-item">
+      <h2>
+        Setup new web project
+      </h2>
+      <form (submit)="proceedToIntall(true)">
+        <div class="form-container">
+          <h3>Project config:</h3>
+          <div class="form-group required">
+            <label for="project_name">Project name</label>
+            <input [(ngModel)]="model.project_name"  type="text" class="form-control" id="project_name" name="project_name" aria-describedby="project_nameHelp" placeholder="Enter project name">
+            <small id="project_nameHelp" class="form-text text-muted">This name will be used for project root folder in ubuntu user home path.</small>
+          </div>
+          <div class="form-group required">
+            <label for="app_name">App name</label>
+            <input [(ngModel)]="model.app_name" type="text" class="form-control" id="app_name" name="app_name" aria-describedby="app_nameHelp" placeholder="Enter app name">
+            <small id="app_nameHelp" class="form-text text-muted">Each project could have few applications that are working together or even independently. You can setup only one app at one run of script.</small>
+          </div>
+          <div class="form-group required">
+            <label for="project_type">Project type</label>
+            <select [(ngModel)]="model.project_type" class="form-control" name="project_type">
+              <option [value]="null"  disabled>Chose project type</option>
+              <option *ngFor="let item of projectTypes" [value]="item.id">{{ item.label }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="app_port">App port</label>
+            <input [(ngModel)]="model.app_port" type="text" class="form-control" id="app_port" name="app_port" aria-describedby="app_portHelp" placeholder="Enter app port">
+            <small id="app_portHelp" class="form-text text-muted">Specify port to be used by application. By default port $PORT is used.</small>
+          </div>
+        </div>
+        <div class="form-container">
+          <h3>Server credentials:</h3>
+          <div class="form-group required">
+            <label for="ssh_host">SSH host or IP address</label>
+            <input [(ngModel)]="model.ssh_host" type="text" class="form-control" id="ssh_host" name="ssh_host" placeholder="Enter SSH host or IP address">
+          </div>
+          <div class="form-group required">
+            <label for="ssh_username">SSH username</label>
+            <input [(ngModel)]="model.ssh_username" type="text" class="form-control" id="ssh_username" name="ssh_username" aria-describedby="ssh_usernameHelp" placeholder="SSH username">
+            <small id="ssh_usernameHelp" class="form-text text-muted">User name to access server with provided key under -s.</small>
+          </div>
+          <div class="form-group required">
+            <label for="ssh_pem">SSH pem key</label>
+            <input (change)="addPemFile($event)" type="file" class="form-control" id="ssh_pem" name="ssh_pem" aria-describedby="ssh_pemHelp" placeholder="Upload SSH pem key">
+            <small id="ssh_pemHelp" class="form-text text-muted">Server pem key to be used to login to server remotely.</small>
+          </div>
+        </div>
+        <div class="form-container">
+          <h3>Server dependencies:</h3>
+          <div *ngFor="let item of model.server_dependency; let i = index" class="form-group repeated">
+            <select [(ngModel)]="model.server_dependency[i].value" class="form-control" name="server_dependency[{{ i }}]">
+              <option [value]="null"  disabled>Chose dependency for server</option>
+              <option *ngFor="let item of serversDeps" [value]="item.id">{{ item.label }}</option>
+            </select>
+            <span (click)="removeRepeatField(model.server_dependency, i)" *ngIf="model.server_dependency && model.server_dependency.length > 1" class="text-danger remove-btn">Remove</span>
+            <span (click)="cleanFields(model.server_dependency)" *ngIf="model.server_dependency && model.server_dependency.length === 1 && model.server_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+          </div>
+          <button (click)="addRepeatField(model.server_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
+        </div>
+        <div class="form-container">
+          <h3>Node.JS Global dependencies:</h3>
+          <div *ngFor="let item of model.node_dependency; let i = index" class="form-group repeated">
+            <select [(ngModel)]="model.node_dependency[i].value" class="form-control" name="node_dependency[{{ i }}]">
+              <option [value]="'null'" disabled>Chose dependency for Node.JS</option>
+              <option *ngFor="let item of nodejsDeps" [value]="item.id">{{ item.label }}</option>
+            </select>
+            <span (click)="removeRepeatField(model.node_dependency, i)" *ngIf="model.node_dependency && model.node_dependency.length > 1" class="text-danger remove-btn">Remove</span>
+            <span (click)="cleanFields(model.node_dependency)" *ngIf="model.node_dependency && model.node_dependency.length === 1 && model.node_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+          </div>
+          <button (click)="addRepeatField(model.node_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
+        </div>
+        <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>
+        <button type="submit" class="btn btn-success">Create and setup</button>
+        <button (click)="proceedToIntall(false)" style="margin-left: 5px;" type="button" class="btn btn-warning">Only create</button>
+      </form>
+    </div>
+  </div>
+</div>

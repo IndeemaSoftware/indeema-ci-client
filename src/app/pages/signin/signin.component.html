@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-6 center-content-item">
+      <h3>
+        Indeema CI - Sign in
+      </h3>
+      <form (submit)="signin()">
+        <div class="form-group">
+          <label for="username">Username or email</label>
+          <input [(ngModel)]="credentials.identifier" type="text" class="form-control" name="username" placeholder="Enter your username or email">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input [(ngModel)]="credentials.password" type="password" class="form-control" name="password" placeholder="Enter password">
+        </div>
+        <div *ngIf="errors.required" class="alert alert-danger">
+          Username and password is required
+        </div>
+        <div *ngIf="errors.incorrect" class="alert alert-danger">
+          Username or password incorrect.
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+      </form>
+    </div>
+  </div>
+</div>

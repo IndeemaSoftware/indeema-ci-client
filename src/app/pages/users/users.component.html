@@ -1,0 +1,68 @@
+<app-header></app-header>
+<div *ngIf="user" class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <h2 style="margin-top: 2rem">
+        Users list
+        <button class="btn btn-success right">Create new user</button>
+      </h2>
+      <h4 class="badge-splited">
+        <span class="badge badge-danger">2 Users blocked!</span>
+      </h4>
+      <table class="table editable-table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Projects</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">
+              user1 <span class="badge badge-danger">Blocked</span>
+            </th>
+            <td>user1@indeema.com</td>
+            <td>4 projects</td>
+            <td>
+              <div class="btn-group btn-group-toggle">
+                <button class="btn btn-success" type="button">Unblock</button>
+                <button class="btn btn-warning" type="button">Edit</button>
+                <button class="btn btn-danger" type="button">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">
+              user2
+            </th>
+            <td>user2@indeema.com</td>
+            <td>1 projects</td>
+            <td>
+              <div class="btn-group btn-group-toggle">
+                <button class="btn btn-danger" type="button">Block</button>
+                <button class="btn btn-warning" type="button">Edit</button>
+                <button class="btn btn-danger" type="button">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">
+              user3
+            </th>
+            <td>user3@indeema.com</td>
+            <td>0 projects</td>
+            <td>
+              <div class="btn-group btn-group-toggle">
+                <button class="btn btn-danger" type="button">Block</button>
+                <button class="btn btn-warning" type="button">Edit</button>
+                <button class="btn btn-danger" type="button">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

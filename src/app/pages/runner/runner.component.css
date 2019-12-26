@@ -1,0 +1,74 @@
+.center-content-item{
+  margin: 10vh auto;
+}
+.form-container{
+  margin-bottom: 0;
+  padding: 10px 0;
+}
+.form-container h3{
+  font-size: 22px;
+}
+.form-group.required > label:after {
+  content:"*";
+  color:red;
+}
+
+/* Console output */
+.console{
+  padding: 10px 15px;
+  background: #040404;
+  display: block;
+  width: 100%;
+  height: 70vh;
+  overflow: hidden;
+}
+#consoleOutput{
+  overflow-y: scroll;
+  width: calc(100% + 30px);
+  height: calc(70vh - 20px);
+  padding-right: 30px;
+}
+.console p{
+  margin: 0;
+  font-size: 14px;
+  line-height: 18px;
+  width: 100%;
+}
+.console .message{
+  color: #e3e35b;
+}
+.console .error{
+  color: #eb4a4a;
+}
+.console .end{
+  color: white;
+}
+.build-error{
+  color: red;
+  font-weight: 600;
+}
+.build-success{
+  color: green;
+  font-weight: 600;
+}
+.console p > span{
+  color: #2a922a;
+  font-weight: 600;
+}
+.action{
+  margin: 10px 0;
+}
+.action button{
+  float: left;
+  margin: 0 5px;
+}
+.repeated{
+  position: relative;
+}
+.remove-btn{
+  position: absolute;
+  top: 50%;
+  right: -70px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}

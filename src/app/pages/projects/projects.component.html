@@ -1,0 +1,51 @@
+<app-header></app-header>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <h2 style="margin-top: 2rem">
+        Projects list
+        <a class="btn btn-success right" routerLink="/runner">Setup project</a>
+      </h2>
+      <h4 *ngIf="projects && projects.length" class="badge-splited">
+        <span *ngIf="statuses.progress" class="badge badge-warning">{{ statuses.progress }} In progress...</span>
+        <span *ngIf="statuses.success" class="badge badge-success">{{ statuses.success }} Setup success!</span>
+        <span *ngIf="statuses.failed" class="badge badge-danger">{{ statuses.failed }} Setup failed</span>
+      </h4>
+      <p *ngIf="!projects" class="text-muted text-center">Loading...</p>
+      <p *ngIf="projects && !projects.length" class="text-muted text-center">Projects not found</p>
+      <table *ngIf="projects && projects.length" class="table editable-table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Project name</th>
+            <th scope="col">Project type</th>
+            <th scope="col">SSH</th>
+            <th scope="col">Owner</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of projects">
+            <th scope="row">
+              {{ project.project_name }}
+              <span *ngIf="project.project_status === 'progress'" class="badge badge-warning">In progress...</span>
+              <span *ngIf="project.project_status === 'success'" class="badge badge-success">Setup success!</span>
+              <span *ngIf="project.project_status === 'failed'" class="badge badge-danger">Setup failed!</span>
+            </th>
+            <td>{{ project.project_type.label }}</td>
+            <td>{{ project.ssh_username }}@{{ project.ssh_host }}</td>
+            <td>{{ project.user.email || 'User not found' }}</td>
+            <td>
+              <div class="btn-group btn-group-toggle">
+                <button *ngIf="project.project_status !== 'failed'" (click)="startProject(project)" class="btn btn-success" [ngClass]="{'disabled': project.project_status === 'progress'}" type="button">Start</button>
+                <button *ngIf="project.project_status === 'failed'" (click)="startProject(project)" class="btn btn-success" type="button">Restart</button>
+                <button (click)="toConsole(project)" class="btn btn-primary" type="button">Console</button>
+                <button (click)="editProject(project)" class="btn btn-warning" type="button">Edit</button>
+                <button (click)="deleteProject(project)" class="btn btn-danger" type="button">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

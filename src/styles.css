@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Helpers */
+.right{
+  float: right;
+}
+.editable-table{
+  margin-top: 1rem;
+}
+.editable-table tbody th,
+.editable-table tbody td{
+  line-height: 35px;
+}
+.badge-splited .badge{
+  margin: 0 10px;
+}
+.badge-splited .badge:first-child{
+  margin-left: 0;
+}
