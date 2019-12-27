@@ -9,6 +9,12 @@
         <div class="form-container">
           <h3>Project config:</h3>
           <div class="form-group required">
+            <label for="os">OS</label>
+            <select [(ngModel)]="model.os" disabled class="form-control" name="os">
+              <option [value]="'ubuntu'"  disabled>Ubuntu OS</option>
+            </select>
+          </div>
+          <div class="form-group required">
             <label for="project_name">Project name</label>
             <input [(ngModel)]="model.project_name"  type="text" class="form-control" id="project_name" name="project_name" aria-describedby="project_nameHelp" placeholder="Enter project name">
             <small id="project_nameHelp" class="form-text text-muted">This name will be used for project root folder in ubuntu user home path.</small>
@@ -29,6 +35,38 @@
             <label for="app_port">App port</label>
             <input [(ngModel)]="model.app_port" type="text" class="form-control" id="app_port" name="app_port" aria-describedby="app_portHelp" placeholder="Enter app port">
             <small id="app_portHelp" class="form-text text-muted">Specify port to be used by application. By default port $PORT is used.</small>
+          </div>
+        </div>
+        <div class="form-container">
+          <h3>Domain and HTTPS setttings:</h3>
+          <div class="form-group" [ngClass]="{'required': model.lets_encrypt}">
+            <label for="domain_name">Domain name</label>
+            <input [(ngModel)]="model.domain_name" type="text" class="form-control" id="domain_name" name="domain_name" placeholder="Enter domain name">
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <input [(ngModel)]="model.lets_encrypt" class="form-check-input" type="checkbox" name="lets_encrypt" id="lets_encrypt">
+              <label class="form-check-label" for="defaultCheck1">
+                Use Let's Encrypt (self-signed certificates)
+              </label>
+            </div>
+          </div>
+          <div *ngIf="!model.lets_encrypt">
+            <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem}">
+              <label for="custom_ssl_key">SSL Key file</label>
+              <input (change)="addKeySSLFile($event)" type="file" accept=".key" class="form-control" id="custom_ssl_key" name="custom_ssl_key" placeholder="Upload SSL Key file">
+              <small *ngIf="project.custom_ssl_key && project.custom_ssl_key.name" class="form-text text-muted">SSL Key: {{ project.custom_ssl_key.name }} <a target="_blank" href="{{api_url}}{{ project.custom_ssl_key.url }}">Download</a></small>
+            </div>
+            <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem}">
+              <label for="custom_ssl_crt">SSL Crt file</label>
+              <input (change)="addCrtSSLFile($event)" type="file" accept=".crt" class="form-control" id="custom_ssl_crt" name="custom_ssl_crt" placeholder="Upload SSL Crt file">
+              <small *ngIf="project.custom_ssl_crt && project.custom_ssl_crt.name" class="form-text text-muted">SSL Crt: {{ project.custom_ssl_crt.name }} <a target="_blank" href="{{api_url}}{{ project.custom_ssl_crt.url }}">Download</a></small>
+            </div>
+            <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem}">
+              <label for="custom_ssl_key">SSL Pem file</label>
+              <input (change)="addPemSSLFile($event)" type="file" accept=".pem" class="form-control" id="custom_ssl_pem" name="custom_ssl_pem" placeholder="Upload SSL Pem file">
+              <small *ngIf="project.custom_ssl_pem && project.custom_ssl_pem.name" class="form-text text-muted">SSL Pem: {{ project.custom_ssl_pem.name }} <a target="_blank" href="{{api_url}}{{ project.custom_ssl_pem.url }}">Download</a></small>
+            </div>
           </div>
         </div>
         <div class="form-container">

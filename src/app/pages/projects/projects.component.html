@@ -10,6 +10,9 @@
         <span *ngIf="statuses.progress" class="badge badge-warning">{{ statuses.progress }} In progress...</span>
         <span *ngIf="statuses.success" class="badge badge-success">{{ statuses.success }} Setup success!</span>
         <span *ngIf="statuses.failed" class="badge badge-danger">{{ statuses.failed }} Setup failed</span>
+        <span *ngIf="statuses.cleanup" class="badge badge-warning">{{ statuses.cleanup }} Cleanup in progress...</span>
+        <span *ngIf="statuses.cleanup_success" class="badge badge-success">{{ statuses.cleanup_success }} Cleanup success!</span>
+        <span *ngIf="statuses.cleanup_failed" class="badge badge-danger">{{ statuses.cleanup_failed }} Cleanup failed</span>
       </h4>
       <p *ngIf="!projects" class="text-muted text-center">Loading...</p>
       <p *ngIf="projects && !projects.length" class="text-muted text-center">Projects not found</p>
@@ -30,16 +33,20 @@
               <span *ngIf="project.project_status === 'progress'" class="badge badge-warning">In progress...</span>
               <span *ngIf="project.project_status === 'success'" class="badge badge-success">Setup success!</span>
               <span *ngIf="project.project_status === 'failed'" class="badge badge-danger">Setup failed!</span>
+              <span *ngIf="project.project_status === 'cleanup'" class="badge badge-warning">Cleanup in progress...</span>
+              <span *ngIf="project.project_status === 'cleanup_success'" class="badge badge-success">Cleanup success!</span>
+              <span *ngIf="project.project_status === 'cleanup_failed'" class="badge badge-danger">Cleanup failed!</span>
             </th>
             <td>{{ project.project_type.label }}</td>
             <td>{{ project.ssh_username }}@{{ project.ssh_host }}</td>
             <td>{{ project.user.email || 'User not found' }}</td>
             <td>
               <div class="btn-group btn-group-toggle">
-                <button *ngIf="project.project_status !== 'failed'" (click)="startProject(project)" class="btn btn-success" [ngClass]="{'disabled': project.project_status === 'progress'}" type="button">Start</button>
+                <button *ngIf="project.project_status !== 'failed'" (click)="startProject(project)" class="btn btn-success" [ngClass]="{'disabled': project.project_status === 'progress' || project.project_status === 'cleanup'}" type="button">Start</button>
                 <button *ngIf="project.project_status === 'failed'" (click)="startProject(project)" class="btn btn-success" type="button">Restart</button>
                 <button (click)="toConsole(project)" class="btn btn-primary" type="button">Console</button>
                 <button (click)="editProject(project)" class="btn btn-warning" type="button">Edit</button>
+                <button (click)="cleanupProject(project)" [ngClass]="{'disabled': project.project_status === 'cleanup' || project.project_status === 'cleanup_success'}" class="btn btn-light" type="button">Cleanup</button>
                 <button (click)="deleteProject(project)" class="btn btn-danger" type="button">Delete</button>
               </div>
             </td>
