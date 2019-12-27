@@ -78,7 +78,7 @@ export class AuthService {
             //Unblock
             this.isLoading = false;
 
-            // this.toastr.error(err.data.message, 'Error!');
+            alert(err.data.message);
 
             this.logout();
             reject();
