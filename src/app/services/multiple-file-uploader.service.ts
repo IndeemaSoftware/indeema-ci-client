@@ -1,9 +1,5 @@
-import { Injectable } from '@angular/core';
 import { FileItem, FileUploader, FileUploaderOptions } from 'ng2-file-upload';
 
-@Injectable({
-  providedIn: 'root'
-})
 export class MultipleFileUploaderService extends FileUploader {
   constructor(
       options: FileUploaderOptions
