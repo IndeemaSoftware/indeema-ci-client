@@ -226,10 +226,11 @@ export class EditComponent implements OnInit {
         || !model.project_type
         || !model.ssh_host
         || !model.ssh_username
+        || !model.domain_name
     )
       return 'Please input all required fields.';
 
-    if(model.lets_encrypt && !model.domain)
+    if(model.lets_encrypt && !model.domain_name)
       return 'If you want to use Let`s encrypt please enter domain name.';
 
     //Check if certs is try to upload
