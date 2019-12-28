@@ -79,8 +79,8 @@
           </div>
           <div class="form-group required">
             <label for="ssh_pem">SSH pem key</label>
-            <input (change)="addPemFile($event)" type="file" accept=".pem" class="form-control" id="ssh_pem" name="ssh_pem" aria-describedby="ssh_pemHelp" placeholder="Upload SSH pem key">
-            <small id="ssh_pemHelp" class="form-text text-muted">Server pem key to be used to login to server remotely.</small>
+            <input (change)="addPemFile($event)" type="file" class="form-control" id="ssh_pem" name="ssh_pem" aria-describedby="ssh_pemHelp" placeholder="Upload SSH pem key">
+            <small id="ssh_pemHelp" class="form-text text-muted">Server ssh key to be used to login to server remotely.</small>
           </div>
         </div>
         <div class="form-container">
