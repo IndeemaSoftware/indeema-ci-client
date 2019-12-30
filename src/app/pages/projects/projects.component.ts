@@ -108,7 +108,7 @@ export class ProjectsComponent implements OnInit {
       return;
 
     this.api.remove(`projects/cleanup/${project.id}`).then(() => {
-      this.getProjects();
+      this.toConsole(project);
     }, (err) => {
       alert(err);
     })
@@ -116,7 +116,7 @@ export class ProjectsComponent implements OnInit {
 
   deleteProject(project){
     this.api.remove(`projects/${project.id}`).then(() => {
-      this.getProjects();
+      this.toConsole(project);
     }, (err) => {
       alert(err);
     })
