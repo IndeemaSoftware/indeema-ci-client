@@ -345,10 +345,12 @@ export class EditComponent implements OnInit {
 
     //Fill model fields
     for(let obj of model.server_dependency){
-      newModel.server_dependencies.push(obj.value);
+      if(obj.value)
+        newModel.server_dependencies.push(obj.value);
     }
     for(let obj of model.node_dependency){
-      newModel.nodejs_dependencies.push(obj.value);
+      if(obj.value)
+        newModel.nodejs_dependencies.push(obj.value);
     }
 
     return newModel;
