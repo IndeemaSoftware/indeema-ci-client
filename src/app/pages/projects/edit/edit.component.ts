@@ -31,6 +31,9 @@ export class EditComponent implements OnInit {
   project = null as any;
   projectId = null as any;
 
+  //Enable to download template
+  enableDownloadBtn = false;
+
   constructor(
       private api: ApiService,
       private auth: AuthService,
@@ -115,6 +118,9 @@ export class EditComponent implements OnInit {
     //Prepare form model
     this.prepareToEdit();
 
+    //Enable download yml button
+    this.enableDownloadBtn = (this.project.project_status === 'success')? true : false;
+
     const jwt = this.auth.getJWT();
 
     this.uploader = new MultipleFileUploaderService({
@@ -188,6 +194,10 @@ export class EditComponent implements OnInit {
         this.errorMsg = err;
       });
     };
+  }
+
+  downloadTemplate(){
+    window.open(environment.API_URL + `/project/download/yml/${this.projectId}`,'_blank');
   }
 
   addPemFile(ev){

@@ -3,6 +3,7 @@ import {Socket} from 'ngx-socket-io';
 import {ApiService} from '../../services/api.service';
 import {AuthService} from '../../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-console',
@@ -103,8 +104,7 @@ export class ConsoleComponent implements OnInit {
   }
 
   downloadTemplate(){
-    console.log('download template file');
-    //window.open(this.templateDownloadPath,'_blank');
+    window.open(environment.API_URL + `/project/download/yml/${this.projectId}`,'_blank');
   }
 
   cleanConsole(){

@@ -114,6 +114,7 @@
         <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>
         <button type="submit" class="btn btn-success">Update and setup</button>
         <button (click)="proceedToUpdate(false)" style="margin-left: 5px;" type="button" class="btn btn-warning">Only update</button>
+        <button *ngIf="enableDownloadBtn" (click)="downloadTemplate()" style="margin-left: 5px;" type="button" class="btn btn-success">Download CI template</button>
       </form>
     </div>
   </div>
