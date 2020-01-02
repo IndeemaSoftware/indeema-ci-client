@@ -236,7 +236,6 @@ export class EditComponent implements OnInit {
         || !model.project_type
         || !model.ssh_host
         || !model.ssh_username
-        || !model.domain_name
     )
       return 'Please input all required fields.';
 
