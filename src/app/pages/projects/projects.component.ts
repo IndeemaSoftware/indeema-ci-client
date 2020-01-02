@@ -50,26 +50,30 @@ export class ProjectsComponent implements OnInit {
 
       //Setup counters
       for(let project of this.projects){
-        if(project.project_status === 'waiting')
-          this.statuses.waiting++;
+        if(project.apps && project.apps.length){
+          for(let app of project.apps){
+            if(app.app_status === 'waiting')
+              this.statuses.waiting++;
 
-        if(project.project_status === 'progress')
-          this.statuses.progress++;
+            if(app.app_status === 'progress')
+              this.statuses.progress++;
 
-        if(project.project_status === 'success')
-          this.statuses.success++;
+            if(app.app_status === 'success')
+              this.statuses.success++;
 
-        if(project.project_status === 'failed')
-          this.statuses.failed++;
+            if(app.app_status === 'failed')
+              this.statuses.failed++;
 
-        if(project.project_status === 'cleanup')
-          this.statuses.cleanup++;
+            if(app.app_status === 'cleanup')
+              this.statuses.cleanup++;
 
-        if(project.project_status === 'cleanup_success')
-          this.statuses.cleanup_success++;
+            if(app.app_status === 'cleanup_success')
+              this.statuses.cleanup_success++;
 
-        if(project.project_status === 'cleanup_failed')
-          this.statuses.cleanup_failed++;
+            if(app.app_status === 'cleanup_failed')
+              this.statuses.cleanup_failed++;
+          }
+        }
       }
 
     }, (err) => {
@@ -88,38 +92,55 @@ export class ProjectsComponent implements OnInit {
     })
   }
 
-  startProject(project){
-    if(project.project_status === 'progress' || project.project_status === 'cleanup')
+  startProject(project, app){
+    if(app.app_status === 'progress' || app.app_status === 'cleanup')
       return;
 
-    this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+    this.route.navigate([`console/${project.id}/${app.id}`], { queryParams: { start: 'true' } });
   }
 
-  toConsole(project){
-    this.route.navigate([`console/${project.id}`]);
+  toConsole(project, app, cleanup = false){
+    if(cleanup)
+      this.route.navigate([`console/${project.id}/${app.id}`], { queryParams: { cleanup: 'true' } });
+    else
+      this.route.navigate([`console/${project.id}/${app.id}`]);
   }
 
   editProject(project){
     this.route.navigate([`projects/${project.id}`]);
   }
 
-  cleanupProject(project){
-    if(project.project_status === 'cleanup' || project.project_status === 'cleanup_success')
+  cleanupProject(project, app){
+    if(app.app_status === 'cleanup' || app.app_status === 'cleanup_success')
       return;
 
-    this.api.remove(`projects/cleanup/${project.id}`).then(() => {
-      this.toConsole(project);
+    this.api.remove(`projects/cleanup/${project.id}/${app.id}`).then(() => {
+      this.toConsole(project, app, true);
     }, (err) => {
       alert(err);
     })
+    setTimeout(() => {
+      this.toConsole(project, app, true);
+    }, 500);
   }
 
-  deleteProject(project){
-    this.api.remove(`projects/${project.id}`).then(() => {
-      this.toConsole(project);
-    }, (err) => {
-      alert(err);
-    })
+  deleteProject(project, app = null) {
+    if (app){
+      this.api.remove(`projects/${project.id}/${app.id}`).then(() => {
+        this.toConsole(project, app, true);
+      }, (err) => {
+        alert(err);
+      })
+    }else {
+      this.api.remove(`projects/remove/${project.id}`).then(() => {
+        this.getProjects();
+      }, (err) => {
+        alert(err);
+      });
+      setTimeout(() => {
+        this.getProjects();
+      }, 1000);
+    }
   }
 
 }

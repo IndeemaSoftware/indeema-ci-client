@@ -4,6 +4,7 @@ import {AuthService} from '../../../services/auth.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import {ApiService} from '../../../services/api.service';
 import {MultipleFileUploaderService} from '../../../services/multiple-file-uploader.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-edit',
@@ -16,7 +17,44 @@ export class EditComponent implements OnInit {
   //File uploader
   public uploader: MultipleFileUploaderService;
 
-  model: any = {};
+  modelDefault: any = {
+    //OS
+    os: 'ubuntu',
+
+    //Project configuration
+    app_name: '',
+    project_type: null,
+    environment: 'development',
+    app_port: '', //optional
+
+    //Server credentials
+    ssh_host: '',
+    ssh_username: '',
+    ssh_pem: null,
+
+    //Domain setup
+    domain_name: null,
+    lets_encrypt: false,
+    custom_ssl_key: null,
+    custom_ssl_crt: null,
+    custom_ssl_pem: null,
+
+    //Server dependencies
+    server_dependency: [
+      {value: null}
+    ],
+
+    //Node.JS dependencies
+    node_dependency: [
+      {value: null}
+    ],
+
+    //Validation error
+    errorMsg: ''
+  };
+
+  projectModel: any = {};
+
   modelApi: any = {};
 
   //Lists
@@ -31,8 +69,13 @@ export class EditComponent implements OnInit {
   project = null as any;
   projectId = null as any;
 
-  //Enable to download template
-  enableDownloadBtn = false;
+  //Upload model index
+  uploadModelIndex = 0;
+
+  /**
+   * Tabs variables
+   */
+  activeTab = 'create-new-app';
 
   constructor(
       private api: ApiService,
@@ -73,53 +116,59 @@ export class EditComponent implements OnInit {
   }
 
   prepareToEdit(){
-    this.model = Object.assign({}, this.project);
+    this.projectModel = _.cloneDeep(this.project.plain());
     this.modelApi = {};
 
-    //Prepare project type
-    this.model.project_type = this.model.project_type.id;
+    //Prepare model apps
+    for(var i = 0; i < this.projectModel.apps.length; i++){
+      this.activeTab = this.projectModel.apps[i].id;
 
-    //Remove exist cert
-    this.model.ssh_pem = null;
-    this.model.custom_ssl_key = null;
-    this.model.custom_ssl_crt = null;
-    this.model.custom_ssl_pem = null;
+      //Clean from dependencies
+      delete this.projectModel.apps[i].console;
+      delete this.projectModel.apps[i].project;
 
-    //Prepare server dependencies
-    if(this.model.server_dependencies && this.model.server_dependencies.length){
-      this.model.server_dependency = [];
-      for(let dep of this.model.server_dependencies){
-        this.model.server_dependency.push({value: dep.id});
+      //Prepare project type
+      this.projectModel.apps[i].project_type = this.projectModel.apps[i].project_type.id;
+
+      //Remove exist cert
+      this.projectModel.apps[i].ssh_pem = null;
+      this.projectModel.apps[i].custom_ssl_key = null;
+      this.projectModel.apps[i].custom_ssl_crt = null;
+      this.projectModel.apps[i].custom_ssl_pem = null;
+
+      //Prepare server dependencies
+      if(this.projectModel.apps[i].server_dependencies && this.projectModel.apps[i].server_dependencies.length){
+        this.projectModel.apps[i].server_dependency = [];
+        for(let dep of this.projectModel.apps[i].server_dependencies){
+          this.projectModel.apps[i].server_dependency.push({value: dep.id});
+        }
+        delete this.projectModel.apps[i].server_dependencies;
+      }else{
+        this.projectModel.apps[i].server_dependency = [
+          {value: null}
+        ];
+        delete this.projectModel.apps[i].server_dependencies;
       }
-      delete this.model.server_dependencies;
-    }else{
-      this.model.server_dependency = [
-        {value: null}
-      ];
-      delete this.model.server_dependencies;
-    }
 
-    //Prepare nodejs dependencies
-    if(this.model.nodejs_dependencies && this.model.nodejs_dependencies.length){
-      this.model.node_dependency = [];
-      for(let dep of this.model.nodejs_dependencies){
-        this.model.node_dependency.push({value: dep.id});
+      //Prepare nodejs dependencies
+      if(this.projectModel.apps[i].nodejs_dependencies && this.projectModel.apps[i].nodejs_dependencies.length){
+        this.projectModel.apps[i].node_dependency = [];
+        for(let dep of this.projectModel.apps[i].nodejs_dependencies){
+          this.projectModel.apps[i].node_dependency.push({value: dep.id});
+        }
+        delete this.projectModel.apps[i].nodejs_dependencies;
+      }else{
+        this.projectModel.apps[i].node_dependency = [
+          {value: null}
+        ];
+        delete this.projectModel.apps[i].nodejs_dependencies;
       }
-      delete this.model.nodejs_dependencies;
-    }else{
-      this.model.node_dependency = [
-        {value: null}
-      ];
-      delete this.model.nodejs_dependencies;
     }
   }
 
   setupProject(){
     //Prepare form model
     this.prepareToEdit();
-
-    //Enable download yml button
-    this.enableDownloadBtn = (this.project.project_status === 'success')? true : false;
 
     const jwt = this.auth.getJWT();
 
@@ -151,69 +200,101 @@ export class EditComponent implements OnInit {
         return;
       }
 
-      //Setup files id`s
-      for(let file of response){
-        if(this.modelApi.ssh_pem && this.modelApi.ssh_pem.name === file.name)
-          this.modelApi.ssh_pem = file.id;
+      if(this.modelApi.apps[this.uploadModelIndex]){
+        //Setup files id`s
+        for(let file of response){
+          if(this.modelApi.apps[this.uploadModelIndex].ssh_pem && this.modelApi.apps[this.uploadModelIndex].ssh_pem.name === file.name)
+            this.modelApi.apps[this.uploadModelIndex].ssh_pem = file.id;
 
-        if(this.modelApi.custom_ssl_key && this.modelApi.custom_ssl_key.name === file.name)
-          this.modelApi.custom_ssl_key = file.id;
+          if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key && this.modelApi.apps[this.uploadModelIndex].custom_ssl_key.name === file.name)
+            this.modelApi.apps[this.uploadModelIndex].custom_ssl_key = file.id;
 
-        if(this.modelApi.custom_ssl_crt && this.modelApi.custom_ssl_crt.name === file.name)
-          this.modelApi.custom_ssl_crt = file.id;
+          if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt && this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt.name === file.name)
+            this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt = file.id;
 
-        if(this.modelApi.custom_ssl_pem && this.modelApi.custom_ssl_pem.name === file.name)
-          this.modelApi.custom_ssl_pem = file.id;
+          if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem && this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem.name === file.name)
+            this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem = file.id;
+        }
       }
 
-      //Cleanup
-      if(!this.modelApi.custom_ssl_key)
-        delete this.modelApi.custom_ssl_key;
+      //Timeout for fix multiple responses
+      setTimeout(() => {
 
-      if(!this.modelApi.custom_ssl_crt)
-        delete this.modelApi.custom_ssl_crt;
+        //Increase index and re-upload
+        this.uploadModelIndex++;
 
-      if(!this.modelApi.custom_ssl_pem)
-        delete this.modelApi.custom_ssl_pem;
+        const isAvaliable = this.uploadFiles();
+        if(!isAvaliable){
+          const proceed_setup = this.modelApi.proceed_setup;
+          delete this.modelApi.proceed_setup;
 
-      const proceed_setup = this.modelApi.proceed_setup;
-      delete this.modelApi.proceed_setup;
+          //Update project
+          this.api.update(`projects/${this.projectId}`, this.modelApi).then((project) => {
+            isUpdateProject = false;
 
-      //Create new project
-      this.api.update(`projects/${this.projectId}`, this.modelApi).then((project) => {
-        isUpdateProject = false;
-
-        //PROJECT CREATED
-        if(proceed_setup){
-          this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+            //PROJECT CREATED
+            if(proceed_setup){
+              this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+            }else{
+              this.route.navigate([`projects`]);
+            }
+          }, (err) => {
+            isUpdateProject = false;
+            this.errorMsg = err;
+          });
         }else{
-          this.route.navigate([`projects`]);
+          isUpdateProject = false;
         }
-      }, (err) => {
-        isUpdateProject = false;
-        this.errorMsg = err;
-      });
+
+      }, 250);
+
     };
   }
 
-  downloadTemplate(){
-    window.open(environment.API_URL + `/project/download/yml/${this.projectId}`,'_blank');
+  trackByFn(index, app) {
+    return app.appId || app.id || index;
   }
 
-  addPemFile(ev){
-    this.model.ssh_pem = ev.target.files[0];
+  downloadTemplate(app){
+    window.open(environment.API_URL + `/app/download/yml/${app.id}`,'_blank');
   }
 
-  addKeySSLFile(ev){
-    this.model.custom_ssl_key = ev.target.files[0];
+  addNewApp(){
+    const newApp = _.cloneDeep(this.modelDefault);
+    newApp.appId = 'project-app-' + (this.projectModel.apps.length + 1) + new Date().getTime();
+
+    this.projectModel.apps.push(newApp);
+
+    //Open current tab
+    this.openTab(newApp.appId);
   }
 
-  addCrtSSLFile(ev){
-    this.model.custom_ssl_crt = ev.target.files[0];
+  removeApp(i){
+    if(this.projectModel.apps[i].appId === this.activeTab || this.projectModel.apps[i].id === this.activeTab){
+      if(this.projectModel.apps[0] && this.projectModel.apps[0].appId)
+        this.openTab(this.projectModel.apps[0].appId);
+
+      if(this.projectModel.apps[0] && this.projectModel.apps[0].id)
+        this.openTab(this.projectModel.apps[0].id);
+    }
+
+    this.projectModel.apps.splice(i, 1);
   }
 
-  addPemSSLFile(ev){
-    this.model.custom_ssl_pem = ev.target.files[0];
+  addPemFile(ev, model){
+    model.ssh_pem = ev.target.files[0];
+  }
+
+  addKeySSLFile(ev, model){
+    model.custom_ssl_key = ev.target.files[0];
+  }
+
+  addCrtSSLFile(ev, model){
+    model.custom_ssl_crt = ev.target.files[0];
+  }
+
+  addPemSSLFile(ev, model){
+    model.custom_ssl_pem = ev.target.files[0];
   }
 
   addRepeatField(arr){
@@ -231,14 +312,17 @@ export class EditComponent implements OnInit {
   validateModel(model){
     if(
         !model.os
-        || !model.project_name
         || !model.app_name
         || !model.project_type
         || !model.ssh_host
         || !model.ssh_username
-        || !model.domain_name
+        || !model.environment
     )
       return 'Please input all required fields.';
+
+    if(!model.id && !model.ssh_pem) {
+      return 'Please input all required fields.';
+    }
 
     if(model.lets_encrypt && !model.domain_name)
       return 'If you want to use Let`s encrypt please enter domain name.';
@@ -246,7 +330,7 @@ export class EditComponent implements OnInit {
     //Check if certs is try to upload
     if(model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem){
       //Check if ssh pem and custom ssl pem have different names
-      if(model.custom_ssl_pem && model.custom_ssl_pem.name === model.ssh_pem.name){
+      if(model.custom_ssl_pem && model.ssh_pem && model.custom_ssl_pem.name === model.ssh_pem.name){
         return 'SSH pem key and Custom SSL Pem key have the same names, please use different names.';
       }
 
@@ -257,6 +341,18 @@ export class EditComponent implements OnInit {
           (model.custom_ssl_pem && !model.custom_ssl_pem.name)
       ){
         return 'SSL files not upload properly, please upload files one more time.';
+      }
+
+      if(!model.id) {
+        //Check if all certs is included
+        if (!model.custom_ssl_key || !model.custom_ssl_crt || !model.custom_ssl_pem) {
+          return 'If you want to use custom certificate then you need to upload .key, .crt and .pem files.';
+        }
+
+        //Check if files has names
+        if (!model.custom_ssl_key.name || !model.custom_ssl_crt.name || !model.custom_ssl_pem.name) {
+          return 'SSL files not upload properly, please upload files one more time.';
+        }
       }
 
       //Check files extentions
@@ -343,74 +439,114 @@ export class EditComponent implements OnInit {
   }
 
   prepareModel(model){
-    const newModel = Object.assign({}, model);
+    const newModel = _.cloneDeep(model);
 
-    //Cleanup model fields
-    delete newModel.server_dependency;
-    delete newModel.node_dependency;
+    for(var i = 0; i < newModel.apps.length; i++){
 
-    //Create new model fields
-    newModel.server_dependencies = [];
-    newModel.nodejs_dependencies = [];
+      //Create new model fields
+      newModel.apps[i].server_dependencies = [];
+      newModel.apps[i].nodejs_dependencies = [];
 
-    //Fill model fields
-    for(let obj of model.server_dependency){
-      if(obj.value)
-        newModel.server_dependencies.push(obj.value);
+      //Fill model fields
+      for(let obj of newModel.apps[i].server_dependency){
+        if(obj.value)
+          newModel.apps[i].server_dependencies.push(obj.value);
+      }
+      for(let obj of newModel.apps[i].node_dependency){
+        if(obj.value)
+          newModel.apps[i].nodejs_dependencies.push(obj.value);
+      }
+
+      if(!newModel.apps[i].custom_ssl_key)
+        delete newModel.apps[i].custom_ssl_key;
+
+      if(!newModel.apps[i].custom_ssl_crt)
+        delete newModel.apps[i].custom_ssl_crt;
+
+      if(!newModel.apps[i].custom_ssl_pem)
+        delete newModel.apps[i].custom_ssl_pem;
+
+      if(!newModel.apps[i].ssh_pem)
+        delete newModel.apps[i].ssh_pem;
+
+      //Cleanup model fields
+      delete newModel.apps[i].server_dependency;
+      delete newModel.apps[i].node_dependency;
+      delete newModel.apps[i].appId;
     }
-    for(let obj of model.node_dependency){
-      if(obj.value)
-        newModel.nodejs_dependencies.push(obj.value);
-    }
-
     return newModel;
   }
 
+  isFileUploaded(){
+    let hasFiles = false;
+
+    for(let app of this.modelApi.apps){
+      if(app.ssh_pem){
+        hasFiles = true;
+        break;
+      }
+
+      if(app.custom_ssl_key){
+        hasFiles = true;
+        break;
+      }
+
+      if(app.custom_ssl_crt){
+        hasFiles = true;
+        break;
+      }
+
+      if(app.custom_ssl_pem){
+        hasFiles = true;
+        break;
+      }
+    }
+
+    return hasFiles;
+  }
+
   proceedToUpdate(start = false){
-    this.errorMsg = this.validateModel(this.model);
-    if(this.errorMsg){
-      return;
+    //Validate models
+    let hasErrors = false;
+    for(var i = 0; i < this.projectModel.apps.length; i++){
+      this.projectModel.apps[i].errorMsg = this.validateModel(this.projectModel.apps[i]);
+      if(this.projectModel.apps[i].errorMsg)
+        hasErrors = true;
+    }
+
+    if(hasErrors){
+      window.scrollTo(0, 1);
+      return false;
+    }
+    this.errorMsg = '';
+    if(!this.projectModel.project_name) {
+      this.errorMsg = 'Project name is required';
+      return false;
     }
 
     //Prepare model for api
-    this.modelApi = this.prepareModel(this.model);
+    this.modelApi = this.prepareModel(this.projectModel);
 
     //Remove all files from queue
     this.uploader.queue = [];
 
-    //Prepare files list
-    const files = [];
-    if(this.modelApi.ssh_pem)
-      files.push(this.modelApi.ssh_pem);
-    if(this.modelApi.custom_ssl_key)
-      files.push(this.modelApi.custom_ssl_key);
-    if(this.modelApi.custom_ssl_crt)
-      files.push(this.modelApi.custom_ssl_crt);
-    if(this.modelApi.custom_ssl_pem)
-      files.push(this.modelApi.custom_ssl_pem);
-
-    //Attach file
-    this.uploader.addToQueue(files);
-
-    //Start project setup
-    this.modelApi.proceed_setup = start;
-
-    //Send files
-    if(files.length) {
-      //Attach file
-      this.uploader.addToQueue(files);
-
-      this.uploader.uploadAllFiles('files', 'POST');
-
+    //Check if user upload any files
+    if(this.isFileUploaded()){
+      this.uploadModelIndex = 0;
+      this.uploadFiles();
     }else{
       const proceed_setup = this.modelApi.proceed_setup;
       delete this.modelApi.proceed_setup;
-      delete this.modelApi.ssh_pem;
-      delete this.modelApi.custom_ssl_key;
-      delete this.modelApi.custom_ssl_crt;
-      delete this.modelApi.custom_ssl_pem;
 
-      //Create new project
+      //Cleanup apps
+      for(var i = 0; i < this.modelApi.apps.length; i++){
+        delete this.modelApi.apps[i].ssh_pem;
+        delete this.modelApi.apps[i].custom_ssl_key;
+        delete this.modelApi.apps[i].custom_ssl_crt;
+        delete this.modelApi.apps[i].custom_ssl_pem;
+      }
+
+      //Update project
       this.api.update(`projects/${this.projectId}`, this.modelApi).then((project) => {
         //PROJECT CREATED
         if(proceed_setup){
@@ -424,5 +560,45 @@ export class EditComponent implements OnInit {
     }
 
     return false;
+  }
+
+  uploadFiles(){
+    //If models finish
+    if(!this.modelApi.apps[this.uploadModelIndex])
+      return false;
+
+    //Remove all files from queue
+    this.uploader.queue = [];
+
+    //Prepare files list
+    const files = [];
+    if(this.modelApi.apps[this.uploadModelIndex].ssh_pem)
+      files.push(this.modelApi.apps[this.uploadModelIndex].ssh_pem);
+    if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key)
+      files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key);
+    if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt)
+      files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt);
+    if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem)
+      files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem);
+
+    if(!files.length){
+      this.uploadModelIndex++;
+      return this.uploadFiles();
+    }
+
+    //Attach file
+    this.uploader.addToQueue(files);
+
+    //Send files
+    this.uploader.uploadAllFiles('files', 'POST');
+
+    return true;
+  }
+
+  /**
+   * Open tab
+   */
+  openTab(name){
+    this.activeTab = name;
   }
 }

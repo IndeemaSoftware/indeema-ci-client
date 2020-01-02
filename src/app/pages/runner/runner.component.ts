@@ -5,6 +5,7 @@ import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
 import {ApiService} from '../../services/api.service';
 import {MultipleFileUploaderService} from '../../services/multiple-file-uploader.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-runner',
@@ -21,9 +22,9 @@ export class RunnerComponent implements OnInit {
     os: 'ubuntu',
 
     //Project configuration
-    project_name: '',
     app_name: '',
     project_type: null,
+    environment: 'development',
     app_port: '', //optional
 
     //Server credentials
@@ -46,10 +47,14 @@ export class RunnerComponent implements OnInit {
     //Node.JS dependencies
     node_dependency: [
       {value: null}
-    ]
+    ],
+
+    //Validation error
+    errorMsg: ''
   };
 
-  model: any = {};
+  projectModel: any = {};
+
   modelApi: any = {};
 
   //Lists
@@ -60,13 +65,21 @@ export class RunnerComponent implements OnInit {
   //Error
   errorMsg = false as any;
 
+  //Upload model index
+  uploadModelIndex = 0;
+
+  /**
+   * Tabs variables
+   */
+  activeTab = 'create-new-app';//default open tab
+
+
   constructor(
     private api: ApiService,
     private auth: AuthService,
     private route: Router
   ) {
     //Prepare form model
-    this.model = Object.assign({}, this.modelDefault);
     this.modelApi = {};
 
     const jwt = this.auth.getJWT();
@@ -86,6 +99,7 @@ export class RunnerComponent implements OnInit {
       file.method = "POST";
     };
     this.uploader.onSuccessItem = (item: any, response: any, status: any, headers: any) => {
+
       //Additional check for create project
       if(isCreatingProject)
         return
@@ -98,38 +112,53 @@ export class RunnerComponent implements OnInit {
         return;
       }
 
-      //Setup files id`s
-      for(let file of response){
-        if(this.modelApi.ssh_pem && this.modelApi.ssh_pem.name === file.name)
-          this.modelApi.ssh_pem = file.id;
+      if(this.modelApi.apps[this.uploadModelIndex]){
+        //Setup files id`s
+        for(let file of response){
+          if(this.modelApi.apps[this.uploadModelIndex].ssh_pem && this.modelApi.apps[this.uploadModelIndex].ssh_pem.name === file.name)
+            this.modelApi.apps[this.uploadModelIndex].ssh_pem = file.id;
 
-        if(this.modelApi.custom_ssl_key && this.modelApi.custom_ssl_key.name === file.name)
-          this.modelApi.custom_ssl_key = file.id;
+          if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key && this.modelApi.apps[this.uploadModelIndex].custom_ssl_key.name === file.name)
+            this.modelApi.apps[this.uploadModelIndex].custom_ssl_key = file.id;
 
-        if(this.modelApi.custom_ssl_crt && this.modelApi.custom_ssl_crt.name === file.name)
-          this.modelApi.custom_ssl_crt = file.id;
+          if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt && this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt.name === file.name)
+            this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt = file.id;
 
-        if(this.modelApi.custom_ssl_pem && this.modelApi.custom_ssl_pem.name === file.name)
-          this.modelApi.custom_ssl_pem = file.id;
+          if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem && this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem.name === file.name)
+            this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem = file.id;
+        }
       }
 
-      const proceed_setup = this.modelApi.proceed_setup;
-      delete this.modelApi.proceed_setup;
+      //Timeout for fix multiple responses
+      setTimeout(() => {
 
-      //Create new project
-      this.api.create('projects/new', this.modelApi).then((project) => {
-        isCreatingProject = false;
+        //Increase index and re-upload
+        this.uploadModelIndex++;
 
-        //PROJECT CREATED
-        if(proceed_setup){
-          this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+        const isAvaliable = this.uploadFiles();
+        if(!isAvaliable){
+          const proceed_setup = this.modelApi.proceed_setup;
+          delete this.modelApi.proceed_setup;
+
+          //Create new project
+          this.api.create('projects/new', this.modelApi).then((project) => {
+            isCreatingProject = false;
+
+            //PROJECT CREATED
+            if(proceed_setup){
+              this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+            }else{
+              this.route.navigate([`projects`]);
+            }
+          }, (err) => {
+            isCreatingProject = false;
+            this.errorMsg = err;
+          });
         }else{
-          this.route.navigate([`projects`]);
+          isCreatingProject = false;
         }
-      }, (err) => {
-        isCreatingProject = false;
-        this.errorMsg = err;
-      });
+
+      }, 250);
     };
   }
 
@@ -146,22 +175,48 @@ export class RunnerComponent implements OnInit {
     //Get nodejs dependencies list
     this.api.get('/project-types')
         .then(data => this.projectTypes = data, err => this.projectTypes = []);
+
+    //Prepare project model
+    this.projectModel = {
+      project_name: '',
+      apps: []
+    };
+    this.addNewApp();
   }
 
-  addPemFile(ev){
-    this.model.ssh_pem = ev.target.files[0];
+  addNewApp(){
+    const newApp = _.cloneDeep(this.modelDefault);
+    newApp.appId = 'project-app-' + (this.projectModel.apps.length + 1) + new Date().getTime();
+
+    this.projectModel.apps.push(newApp);
+
+    //Open current tab
+    this.openTab(newApp.appId);
   }
 
-  addKeySSLFile(ev){
-    this.model.custom_ssl_key = ev.target.files[0];
+  removeApp(i){
+    if(this.projectModel.apps[i].appId === this.activeTab){
+      if(this.projectModel.apps[0] && this.projectModel.apps[0].appId)
+        this.openTab(this.projectModel.apps[0].appId);
+    }
+
+    this.projectModel.apps.splice(i, 1);
   }
 
-  addCrtSSLFile(ev){
-    this.model.custom_ssl_crt = ev.target.files[0];
+  addPemFile(ev, model){
+    model.ssh_pem = ev.target.files[0];
   }
 
-  addPemSSLFile(ev){
-    this.model.custom_ssl_pem = ev.target.files[0];
+  addKeySSLFile(ev, model){
+    model.custom_ssl_key = ev.target.files[0];
+  }
+
+  addCrtSSLFile(ev, model){
+    model.custom_ssl_crt = ev.target.files[0];
+  }
+
+  addPemSSLFile(ev, model){
+    model.custom_ssl_pem = ev.target.files[0];
   }
 
   addRepeatField(arr){
@@ -179,13 +234,12 @@ export class RunnerComponent implements OnInit {
   validateModel(model){
     if(
         !model.os
-     || !model.project_name
      || !model.app_name
      || !model.project_type
      || !model.ssh_host
      || !model.ssh_username
      || !model.ssh_pem
-     || !model.domain_name
+     || !model.environment
     )
       return 'Please input all required fields.';
 
@@ -210,15 +264,15 @@ export class RunnerComponent implements OnInit {
       }
 
       //Check files extentions
-      const extentionKey = this.model.custom_ssl_key.name.split('.').pop();
+      const extentionKey = model.custom_ssl_key.name.split('.').pop();
       if(extentionKey !== 'key')
         return 'SSL Key file is not valid, please upload file with .key extention.';
 
-      const extentionCrt = this.model.custom_ssl_crt.name.split('.').pop();
+      const extentionCrt = model.custom_ssl_crt.name.split('.').pop();
       if(extentionCrt !== 'crt')
         return 'SSL Crt file is not valid, please upload file with .crt extention.';
 
-      const extentionPem = this.model.custom_ssl_pem.name.split('.').pop();
+      const extentionPem = model.custom_ssl_pem.name.split('.').pop();
       if(extentionPem !== 'pem')
         return 'SSL Pem file is not valid, please upload file with .pem extention.';
 
@@ -288,60 +342,108 @@ export class RunnerComponent implements OnInit {
   }
 
   prepareModel(model){
-    const newModel = Object.assign({}, model);
+    const newModel = _.cloneDeep(model);
 
-    //Cleanup model fields
-    delete newModel.server_dependency;
-    delete newModel.node_dependency;
+    for(var i = 0; i < newModel.apps.length; i++){
 
-    //Create new model fields
-    newModel.server_dependencies = [];
-    newModel.nodejs_dependencies = [];
+      //Create new model fields
+      newModel.apps[i].server_dependencies = [];
+      newModel.apps[i].nodejs_dependencies = [];
 
-    //Fill model fields
-    for(let obj of model.server_dependency){
-      if(obj.value)
-        newModel.server_dependencies.push(obj.value);
+      //Fill model fields
+      for(let obj of newModel.apps[i].server_dependency){
+        if(obj.value)
+          newModel.apps[i].server_dependencies.push(obj.value);
+      }
+      for(let obj of newModel.apps[i].node_dependency){
+        if(obj.value)
+          newModel.apps[i].nodejs_dependencies.push(obj.value);
+      }
+
+      if(!newModel.apps[i].custom_ssl_key)
+        delete newModel.apps[i].custom_ssl_key;
+
+      if(!newModel.apps[i].custom_ssl_crt)
+        delete newModel.apps[i].custom_ssl_crt;
+
+      if(!newModel.apps[i].custom_ssl_pem)
+        delete newModel.apps[i].custom_ssl_pem;
+
+      if(!newModel.apps[i].ssh_pem)
+        delete newModel.apps[i].ssh_pem;
+
+      //Cleanup model fields
+      delete newModel.apps[i].server_dependency;
+      delete newModel.apps[i].node_dependency;
+      delete newModel.apps[i].appId;
     }
-    for(let obj of model.node_dependency){
-      if(obj.value)
-        newModel.nodejs_dependencies.push(obj.value);
-    }
-
     return newModel;
   }
 
   proceedToIntall(start = false){
-    this.errorMsg = this.validateModel(this.model);
-    if(this.errorMsg){
-      return;
+
+    //Validate models
+    let hasErrors = false;
+    for(var i = 0; i < this.projectModel.apps.length; i++){
+      this.projectModel.apps[i].errorMsg = this.validateModel(this.projectModel.apps[i]);
+      if(this.projectModel.apps[i].errorMsg)
+        hasErrors = true;
+    }
+
+    if(hasErrors){
+      window.scrollTo(0, 1);
+      return false;
+    }
+    this.errorMsg = '';
+    if(!this.projectModel.project_name) {
+      this.errorMsg = 'Project name is required';
+      return false;
     }
 
     //Prepare model for api
-    this.modelApi = this.prepareModel(this.model);
+    this.modelApi = this.prepareModel(this.projectModel);
+
+    //Start project setup
+    this.modelApi.proceed_setup = start;
+
+    //Start recrusion for upload files
+    this.uploadModelIndex = 0;
+    this.uploadFiles();
+
+    return false;
+  }
+
+  uploadFiles(){
+    //If models finish
+    if(!this.modelApi.apps[this.uploadModelIndex])
+      return false;
 
     //Remove all files from queue
     this.uploader.queue = [];
 
     //Prepare files list
-    const files = [this.modelApi.ssh_pem];
-    if(this.modelApi.custom_ssl_key)
-      files.push(this.modelApi.custom_ssl_key);
-    if(this.modelApi.custom_ssl_crt)
-      files.push(this.modelApi.custom_ssl_crt);
-    if(this.modelApi.custom_ssl_pem)
-      files.push(this.modelApi.custom_ssl_pem);
+    const files = [this.modelApi.apps[this.uploadModelIndex].ssh_pem];
+    if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key)
+      files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key);
+    if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt)
+      files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt);
+    if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem)
+      files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem);
 
     //Attach file
     this.uploader.addToQueue(files);
 
-    //Start project setup
-    this.modelApi.proceed_setup = start;
-
     //Send files
     this.uploader.uploadAllFiles('files', 'POST');
 
-    return false;
+    return true;
+  }
+
+  /**
+   * Open tab
+   */
+  openTab(name){
+    this.activeTab = name;
   }
 
 }

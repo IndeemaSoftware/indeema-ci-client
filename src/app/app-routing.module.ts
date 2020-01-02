@@ -30,7 +30,7 @@ const routes: Routes = [
     component: EditComponent
   },
   {
-    path: 'console/:id',
+    path: 'console/:id/:app_id',
     component: ConsoleComponent
   },
   {

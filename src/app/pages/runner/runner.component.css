@@ -72,3 +72,52 @@
   transform: translateY(-50%);
   cursor: pointer;
 }
+
+/* App tabs */
+.app-tabs{
+  display: table;
+  width: 100%;
+}
+.app-tabs .app-control{
+  display: table;
+  width: 100%;
+  padding: 5px 10px 0;
+}
+.app-tabs .app-control div{
+  display: table;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-top: 1px solid #eee;
+  border-radius: 2px;
+  border-right: 1px solid #eee;
+  border-left: 1px solid #eee;
+  color: #333;
+  text-decoration: none !important;
+  width: 100%;
+}
+.app-tabs .app-control div a{
+  color: #333;
+  text-decoration: none !important;
+  max-width: 75%;
+  display: block;
+  float: left;
+}
+.app-tabs .app-control div button{
+  float: right;
+}
+.app-tabs .app-control div a.action-tab{
+  color: #00b640;
+}
+.app-tabs .app-control div a.active{
+  opacity: 0.5;
+  cursor: default !important;
+}
+.app-tabs .app-tab-body{
+  display: none;
+  width: 100%;
+  border-top: 1px solid #eee;
+  padding: 15px 20px;
+}
+.app-tabs .app-tab-body.visible{
+  display: table;
+}

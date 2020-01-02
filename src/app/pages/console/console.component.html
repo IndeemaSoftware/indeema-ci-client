@@ -15,7 +15,8 @@
       <div class="action">
         <button (click)="cleanConsole()" type="button" class="btn">Clear</button>
         <button (click)="disableConsole()" type="button" class="btn btn-warning">Back to setup</button>
-        <button (click)="setupProject()" type="button" class="btn btn-danger">Reload script</button>
+        <button *ngIf="!isCleanup" (click)="setupProject()" type="button" class="btn btn-danger">Reload script</button>
+        <button *ngIf="isCleanup" (click)="cleanupProject()" type="button" class="btn btn-danger">Reload cleanup</button>
         <button *ngIf="enableDownloadBtn" (click)="downloadTemplate()" type="button" class="btn btn-success">Download CI template</button>
       </div>
     </div>

@@ -19,13 +19,18 @@ export class ConsoleComponent implements OnInit {
 
   //Project data
   project = null as any;
+  app = null as any;
   projectId = null as any;
+  appId = null as any;
 
   //Auto start setup
   autoStart = false;
 
   //Download btn
   enableDownloadBtn = false;
+
+  //Is cleanup feature
+  isCleanup = false;
 
   constructor(
     private socket: Socket,
@@ -41,9 +46,16 @@ export class ConsoleComponent implements OnInit {
       return;
     }
 
+    this.appId = this.activatedRoute.snapshot.params['app_id'];
+    if(!this.appId){
+      this.route.navigate([`projects`]);
+      return;
+    }
+
     //Get params
     this.activatedRoute.queryParams.subscribe(params => {
       this.autoStart = params['start']? true : false;
+      this.isCleanup = params['cleanup']? true : false;
     });
   }
 
@@ -55,29 +67,38 @@ export class ConsoleComponent implements OnInit {
 
     //Get project
     this.api.get(`/projects/${this.projectId}`)
-        .then(data => {
-          this.project = data;
-          this.prepareConsole();
-        }, err => {
-          alert(err);
-          this.route.navigate([`projects`]);
-        });
+      .then(data => {
+        this.project = data;
+
+        //Get app
+        this.api.get(`/app/${this.appId}`)
+          .then(data => {
+            this.app = data;
+            this.prepareConsole();
+          }, err => {
+            alert(err);
+            this.route.navigate([`projects`]);
+          });
+      }, err => {
+        alert(err);
+        this.route.navigate([`projects`]);
+      });
   }
 
   prepareConsole(){
-    if(this.project.project_status === 'success'){
+    if(this.app.app_status === 'success'){
       this.enableDownloadBtn = true;
     }else{
       this.enableDownloadBtn = false;
     }
 
     if(this.autoStart){
-      this.connectToChannel(this.projectId);
+      this.connectToChannel(this.appId);
 
       this.setupProject();
     }else{
       //Get project console output
-      this.api.get(`/console/project/${this.projectId}`)
+      this.api.get(`/console/app/${this.appId}`)
           .then(data => {
             const list = Object.values(data) as any;
             for(let item of list){
@@ -86,7 +107,7 @@ export class ConsoleComponent implements OnInit {
             }
 
             //Connect to project stream
-            this.connectToChannel(this.projectId);
+            this.connectToChannel(this.appId);
           }, err => {
             alert(err);
             this.route.navigate([`projects`]);
@@ -95,7 +116,7 @@ export class ConsoleComponent implements OnInit {
   }
 
   setupProject(){
-    this.api.create(`/console/setup/${this.projectId}`, {}).then(() => {
+    this.api.create(`/console/setup/${this.projectId}/${this.appId}`, {}).then(() => {
       this.cleanConsole();
     }, (err) => {
       alert(err);
@@ -104,7 +125,7 @@ export class ConsoleComponent implements OnInit {
   }
 
   downloadTemplate(){
-    window.open(environment.API_URL + `/project/download/yml/${this.projectId}`,'_blank');
+    window.open(environment.API_URL + `/app/download/yml/${this.projectId}`,'_blank');
   }
 
   cleanConsole(){
@@ -116,8 +137,18 @@ export class ConsoleComponent implements OnInit {
     this.route.navigate([`projects/${this.projectId}`]);
   }
 
+  cleanupProject(){
+    this.api.remove(`projects/cleanup/${this.projectId}/${this.appId}`).then(() => {
+      this.cleanConsole();
+    }, (err) => {
+      alert(err);
+      this.route.navigate([`projects`]);
+    })
+  }
+
   addMessage(type, msg){
     msg = msg.toString().replace('\\n', '');
+    msg = msg.replace('\\t', '');
     msg = msg.replace('"', '');
     msg = msg.replace('"', '');
     this.consoleOutput.push({
