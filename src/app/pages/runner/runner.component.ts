@@ -185,7 +185,6 @@ export class RunnerComponent implements OnInit {
      || !model.ssh_host
      || !model.ssh_username
      || !model.ssh_pem
-     || !model.domain_name
     )
       return 'Please input all required fields.';
 
