@@ -125,7 +125,7 @@ export class ConsoleComponent implements OnInit {
   }
 
   downloadTemplate(){
-    window.open(environment.API_URL + `/app/download/yml/${this.projectId}`,'_blank');
+    window.open(environment.API_URL + `/app/download/yml/${this.appId}`,'_blank');
   }
 
   cleanConsole(){
