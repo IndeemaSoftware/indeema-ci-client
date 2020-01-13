@@ -32,7 +32,6 @@ export class RunnerComponent implements OnInit {
     avaliable_ports: '',//optional
 
     //AWS S3 Config
-    s3_project: false,
     s3_bucket_name: '',
     aws_access_key_id: '',
     aws_secret_access_key: '',
@@ -250,7 +249,7 @@ export class RunnerComponent implements OnInit {
     )
       return 'Please input all required fields.';
 
-    if(model.s3_project){
+    if(model.os === 'aws_s3'){
       if(!model.s3_bucket_name || !model.aws_access_key_id || !model.aws_secret_access_key)
         return 'Please input all required fields.';
     }else{

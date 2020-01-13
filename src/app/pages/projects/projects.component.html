@@ -55,8 +55,8 @@
                   <td>{{ app.project_type.label }}</td>
                   <th scope="row">{{ app.environment }}</th>
                   <td>
-                    <div *ngIf="!app.s3_project && app.ssh_username && app.ssh_host">{{ app.ssh_username }}@{{ app.ssh_host }}</div>
-                    <div *ngIf="app.s3_project && !app.ssh_username && !app.ssh_host">Using AWS S3</div>
+                    <div *ngIf="app.os !== 'aws_s3'">{{ app.ssh_username }}@{{ app.ssh_host }}</div>
+                    <div *ngIf="app.os === 'aws_s3'">Using AWS S3</div>
                   </td>
                   <td>
                     <div class="btn-group btn-group-toggle">
