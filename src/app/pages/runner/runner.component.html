@@ -65,6 +65,11 @@
                   <input [(ngModel)]="model.app_port" type="text" class="form-control" name="app_port{{ pId }}" placeholder="Enter app port">
                   <small class="form-text text-muted">Specify port to be used by application. By default port $PORT is used.</small>
                 </div>
+                <div class="form-group">
+                  <label for="avaliable_ports">Avaliable ports</label>
+                  <input [(ngModel)]="model.avaliable_ports" type="text" class="form-control" name="avaliable_ports{{ pId }}" placeholder="Enter avaliable ports">
+                  <small class="form-text text-muted">This prots will be enabled in firewall</small>
+                </div>
               </div>
               <div class="form-container">
                 <h3>Domain and HTTPS setttings:</h3>

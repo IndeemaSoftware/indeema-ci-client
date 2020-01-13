@@ -26,6 +26,7 @@ export class RunnerComponent implements OnInit {
     project_type: null,
     environment: 'development',
     app_port: '', //optional
+    avaliable_ports: '',//optional
 
     //Server credentials
     ssh_host: '',
