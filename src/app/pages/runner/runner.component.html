@@ -35,15 +35,21 @@
               <div *ngIf="model.errorMsg" class="alert alert-danger text-center">{{ model.errorMsg }}</div>
               <div class="form-container">
                 <div class="form-group required">
+                  <label for="app_name">App name</label>
+                  <input [(ngModel)]="model.app_name" type="text" class="form-control" name="app_name{{ pId }}" placeholder="Enter app name">
+                  <small class="form-text text-muted">Each project could have few applications that are working together or even independently. You can setup only one app at one run of script.</small>
+                </div>
+                <div class="form-group required">
                   <label for="os">OS</label>
                   <select [(ngModel)]="projectModel.apps[pId].os" disabled class="form-control" name="os{{ pId }}">
                     <option [value]="'ubuntu'"  disabled>Ubuntu OS</option>
                   </select>
                 </div>
                 <div class="form-group required">
-                  <label for="app_name">App name</label>
-                  <input [(ngModel)]="model.app_name" type="text" class="form-control" name="app_name{{ pId }}" placeholder="Enter app name">
-                  <small class="form-text text-muted">Each project could have few applications that are working together or even independently. You can setup only one app at one run of script.</small>
+                  <label for="ci_template">CI Template</label>
+                  <select [(ngModel)]="projectModel.apps[pId].ci_template" disabled class="form-control" name="ci_template{{ pId }}">
+                    <option [value]="'gitlab_ci'"  disabled>GitLab CI</option>
+                  </select>
                 </div>
                 <div class="form-group required">
                   <label for="project_type">App type</label>
@@ -101,6 +107,29 @@
                 </div>
               </div>
               <div class="form-container">
+                <h3>AWS S3 Static website configure:</h3>
+                <div class="form-group form-check">
+                  <input [(ngModel)]="model.s3_project" type="checkbox" class="form-check-input" name="s3_project" id="s3_project">
+                  <label class="form-check-label" for="s3_project">Use AWS S3 Bucket for project</label>
+                </div>
+                <div *ngIf="model.s3_project" class="form-container">
+                  <div class="form-group required">
+                    <label for="s3_bucket_name">AWS S3 Bucket name</label>
+                    <input [(ngModel)]="model.s3_bucket_name" type="text" class="form-control" name="s3_bucket_name{{ pId }}" placeholder="Enter AWS Bucket name">
+                  </div>
+                  <div class="form-group required">
+                    <label for="aws_access_key_id">AWS ACCESS KEY ID</label>
+                    <input [(ngModel)]="model.aws_access_key_id" type="text" class="form-control" name="aws_access_key_id{{ pId }}" placeholder="AWS ACCESS KEY ID">
+                    <small class="form-text text-muted">Note! You need to add variable $AWS_ACCESS_KEY_ID to GitLab project, without this key your deploy will be crash.</small>
+                  </div>
+                  <div class="form-group required">
+                    <label for="aws_secret_access_key">AWS SECRET ACCESS KEY</label>
+                    <input [(ngModel)]="model.aws_secret_access_key" type="text" class="form-control" name="aws_secret_access_key{{ pId }}" placeholder="AWS SECRET ACCESS KEY">
+                    <small class="form-text text-muted">Note! You need to add variable $AWS_SECRET_ACCESS_KEY to GitLab project, without this key your deploy will be crash.</small>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="!model.s3_project" class="form-container">
                 <h3>Server credentials:</h3>
                 <div class="form-group required">
                   <label for="ssh_host">SSH host or IP address</label>

@@ -18,6 +18,9 @@ export class EditComponent implements OnInit {
   public uploader: MultipleFileUploaderService;
 
   modelDefault: any = {
+    //CI templates
+    ci_template: 'gitlab_ci',
+
     //OS
     os: 'ubuntu',
 
@@ -27,6 +30,12 @@ export class EditComponent implements OnInit {
     environment: 'development',
     app_port: '', //optional
     avaliable_ports: '',//optional
+
+    //AWS S3 Config
+    s3_project: false,
+    s3_bucket_name: '',
+    aws_access_key_id: '',
+    aws_secret_access_key: '',
 
     //Server credentials
     ssh_host: '',
@@ -315,11 +324,17 @@ export class EditComponent implements OnInit {
         !model.os
         || !model.app_name
         || !model.project_type
-        || !model.ssh_host
-        || !model.ssh_username
         || !model.environment
     )
       return 'Please input all required fields.';
+
+    if(model.s3_project){
+      if(!model.s3_bucket_name || !model.aws_access_key_id || !model.aws_secret_access_key)
+        return 'Please input all required fields.';
+    }else{
+      if(!model.ssh_host || !model.ssh_username)
+        return 'Please input all required fields.';
+    }
 
     if(!model.id && !model.ssh_pem) {
       return 'Please input all required fields.';

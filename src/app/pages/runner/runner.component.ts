@@ -18,6 +18,9 @@ export class RunnerComponent implements OnInit {
   public uploader: MultipleFileUploaderService;
 
   modelDefault: any = {
+    //CI templates
+    ci_template: 'gitlab_ci',
+
     //OS
     os: 'ubuntu',
 
@@ -27,6 +30,12 @@ export class RunnerComponent implements OnInit {
     environment: 'development',
     app_port: '', //optional
     avaliable_ports: '',//optional
+
+    //AWS S3 Config
+    s3_project: false,
+    s3_bucket_name: '',
+    aws_access_key_id: '',
+    aws_secret_access_key: '',
 
     //Server credentials
     ssh_host: '',
@@ -237,12 +246,17 @@ export class RunnerComponent implements OnInit {
         !model.os
      || !model.app_name
      || !model.project_type
-     || !model.ssh_host
-     || !model.ssh_username
-     || !model.ssh_pem
      || !model.environment
     )
       return 'Please input all required fields.';
+
+    if(model.s3_project){
+      if(!model.s3_bucket_name || !model.aws_access_key_id || !model.aws_secret_access_key)
+        return 'Please input all required fields.';
+    }else{
+      if(!model.ssh_host || !model.ssh_username || !model.ssh_pem)
+        return 'Please input all required fields.';
+    }
 
     if(model.lets_encrypt && !model.domain_name)
       return 'If you want to use Let`s encrypt please enter domain name.';
@@ -250,7 +264,7 @@ export class RunnerComponent implements OnInit {
     //Check if certs is try to upload
     if(model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem){
       //Check if ssh pem and custom ssl pem have different names
-      if(model.custom_ssl_pem && model.custom_ssl_pem.name === model.ssh_pem.name){
+      if(model.ssh_pem && model.custom_ssl_pem && model.custom_ssl_pem.name === model.ssh_pem.name){
         return 'SSH pem key and Custom SSL Pem key have the same names, please use different names.';
       }
 
@@ -407,11 +421,66 @@ export class RunnerComponent implements OnInit {
     //Start project setup
     this.modelApi.proceed_setup = start;
 
-    //Start recrusion for upload files
-    this.uploadModelIndex = 0;
-    this.uploadFiles();
+    if(this.isFileUploaded()){
+      //Start recrusion for upload files
+      this.uploadModelIndex = 0;
+      this.uploadFiles();
+    }else{
+      const proceed_setup = this.modelApi.proceed_setup;
+      delete this.modelApi.proceed_setup;
+
+      //Cleanup apps
+      for(var i = 0; i < this.modelApi.apps.length; i++){
+        delete this.modelApi.apps[i].ssh_pem;
+        delete this.modelApi.apps[i].custom_ssl_key;
+        delete this.modelApi.apps[i].custom_ssl_crt;
+        delete this.modelApi.apps[i].custom_ssl_pem;
+      }
+
+      //Update project
+      this.api.create('projects/new', this.modelApi).then((project) => {
+        //PROJECT CREATED
+        if(proceed_setup){
+          this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+        }else{
+          this.route.navigate([`projects`]);
+        }
+      }, (err) => {
+        this.errorMsg = err;
+      });
+    }
 
     return false;
+  }
+
+
+
+  isFileUploaded(){
+    let hasFiles = false;
+
+    for(let app of this.modelApi.apps){
+      if(app.ssh_pem){
+        hasFiles = true;
+        break;
+      }
+
+      if(app.custom_ssl_key){
+        hasFiles = true;
+        break;
+      }
+
+      if(app.custom_ssl_crt){
+        hasFiles = true;
+        break;
+      }
+
+      if(app.custom_ssl_pem){
+        hasFiles = true;
+        break;
+      }
+    }
+
+    return hasFiles;
   }
 
   uploadFiles(){
@@ -423,13 +492,20 @@ export class RunnerComponent implements OnInit {
     this.uploader.queue = [];
 
     //Prepare files list
-    const files = [this.modelApi.apps[this.uploadModelIndex].ssh_pem];
+    const files = [];
+    if(this.modelApi.apps[this.uploadModelIndex].ssh_pem)
+      files.push(this.modelApi.apps[this.uploadModelIndex].ssh_pem);
     if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key)
       files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key);
     if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt)
       files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt);
     if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem)
       files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem);
+
+    if(!files.length){
+      this.uploadModelIndex++;
+      return this.uploadFiles();
+    }
 
     //Attach file
     this.uploader.addToQueue(files);

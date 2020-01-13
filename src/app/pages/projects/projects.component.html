@@ -54,7 +54,10 @@
                   </th>
                   <td>{{ app.project_type.label }}</td>
                   <th scope="row">{{ app.environment }}</th>
-                  <td>{{ app.ssh_username }}@{{ app.ssh_host }}</td>
+                  <td>
+                    <div *ngIf="!app.s3_project && app.ssh_username && app.ssh_host">{{ app.ssh_username }}@{{ app.ssh_host }}</div>
+                    <div *ngIf="app.s3_project && !app.ssh_username && !app.ssh_host">Using AWS S3</div>
+                  </td>
                   <td>
                     <div class="btn-group btn-group-toggle">
                       <button *ngIf="app.app_status !== 'failed'" (click)="startProject(project, app)" class="btn btn-success" [ngClass]="{'disabled': app.app_status === 'progress' || app.app_status === 'cleanup'}" type="button">Start</button>
