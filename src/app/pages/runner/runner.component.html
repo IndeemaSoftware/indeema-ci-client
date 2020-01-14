@@ -118,6 +118,10 @@
                     <input [(ngModel)]="model.s3_bucket_name" type="text" class="form-control" name="s3_bucket_name{{ pId }}" placeholder="Enter AWS Bucket name">
                   </div>
                   <div class="form-group required">
+                    <label for="s3_user">AWS User</label>
+                    <input [(ngModel)]="model.s3_user" type="text" class="form-control" name="s3_user{{ pId }}" placeholder="Enter AWS User">
+                  </div>
+                  <div class="form-group required">
                     <label for="aws_access_key_id">AWS ACCESS KEY ID</label>
                     <input [(ngModel)]="model.aws_access_key_id" type="text" class="form-control" name="aws_access_key_id{{ pId }}" placeholder="AWS ACCESS KEY ID">
                     <small class="form-text text-muted">Note! You need to add variable $AWS_ACCESS_KEY_ID to GitLab project, without this key your deploy will be crash.</small>

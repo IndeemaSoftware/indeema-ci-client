@@ -32,6 +32,7 @@ export class EditComponent implements OnInit {
     avaliable_ports: '',//optional
 
     //AWS S3 Config
+    s3_user: '',
     s3_bucket_name: '',
     aws_access_key_id: '',
     aws_secret_access_key: '',
@@ -328,7 +329,7 @@ export class EditComponent implements OnInit {
       return 'Please input all required fields.';
 
     if(model.os === 'aws_s3'){
-      if(!model.s3_bucket_name || !model.aws_access_key_id || !model.aws_secret_access_key)
+      if(!model.s3_user || !model.s3_bucket_name || !model.aws_access_key_id || !model.aws_secret_access_key)
         return 'Please input all required fields.';
     }else{
       if(!model.ssh_host || !model.ssh_username)
