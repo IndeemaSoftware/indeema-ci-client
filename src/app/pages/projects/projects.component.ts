@@ -126,21 +126,41 @@ export class ProjectsComponent implements OnInit {
 
   deleteProject(project, app = null) {
     if (app){
-      this.api.remove(`projects/${project.id}/${app.id}`).then(() => {
-        this.toConsole(project, app, true);
-      }, (err) => {
-        alert(err);
-      })
+      if(app.app_status !== 'cleanup_success'){
+        alert('Before delete app, please cleanup this app!');
+      }else{
+        this.api.remove(`projects/${project.id}/${app.id}`).then(() => {
+          this.getProjects();
+        }, (err) => {
+        });
+        setTimeout(() => {
+          this.getProjects();
+        }, 1000);
+      }
     }else {
-      this.api.remove(`projects/remove/${project.id}`).then(() => {
-        this.getProjects();
-      }, (err) => {
-        alert(err);
-      });
-      setTimeout(() => {
-        this.getProjects();
-      }, 1000);
+      if(!this.isAppsNeedToCleanup(project)){
+        this.api.remove(`projects/remove/${project.id}`).then(() => {
+          this.getProjects();
+        }, (err) => {
+        });
+        setTimeout(() => {
+          this.getProjects();
+        }, 1000);
+      }else{
+        alert('PLease first cleanup all apps in project');
+      }
     }
+  }
+
+  isAppsNeedToCleanup(project){
+    let isNeed = false;
+    for(let app of project.apps){
+      if(app.app_status !== 'cleanup_success'){
+        isNeed = true;
+        break;
+      }
+    }
+    return isNeed;
   }
 
 }

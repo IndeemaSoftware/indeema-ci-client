@@ -26,6 +26,7 @@ export class EditComponent implements OnInit {
 
     //Project configuration
     app_name: '',
+    desc: '',
     project_type: null,
     environment: 'development',
     app_port: '', //optional

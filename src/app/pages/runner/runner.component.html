@@ -13,6 +13,10 @@
             <input [(ngModel)]="projectModel.project_name"  type="text" class="form-control" name="project_name" placeholder="Enter project name">
             <small class="form-text text-muted">This name will be used for project root folder in ubuntu user home path.</small>
           </div>
+          <div class="form-group">
+            <label for="desc">Project description</label>
+            <textarea [(ngModel)]="projectModel.desc" class="form-control" id="desc" name="desc" rows="3"></textarea>
+          </div>
         </div>
         <div class="form-container">
           <h3>Project apps:</h3>
@@ -38,6 +42,10 @@
                   <label for="app_name">App name</label>
                   <input [(ngModel)]="model.app_name" type="text" class="form-control" name="app_name{{ pId }}" placeholder="Enter app name">
                   <small class="form-text text-muted">Each project could have few applications that are working together or even independently. You can setup only one app at one run of script.</small>
+                </div>
+                <div class="form-group">
+                  <label for="desc{{ pId }}">App description</label>
+                  <textarea [(ngModel)]="model.desc" class="form-control" id="desc{{ pId }}" name="desc{{ pId }}" rows="3"></textarea>
                 </div>
                 <div class="form-group required">
                   <label for="os">OS</label>

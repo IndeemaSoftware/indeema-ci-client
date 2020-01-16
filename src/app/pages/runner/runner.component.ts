@@ -26,6 +26,7 @@ export class RunnerComponent implements OnInit {
 
     //Project configuration
     app_name: '',
+    desc: '',
     project_type: null,
     environment: 'development',
     app_port: '', //optional
@@ -189,6 +190,7 @@ export class RunnerComponent implements OnInit {
     //Prepare project model
     this.projectModel = {
       project_name: '',
+      desc: '',
       apps: []
     };
     this.addNewApp();

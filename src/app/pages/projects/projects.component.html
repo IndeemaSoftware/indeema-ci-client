@@ -63,8 +63,8 @@
                       <button *ngIf="app.app_status !== 'failed'" (click)="startProject(project, app)" class="btn btn-success" [ngClass]="{'disabled': app.app_status === 'progress' || app.app_status === 'cleanup'}" type="button">Start</button>
                       <button *ngIf="app.app_status === 'failed'" (click)="startProject(project, app)" class="btn btn-success" type="button">Restart</button>
                       <button (click)="toConsole(project, app)" class="btn btn-primary" type="button">Console</button>
-                      <button *ngIf="app.os !== 'aws_s3'" (click)="cleanupProject(project, app)" [ngClass]="{'disabled': app.app_status === 'cleanup' || app.app_status === 'cleanup_success'}" class="btn btn-light" type="button">Cleanup</button>
-                      <button (click)="deleteProject(project, app)" class="btn btn-danger" type="button">Delete</button>
+                      <button (click)="cleanupProject(project, app)" [ngClass]="{'disabled': app.app_status === 'cleanup' || app.app_status === 'cleanup_success'}" class="btn btn-light" type="button">Cleanup</button>
+                      <button (click)="deleteProject(project, app)" [ngClass]="{'disabled': app.app_status !== 'cleanup_success'}" class="btn btn-danger" type="button">Delete</button>
                     </div>
                   </td>
                 </tr>
@@ -74,7 +74,7 @@
             <td>
               <div class="btn-group btn-group-toggle">
                 <button (click)="editProject(project)" class="btn btn-warning" type="button">Edit</button>
-                <button (click)="deleteProject(project)" class="btn btn-danger" type="button">Delete</button>
+                <button (click)="deleteProject(project)" [ngClass]="{'disabled': isAppsNeedToCleanup(project)}" class="btn btn-danger" type="button">Delete</button>
               </div>
             </td>
           </tr>
