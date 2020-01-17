@@ -363,6 +363,9 @@ export class EditComponent implements OnInit {
     }else{
       if(!model.ssh_host || !model.ssh_username)
         return 'Please input all required fields.';
+
+      if(model.ssh_username === 'root')
+        return 'Please don`t use root user for project. Please create specific user for project. Note! Don`t forget disallow sudo with password for this user.'
     }
 
     if(!model.id) {

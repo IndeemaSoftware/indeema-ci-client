@@ -287,6 +287,8 @@ export class RunnerComponent implements OnInit {
       if(!model.ssh_host || !model.ssh_username || !model.ssh_pem)
         return 'Please input all required fields.';
 
+      if(model.ssh_username === 'root')
+        return 'Please don`t use root user for project. Please create specific user for project. Note! Don`t forget disallow sudo with password for this user.'
     }
 
     if(model.lets_encrypt && !model.domain_name)
