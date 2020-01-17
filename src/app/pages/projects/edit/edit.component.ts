@@ -37,6 +37,8 @@ export class EditComponent implements OnInit {
     s3_bucket_name: '',
     aws_access_key_id: '',
     aws_secret_access_key: '',
+    s3_https: false,
+    s3_region: '',
 
     //Server credentials
     ssh_host: '',
