@@ -114,7 +114,7 @@
                   </div>
                   <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem}">
                     <label for="custom_ssl_key">SSL Pem file</label>
-                    <input (change)="addPemSSLFile($event, model)" type="file" accept=".pem" class="form-control" name="custom_ssl_pem{{ pId }}" placeholder="Upload SSL Pem file">
+                    <input (change)="addPemSSLFile($event, model)" type="file" class="form-control" name="custom_ssl_pem{{ pId }}" placeholder="Upload SSL Pem file">
                   </div>
                 </div>
               </div>
@@ -154,7 +154,7 @@
                 </div>
                 <div class="form-group required">
                   <label for="ssh_pem">SSH pem key</label>
-                  <input (change)="addPemFile($event, model)" type="file" accept=".pem" class="form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH pem key">
+                  <input (change)="addPemFile($event, model)" type="file" class="form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH pem key">
                   <small class="form-text text-muted">Server ssh key to be used to login to server remotely.</small>
                 </div>
               </div>
