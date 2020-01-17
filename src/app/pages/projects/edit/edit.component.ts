@@ -329,9 +329,37 @@ export class EditComponent implements OnInit {
     )
       return 'Please input all required fields.';
 
+    if(model.app_port){
+      const portRegex = new RegExp('^[0-9]+$', 'gm');
+      if(!portRegex.test(model.app_port)){
+        return 'App port is invalid. Please use: numbers';
+      }
+    }
+
+    if(model.avaliable_ports){
+      const portRegex = new RegExp('^[0-9]+$', 'gm');
+      const availiablePortRegex = new RegExp('^[0-9 ]+$', 'gm');
+
+      if(!portRegex.test(model.avaliable_ports)){
+        if(!availiablePortRegex.test(model.avaliable_ports)){
+          return 'Avaliable ports is invalid. Please use: numbers. Separate ports by whitespace';
+        }
+      }
+    }
+
+    const appNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
+    if(!appNameRegex.test(model.app_name)){
+      return 'App name is invalid. Please use: alphabetic characters, numbers, "-" or "_"';
+    }
+
     if(model.os === 'aws_s3'){
       if(!model.s3_user || !model.s3_bucket_name || !model.aws_access_key_id || !model.aws_secret_access_key)
         return 'Please input all required fields.';
+
+      const bucketNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
+      if(!bucketNameRegex.test(model.s3_bucket_name)){
+        return 'AWS S3 Bucket name is invalid. Please use: alphabetic characters, numbers, "-" or "_"';
+      }
     }else{
       if(!model.ssh_host || !model.ssh_username)
         return 'Please input all required fields.';
@@ -344,6 +372,13 @@ export class EditComponent implements OnInit {
 
     if(model.lets_encrypt && !model.domain_name)
       return 'If you want to use Let`s encrypt please enter domain name.';
+
+    if(model.lets_encrypt && model.domain_name){
+      const domainNameRegex = new RegExp('^[-\.a-z]+$', 'gm');
+      if(!domainNameRegex.test(model.domain_name)){
+        return 'Domain name is invalid. For using Let`s Encript please use: alphabetic characters(lower case), "." or "-"';
+      }
+    }
 
     //Check if certs is try to upload
     if(model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem){
@@ -540,6 +575,12 @@ export class EditComponent implements OnInit {
     if(!this.projectModel.project_name) {
       this.errorMsg = 'Project name is required';
       return false;
+    }else{
+      const projectNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
+      if(!projectNameRegex.test(this.projectModel.project_name)){
+        this.errorMsg = 'Project name is invalid. Please use: alphabetic characters, numbers, "-" or "_"';
+        return false;
+      }
     }
 
     //Prepare model for api
