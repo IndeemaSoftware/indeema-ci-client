@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(){
     this.auth.getUser().then((user) => {
-      this.route.navigate(['/runner']);
+      this.route.navigate(['/projects']);
     }, (err) => {
       this.route.navigate(['/signin']);
     });

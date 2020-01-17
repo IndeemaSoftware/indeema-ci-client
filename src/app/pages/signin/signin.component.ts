@@ -27,7 +27,7 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     this.auth.getUser().then((user) => {
-      this.route.navigate(['/runner']);
+      this.route.navigate(['/projects']);
     });
   }
 
@@ -47,7 +47,7 @@ export class SigninComponent implements OnInit {
 
     //Try to auth
     this.auth.signin(this.credentials).then((user) => {
-      this.route.navigate(['/runner']);
+      this.route.navigate(['/projects']);
     }, (err) => {
       this.errors.incorrect = true;
     })
