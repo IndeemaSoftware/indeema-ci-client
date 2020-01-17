@@ -38,7 +38,7 @@ export class RunnerComponent implements OnInit {
     aws_access_key_id: '',
     aws_secret_access_key: '',
     s3_https: false,
-    s3_region: '',
+    s3_region: null,
 
     //Server credentials
     ssh_host: '',
@@ -74,6 +74,7 @@ export class RunnerComponent implements OnInit {
   serversDeps = [] as any;
   nodejsDeps = [] as any;
   projectTypes = [] as any;
+  awsRegions = [] as any;
 
   //Error
   errorMsg = false as any;
@@ -189,6 +190,10 @@ export class RunnerComponent implements OnInit {
     this.api.get('/project-types')
         .then(data => this.projectTypes = data, err => this.projectTypes = []);
 
+    //Get AWS regions
+    this.api.get('/aws/regions')
+        .then(data => this.awsRegions = data, err => this.awsRegions = []);
+
     //Prepare project model
     this.projectModel = {
       project_name: '',
@@ -278,7 +283,7 @@ export class RunnerComponent implements OnInit {
     }
 
     if(model.os === 'aws_s3'){
-      if(!model.s3_user || !model.s3_bucket_name || !model.aws_access_key_id || !model.aws_secret_access_key)
+      if(!model.s3_user || !model.s3_bucket_name || !model.aws_access_key_id || !model.aws_secret_access_key || !model.s3_region)
         return 'Please input all required fields.';
 
       const bucketNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
