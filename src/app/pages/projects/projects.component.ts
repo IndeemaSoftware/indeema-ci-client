@@ -175,7 +175,7 @@ export class ProjectsComponent implements OnInit {
   isAppsNeedToCleanup(project){
     let isNeed = false;
     for(let app of project.apps){
-      if(app.app_status !== 'cleanup_success'){
+      if(app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'){
         isNeed = true;
         break;
       }
