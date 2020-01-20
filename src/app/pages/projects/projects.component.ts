@@ -116,14 +116,24 @@ export class ProjectsComponent implements OnInit {
     if(app.app_status === 'cleanup' || app.app_status === 'cleanup_success')
       return;
 
-    this.api.remove(`projects/cleanup/${project.id}/${app.id}`).then(() => {
-      this.toConsole(project, app, true);
-    }, (err) => {
-      this.modal.alert(err);
-    })
-    setTimeout(() => {
-      this.toConsole(project, app, true);
-    }, 500);
+    //Ask to cleanup server
+    this.modal.confirm(
+        `Confirm cleanup app "${app.app_name}"`,
+        "Do you really want to cleanup this app on server?<br>If yes, please input app name.",
+        (value) => {
+          if(value !== app.app_name)
+            return 'App name is incorrect!';
+        }
+    ).then((res) => {
+      this.api.remove(`projects/cleanup/${project.id}/${app.id}`).then(() => {
+        this.toConsole(project, app, true);
+      }, (err) => {
+        this.modal.alert(err);
+      })
+      setTimeout(() => {
+        this.toConsole(project, app, true);
+      }, 500);
+    });
   }
 
   deleteProject(project, app = null) {
