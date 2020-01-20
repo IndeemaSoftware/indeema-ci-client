@@ -26,7 +26,7 @@
                 <a (click)="openTab(model.appId || model.id)" [ngClass]="{'active': activeTab === model.appId || activeTab === model.id}" href="javascript:void(0)">
                   {{ model.app_name || 'App #' + (i + 1) }} <span *ngIf="model.errorMsg" class="text-danger">(validation error)</span>
                 </a>
-                <button *ngIf="projectModel.apps.length > 1" (click)="removeApp(i)" type="button" class="btn btn-outline-danger">Remove</button>
+                <button *ngIf="projectModel.apps.length > 1 && !model.id" (click)="removeApp(i)" type="button" class="btn btn-outline-danger">Remove</button>
               </div>
               <div>
                 <a (click)="addNewApp()" href="javascript:void(0)" class="action-tab">
