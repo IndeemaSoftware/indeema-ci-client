@@ -48,13 +48,6 @@
                   <textarea [(ngModel)]="model.desc" class="form-control" id="desc{{ pId }}" name="desc{{ pId }}" rows="3"></textarea>
                 </div>
                 <div class="form-group required">
-                  <label for="os">OS</label>
-                  <select [(ngModel)]="projectModel.apps[pId].os" class="form-control" name="os{{ pId }}">
-                    <option [value]="'ubuntu'">Ubuntu OS</option>
-                    <option [value]="'aws_s3'">AWS S3 Static website hosting</option>
-                  </select>
-                </div>
-                <div class="form-group required">
                   <label for="ci_template">CI Template</label>
                   <select [(ngModel)]="projectModel.apps[pId].ci_template" disabled class="form-control" name="ci_template{{ pId }}">
                     <option [value]="'gitlab_ci'"  disabled>GitLab CI</option>
@@ -78,10 +71,17 @@
                     <option [value]="'production'">Production</option>
                   </select>
                 </div>
+                <div class="form-group required border-top">
+                  <label for="os">OS</label>
+                  <select [(ngModel)]="projectModel.apps[pId].os" class="form-control" name="os{{ pId }}">
+                    <option [value]="'ubuntu'">Ubuntu OS</option>
+                    <option [value]="'aws_s3'">AWS S3 Static website hosting</option>
+                  </select>
+                </div>
                 <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-group">
                   <label for="app_port">App port</label>
                   <input [(ngModel)]="model.app_port" type="text" class="form-control" name="app_port{{ pId }}" placeholder="Enter app port">
-                  <small class="form-text text-muted">Specify port to be used by application. By default port $PORT is used.</small>
+                  <small class="form-text text-muted">Specify port to be used by application. By default port 8080 is used.</small>
                 </div>
                 <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-group">
                   <label for="avaliable_ports">Avaliable ports</label>

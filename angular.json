@@ -23,6 +23,7 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/ngx-angular8-sweetalert2/dist/sweetalert2.css",
               "src/styles.css"
             ],
             "scripts": []

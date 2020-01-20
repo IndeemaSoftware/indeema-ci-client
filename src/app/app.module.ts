@@ -38,6 +38,7 @@ import { UsersComponent } from './pages/users/users.component';
 import { EditComponent } from './pages/projects/edit/edit.component';
 import { ConsoleComponent } from './pages/console/console.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

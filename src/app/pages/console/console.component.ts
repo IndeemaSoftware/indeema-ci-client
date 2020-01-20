@@ -4,6 +4,7 @@ import {ApiService} from '../../services/api.service';
 import {AuthService} from '../../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
+import {ModalService} from '../../services/modal.service';
 
 @Component({
   selector: 'app-console',
@@ -38,6 +39,7 @@ export class ConsoleComponent implements OnInit {
     private auth: AuthService,
     private route: Router,
     private activatedRoute: ActivatedRoute,
+    private modal: ModalService
   ) {
 
     this.projectId = this.activatedRoute.snapshot.params['id'];
@@ -76,11 +78,11 @@ export class ConsoleComponent implements OnInit {
             this.app = data;
             this.prepareConsole();
           }, err => {
-            alert(err);
+            this.modal.alert(err);
             this.route.navigate([`projects`]);
           });
       }, err => {
-        alert(err);
+        this.modal.alert(err);
         this.route.navigate([`projects`]);
       });
   }
@@ -109,7 +111,7 @@ export class ConsoleComponent implements OnInit {
             //Connect to project stream
             this.connectToChannel(this.appId);
           }, err => {
-            alert(err);
+            this.modal.alert(err);
             this.route.navigate([`projects`]);
           });
     }
@@ -119,7 +121,7 @@ export class ConsoleComponent implements OnInit {
     this.api.create(`/console/setup/${this.projectId}/${this.appId}`, {}).then(() => {
       this.cleanConsole();
     }, (err) => {
-      alert(err);
+      this.modal.alert(err);
       this.route.navigate([`projects`]);
     })
   }
@@ -141,7 +143,7 @@ export class ConsoleComponent implements OnInit {
     this.api.remove(`projects/cleanup/${this.projectId}/${this.appId}`).then(() => {
       this.cleanConsole();
     }, (err) => {
-      alert(err);
+      this.modal.alert(err);
       this.route.navigate([`projects`]);
     })
   }

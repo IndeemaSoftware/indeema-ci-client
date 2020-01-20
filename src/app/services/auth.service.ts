@@ -4,6 +4,7 @@ import { StorageService } from './storage.service';
 import {environment} from '../../environments/environment';
 import { Router } from '@angular/router';
 import {ApiService} from './api.service';
+import {ModalService} from './modal.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class AuthService {
       private rest: Restangular,
       private storage: StorageService,
       private router: Router,
-      private api: ApiService
+      private api: ApiService,
+      private modal: ModalService
   ) {}
 
   getJWT(){
@@ -78,7 +80,7 @@ export class AuthService {
             //Unblock
             this.isLoading = false;
 
-            alert(err.data.message);
+            this.modal.alert(err.data.message, 'Auth error!');
 
             this.logout();
             reject();
@@ -135,7 +137,7 @@ export class AuthService {
       this.user = user;
 
       if (!this.user.confirmed) {
-        // this.toastr.error('You need to confirm your email address.', 'Alert!');
+        this.modal.alert('You need to confirm your email address.', 'Alert!');
       }
 
     }else{
@@ -145,11 +147,11 @@ export class AuthService {
           this.user = user;
 
           if (!this.user.confirmed){
-            // this.toastr.error('You need to confirm your email address.', 'Alert!');
+            this.modal.alert('You need to confirm your email address.', 'Alert!');
           }
         },
         (err) => {
-          // this.toastr.error(err.data.message , 'Auth failed!');
+          this.modal.alert(err.data.message , 'Auth failed!');
         });
     }
   }

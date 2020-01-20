@@ -5,6 +5,7 @@ import {Router, ActivatedRoute} from '@angular/router';
 import {ApiService} from '../../../services/api.service';
 import {MultipleFileUploaderService} from '../../../services/multiple-file-uploader.service';
 import * as _ from 'lodash';
+import {ModalService} from '../../../services/modal.service';
 
 @Component({
   selector: 'app-edit',
@@ -96,6 +97,7 @@ export class EditComponent implements OnInit {
       private auth: AuthService,
       private route: Router,
       private activatedRoute: ActivatedRoute,
+      private modal: ModalService
   ) {
     this.projectId = this.activatedRoute.snapshot.params['id'];
     if(!this.projectId){
@@ -128,7 +130,7 @@ export class EditComponent implements OnInit {
           this.project = data;
           this.setupProject();
         }, err => {
-          alert(err);
+          this.modal.alert(err);
           this.route.navigate([`projects`]);
         });
   }

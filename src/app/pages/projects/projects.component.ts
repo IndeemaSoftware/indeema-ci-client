@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {ApiService} from '../../services/api.service';
 import {Router} from '@angular/router';
+import {ModalService} from '../../services/modal.service';
 
 @Component({
   selector: 'app-projects',
@@ -24,6 +25,7 @@ export class ProjectsComponent implements OnInit {
       private auth: AuthService,
       private api: ApiService,
       private route: Router,
+      private modal: ModalService
   ) { }
 
   ngOnInit() {
@@ -117,7 +119,7 @@ export class ProjectsComponent implements OnInit {
     this.api.remove(`projects/cleanup/${project.id}/${app.id}`).then(() => {
       this.toConsole(project, app, true);
     }, (err) => {
-      alert(err);
+      this.modal.alert(err);
     })
     setTimeout(() => {
       this.toConsole(project, app, true);
@@ -127,27 +129,45 @@ export class ProjectsComponent implements OnInit {
   deleteProject(project, app = null) {
     if (app){
       if(app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'){
-        alert('Before delete app, please cleanup this app!');
+        this.modal.alert('Before delete app, please cleanup this app!', 'Important!', 'I understand!');
       }else{
-        this.api.remove(`projects/${project.id}/${app.id}`).then(() => {
-          this.getProjects();
-        }, (err) => {
+        this.modal.confirm(
+            `Confirm deleting app "${app.app_name}"`,
+            "Do you really want to remove this app?<br>If yes, please input app name.",
+            (value) => {
+              if(value !== app.app_name)
+                return 'App name is incorrect!';
+            }
+        ).then((res) => {
+          this.api.remove(`projects/${project.id}/${app.id}`).then(() => {
+            this.getProjects();
+          }, (err) => {
+          });
+          setTimeout(() => {
+            this.getProjects();
+          }, 1000);
         });
-        setTimeout(() => {
-          this.getProjects();
-        }, 1000);
       }
     }else {
       if(!this.isAppsNeedToCleanup(project)){
-        this.api.remove(`projects/remove/${project.id}`).then(() => {
-          this.getProjects();
-        }, (err) => {
+        this.modal.confirm(
+            `Confirm deleting project "${project.project_name}"`,
+            "Do you really want to remove this project?<br>If yes, please input project name.",
+            (value) => {
+              if(value !== project.project_name)
+                return 'Project name is incorrect!';
+            }
+        ).then((res) => {
+          this.api.remove(`projects/remove/${project.id}`).then(() => {
+            this.getProjects();
+          }, (err) => {
+          });
+          setTimeout(() => {
+            this.getProjects();
+          }, 1000);
         });
-        setTimeout(() => {
-          this.getProjects();
-        }, 1000);
       }else{
-        alert('PLease first cleanup all apps in project');
+        this.modal.alert('PLease first cleanup all apps in project', 'Important!', 'I understand!');
       }
     }
   }

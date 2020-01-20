@@ -64,7 +64,7 @@
                       <button *ngIf="app.app_status === 'failed'" (click)="startProject(project, app)" class="btn btn-success" type="button">Restart</button>
                       <button (click)="toConsole(project, app)" class="btn btn-primary" type="button">Console</button>
                       <button (click)="cleanupProject(project, app)" [ngClass]="{'disabled': app.app_status === 'cleanup' || app.app_status === 'cleanup_success'}" class="btn btn-light" type="button">Cleanup</button>
-                      <button (click)="deleteProject(project, app)" [ngClass]="{'disabled': app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'}" class="btn btn-danger" type="button">Delete</button>
+                      <button (click)="deleteProject(project, app)" [ngClass]="{'disabled': app.app_status !== 'cleanup_success'}" class="btn btn-danger" type="button">Delete</button>
                     </div>
                   </td>
                 </tr>

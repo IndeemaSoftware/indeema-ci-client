@@ -17,3 +17,7 @@
 .badge-splited .badge:first-child{
   margin-left: 0;
 }
+.border-top{
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
