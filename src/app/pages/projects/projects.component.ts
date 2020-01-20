@@ -123,7 +123,9 @@ export class ProjectsComponent implements OnInit {
         (value) => {
           if(value !== app.app_name)
             return 'App name is incorrect!';
-        }
+        },
+        'Yes, please cleanup!',
+        'Don`t cleanup'
     ).then((res) => {
       this.api.remove(`projects/cleanup/${project.id}/${app.id}`).then(() => {
         this.toConsole(project, app, true);
