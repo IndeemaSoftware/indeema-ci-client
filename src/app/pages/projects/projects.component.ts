@@ -126,7 +126,7 @@ export class ProjectsComponent implements OnInit {
 
   deleteProject(project, app = null) {
     if (app){
-      if(app.app_status !== 'cleanup_success'){
+      if(app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'){
         alert('Before delete app, please cleanup this app!');
       }else{
         this.api.remove(`projects/${project.id}/${app.id}`).then(() => {
