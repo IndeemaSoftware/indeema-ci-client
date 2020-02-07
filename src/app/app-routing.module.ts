@@ -7,6 +7,7 @@ import {ProjectsComponent} from './pages/projects/projects.component';
 import {UsersComponent} from './pages/users/users.component';
 import {EditComponent} from './pages/projects/edit/edit.component';
 import {ConsoleComponent} from './pages/console/console.component';
+import {SettingsComponent} from './pages/settings/settings.component';
 
 const routes: Routes = [
   {
@@ -36,7 +37,11 @@ const routes: Routes = [
   {
     path: 'users',
     component: UsersComponent
-  }
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent
+  },
 ];
 
 @NgModule({

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {environment} from "../../../../environments/environment";
-import {AuthService} from '../../../services/auth.service';
-import {Router, ActivatedRoute} from '@angular/router';
-import {ApiService} from '../../../services/api.service';
-import {MultipleFileUploaderService} from '../../../services/multiple-file-uploader.service';
+import { environment } from "../../../../environments/environment";
+import { AuthService } from '../../../services/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ApiService } from '../../../services/api.service';
+import { MultipleFileUploaderService } from '../../../services/multiple-file-uploader.service';
 import * as _ from 'lodash';
-import {ModalService} from '../../../services/modal.service';
+import { ModalService} from '../../../services/modal.service';
 
 @Component({
   selector: 'app-edit',

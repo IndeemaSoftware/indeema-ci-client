@@ -1,0 +1,5 @@
+[submodule "scripts"]
+	path = scripts
+	url = ../../volodymyr-shevchyk/connect_runner.git
+	branch = master
+    ignore = dirty

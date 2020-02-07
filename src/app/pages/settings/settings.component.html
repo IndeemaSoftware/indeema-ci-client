@@ -1,0 +1,71 @@
+<app-header></app-header>
+<div class="container">
+  <div class="tab">
+    <button class="tablinks" (click)="switchSetting('General')">General</button>
+    <button class="tablinks" (click)="switchSetting('Authentication')">Authentication</button>
+    <button class="tablinks" (click)="switchSetting('Templates')">Templates</button>
+  </div>
+
+    <!-- Tab content -->
+  <div id="General" class="tabcontent">
+    <!-- General settings -->
+    <!-- Start -->
+    <h3>General</h3>
+    <div class="form-group">
+      <label for="project_path">Project path</label>
+      <input [(ngModel)]="settingsModel.project_path" class="form-control" id="project_path" name="project_path" placeholder="Enter prefered project path on server">
+    </div>    
+    <div class="form-group">
+      <label for="maintenance_git_url">Maintenance git url</label>
+      <input [(ngModel)]="settingsModel.maintenance_git_url" class="form-control" id="maintenance_git_url" name="maintenance_git_url" placeholder="Enter git url to maintenance page">
+    </div>
+    <div class="form-group">
+      <label for="ssh_pem">SSH pem key</label>
+      <input (change)="addPemFile($event, model)" type="file" class="form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH key to access git repo if repo is private">
+      <small *ngIf="settingsModel.maintenance_git_ssh_key && settingsModel.maintenance_git_ssh_key.name" class="form-text text-muted">SSH Pem: {{ settingsModel.maintenance_git_ssh_key.name }} <a target="_blank" href="{{api_url}}{{ project.apps[pId].ssh_pem.url }}">Download</a></small>
+      <small class="form-text text-muted">Server ssh key to access git repo if repo is private.</small>
+    </div>
+    <div class="form-group"> 
+      <label for="maintenance_path">Maintenance path</label>
+      <input [(ngModel)]="settingsModel.maintenance_path" class="form-control" id="maintenance_path" name="maintenance_path" placeholder="Enter name of maintenance page folder that will be located inside the project path">
+    </div>
+  </div>
+  <!-- Finish -->
+  <!-- General settings -->
+
+  <!-- Authentication settings -->
+  <!-- Start -->
+  <div id="Authentication" class="tabcontent">
+    <h3>Authentication</h3>
+    <div class="form-group">
+      <div class="form-check">
+        <input [(ngModel)]="settingsModel.use_ldap" class="form-check-input" type="checkbox" name="use_ldap">
+        <label class="form-check-label" for="defaultCheck1">
+          Use LDAP auth
+        </label>
+      </div>
+      <div *ngIf="settingsModel.use_ldap">
+        <div class="form-group">
+          <label for="ldap_domain">LDAP domain</label>
+          <input [(ngModel)]="settingsModel.ldap_domain" class="form-control" id="ldap_domain" name="ldap_domain" placeholder="Enter LDAP server domain">
+        </div>    
+        <div class="form-group">
+          <label for="ldap_domain">User LDAP DN</label>
+          <input [(ngModel)]="settingsModel.ldap_user_db" class="form-control" id="ldap_user_db" name="ldap_user_db" placeholder="Enter user LDAP DN">
+        </div>   
+        <div class="form-group">
+          <label for="ldap_domain">Group LDAP DN</label>
+          <input [(ngModel)]="settingsModel.ldap_group_db" class="form-control" id="ldap_group_db" name="ldap_group_db" placeholder="Enter user LDAP DN">
+        </div>   
+      </div>
+    </div>
+  </div>
+  <!-- Finish -->
+  <!-- Authentication settings -->
+
+
+  <div id="Templates" class="tabcontent">
+    <h3>Templates</h3>
+    <p>Tokyo is the capital of Japan.</p>
+  </div>
+</div>
