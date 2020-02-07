@@ -1,9 +1,10 @@
 <app-header></app-header>
 <div class="container">
   <div class="tab">
-    <button class="tablinks" (click)="switchSetting('General')">General</button>
-    <button class="tablinks" (click)="switchSetting('Authentication')">Authentication</button>
-    <button class="tablinks" (click)="switchSetting('Templates')">Templates</button>
+    <button class="tablinks" (click)="switchSetting('General')">        General</button>
+    <button class="tablinks" (click)="switchSetting('Authentication')"> Authentication</button>
+    <button class="tablinks" (click)="switchSetting('Templates')">      Templates</button>
+    <button class="tablinks" (click)="switchSetting('Servers')">        Servers</button>
   </div>
 
     <!-- Tab content -->
@@ -75,23 +76,47 @@
           <option [value]="item">{{ item }}</option>
         </ng-container>
       </select>
-
-      <!-- <select  class="form-control"  name="selectCITemplate" [(ngModel)]="settingsModel.ci_template_list" (change)="ci_template_list{{ pId }}">
-        <option [value]="null"  disabled>Chose CI template</option>
-      </select> -->
       </div>
     <div class="form-group">
       <label for="new_template_name">New template name</label>
       <input [(ngModel)]="settingsModel.new_template_name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Please enter name for new template">
     </div>   
     <button (click)="duplicateCITemplate()" class="btn btn-primary" [disabled]="!settingsModel.new_template_name">Duplicate</button>
-    <button (click)="deleteCITemplate()" class="btn btn-primary" [disabled]="new_template_name === ''" class="btn btn-danger">Delete</button>
+    <button (click)="deleteCITemplate()" class="btn btn-primary" [disabled]="!settingsModel.ci_template" class="btn btn-danger">Delete</button>
     <div class="form-group">
       <label for="desc">Script</label>
-      <textarea [(ngModel)]="settingsModel.ci_template_script" [(value)]="settingsModel.ci_template_script" class="form-control" id="script" name="script" rows="3"></textarea>
+      <textarea [(ngModel)]="settingsModel.ci_template_script" [(value)]="settingsModel.ci_template_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="saveScript()" class="btn btn-primary" >Save script</button>
+    <button (click)="saveTemplateScript()" class="btn btn-primary" >Save script</button>
   </div>
   <!-- Finish -->
   <!-- Authentication settings -->
+
+  <!-- Servers settings -->
+  <!-- Start -->
+  <div id="Servers" class="tabcontent">
+    <h3>Servers</h3>
+    <div class="form-group required">
+      <label for="server">Server setup script</label>
+      <select (change)="serverSelected()" [(ngModel)]="settingsModel.server" enabled class="form-control" name="server{{ pId }}">
+        <option [value]="null"  disabled>Chose server setup script</option>
+        <ng-container *ngFor="let item of settingsModel.server_list">
+          <option [value]="item">{{ item }}</option>
+        </ng-container>
+      </select>
+      </div>
+    <div class="form-group">
+      <label for="new_server_name">New server setup script name</label>
+      <input [(ngModel)]="settingsModel.new_server_name" class="form-control" id="new_server_name" name="new_server_name" placeholder="Please enter name for new server setup script">
+    </div>   
+    <button (click)="duplicateServer()" class="btn btn-primary" [disabled]="!settingsModel.new_server_name">Duplicate</button>
+    <button (click)="deleteServer()" class="btn btn-primary" [disabled]="!settingsModel.server" class="btn btn-danger">Delete</button>
+    <div class="form-group">
+      <label for="desc">Script</label>
+      <textarea [(ngModel)]="settingsModel.server_script" [(value)]="settingsModel.server_script" class="form-control" id="script" name="script" rows="10"></textarea>
+    </div>
+    <button (click)="saveServerScript()" class="btn btn-primary" >Save script</button>
+  </div>
+  <!-- Finish -->
+  <!-- Servers settings -->
 </div>
