@@ -15,21 +15,26 @@ export class SettingsComponent implements OnInit {
   public uploader: MultipleFileUploaderService;
 
   modelDefault: any = {
-    project_path: "/home/$USER"
+    project_path: "/home/$USER",
+    ci_template_script: null
   };
 
-  settingsModel: any = {}
+  settingsModel: any = {};
 
   constructor(
-      private auth: AuthService,
-      private api: ApiService,
-      private route: Router,
-      private modal: ModalService
-  ) { }
+    private api: ApiService,
+    private auth: AuthService,
+    private route: Router,
+    private modal: ModalService
+  ) { };
 
   ngOnInit() {
     this.auth.getUser().then((user) => {
       this.switchSetting('General');
+
+      this.api.get('ci_template/listAll').then((resp) => {
+        this.settingsModel.ci_template_list = resp.data;
+      });  
     }, (err) => {
       this.route.navigate(['signin']);
     });
@@ -39,8 +44,12 @@ export class SettingsComponent implements OnInit {
     
   }
 
-  saveScript(){
+  templateSelected(pId){
+    console.log(pId);
+  }
 
+  saveScript(){
+    console.log("Save pressed!");
   }
   
   switchSetting(page) {
