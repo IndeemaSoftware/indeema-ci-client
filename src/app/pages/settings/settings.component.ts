@@ -97,14 +97,14 @@ export class SettingsComponent implements OnInit {
 
   saveScript() {
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.ci_template}" template`,
-      "Do you really want to delete this template?<br>If yes, please input template name.",
+      `Confirm saving of updates of "${this.settingsModel.ci_template}" script`,
+      "Do you really want to save changes of script?<br>If yes, please input template name.",
       (value) => {
         if(value !== this.settingsModel.ci_template)
           return 'Template name is incorrect!';
       },
-      'Yes, please remove!',
-      'Don`t remove'
+      'Yes, please save!',
+      'Don`t save'
   ).then((res) => {
     this.api.create(`ci_template/${this.settingsModel.ci_template}`, this.settingsModel.ci_template_script).then((resp) => {
       if (resp.status == "ok")  {
