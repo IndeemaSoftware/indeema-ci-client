@@ -1,0 +1,4 @@
+[submodule "connect_runner"]
+	path = connect_runner
+	url = git@git.indeema.com:volodymyr-shevchyk/connect_runner.git
+	branch = master
