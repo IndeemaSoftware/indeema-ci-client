@@ -82,15 +82,15 @@
       </div>
     <div class="form-group">
       <label for="new_template_name">New template name</label>
-      <input [(ngModel)]="settingsModel.new_template_name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Enter user LDAP DN">
+      <input [(ngModel)]="settingsModel.new_template_name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Please enter name for new template">
     </div>   
-    <button class="btn btn-primary" [disabled]="new_template_name === ''">Dublicate</button>
+    <button (click)="duplicateCITemplate()" class="btn btn-primary" [disabled]="!settingsModel.new_template_name">Duplicate</button>
+    <button (click)="deleteCITemplate()" class="btn btn-primary" [disabled]="new_template_name === ''" class="btn btn-danger">Delete</button>
     <div class="form-group">
       <label for="desc">Script</label>
       <textarea [(ngModel)]="settingsModel.ci_template_script" [(value)]="settingsModel.ci_template_script" class="form-control" id="script" name="script" rows="3"></textarea>
     </div>
-    <button (click)="saveScript()" class="btn btn-primary" >Save</button>
-    <button class="btn btn-primary" color="red">Delete</button>
+    <button (click)="saveScript()" class="btn btn-primary" >Save script</button>
   </div>
   <!-- Finish -->
   <!-- Authentication settings -->
