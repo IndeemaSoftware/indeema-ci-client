@@ -19,7 +19,7 @@ export class SettingsComponent implements OnInit {
   };
 
   settingsModel: any = {}
-  
+
   constructor(
       private auth: AuthService,
       private api: ApiService,
@@ -33,6 +33,14 @@ export class SettingsComponent implements OnInit {
     }, (err) => {
       this.route.navigate(['signin']);
     });
+  }
+
+  dublicateScript(){
+    
+  }
+
+  saveScript(){
+
   }
   
   switchSetting(page) {

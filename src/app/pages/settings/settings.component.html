@@ -63,9 +63,27 @@
   <!-- Finish -->
   <!-- Authentication settings -->
 
-
+  <!-- Authentication settings -->
+  <!-- Start -->
   <div id="Templates" class="tabcontent">
-    <h3>Templates</h3>
-    <p>Tokyo is the capital of Japan.</p>
+    <h3>CI Templates</h3>
+    <div class="form-group required">
+      <label for="ci_template">CI Template</label>
+      <select [(ngModel)]="settingsModel.apps[pId].ci_template" disabled class="form-control" name="ci_template{{ pId }}">
+        <option [value]="'gitlab_ci'"  disabled>GitLab CI</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="new_template_name">New template name</label>
+      <input [(ngModel)]="settingsModel.new_template_name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Enter user LDAP DN">
+    </div>   
+    <button class="btn btn-primary" [disabled]="new_template_name === ''">Dublicate</button>
+    <div class="form-group">
+      <label for="desc">Script</label>
+      <textarea [(ngModel)]="settingsModel.apps[pId].ci_template.script" class="form-control" id="desc" name="desc" rows="3"></textarea>
+    </div>
+    <button class="btn btn-primary" >Save</button>
   </div>
+  <!-- Finish -->
+  <!-- Authentication settings -->
 </div>
