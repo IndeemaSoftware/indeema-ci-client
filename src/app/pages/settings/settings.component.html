@@ -69,7 +69,7 @@
     <h3>CI Templates</h3>
     <div class="form-group required">
       <label for="ci_template">CI Template</label>
-      <select (click)="templateSelected(pId)" [(ngModel)]="settingsModel.ci_template_list" enabled class="form-control" name="ci_template_list{{ pId }}">
+      <select (change)="templateSelected()" [(ngModel)]="settingsModel.ci_template" enabled class="form-control" name="ci_template{{ pId }}">
         <option [value]="null"  disabled>Chose CI template</option>
         <ng-container *ngFor="let item of settingsModel.ci_template_list">
           <option [value]="item">{{ item }}</option>
@@ -85,10 +85,10 @@
       <input [(ngModel)]="settingsModel.new_template_name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Enter user LDAP DN">
     </div>   
     <button class="btn btn-primary" [disabled]="new_template_name === ''">Dublicate</button>
-    <!-- <div class="form-group">
+    <div class="form-group">
       <label for="desc">Script</label>
-      <textarea [(ngModel)]="settingsModel.apps[pId].ci_template.script" class="form-control" id="desc" name="desc" rows="3"></textarea>
-    </div> -->
+      <textarea [(ngModel)]="settingsModel.ci_template_script" [(value)]="settingsModel.ci_template_script" class="form-control" id="script" name="script" rows="3"></textarea>
+    </div>
     <button (click)="saveScript()" class="btn btn-primary" >Save</button>
     <button class="btn btn-primary" color="red">Delete</button>
   </div>

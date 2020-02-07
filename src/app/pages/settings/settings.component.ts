@@ -16,10 +16,10 @@ export class SettingsComponent implements OnInit {
 
   modelDefault: any = {
     project_path: "/home/$USER",
-    ci_template_script: null
   };
 
   settingsModel: any = {};
+  ci_template: null
 
   constructor(
     private api: ApiService,
@@ -32,7 +32,7 @@ export class SettingsComponent implements OnInit {
     this.auth.getUser().then((user) => {
       this.switchSetting('General');
 
-      this.api.get('ci_template/listAll').then((resp) => {
+      this.api.get(`ci_template/listAll`).then((resp) => {
         this.settingsModel.ci_template_list = resp.data;
       });  
     }, (err) => {
@@ -44,8 +44,13 @@ export class SettingsComponent implements OnInit {
     
   }
 
-  templateSelected(pId){
-    console.log(pId);
+  templateSelected(){
+    console.log(this.settingsModel.ci_template);
+    this.api.get(`ci_template/download/${this.settingsModel.ci_template}`).then((resp) => {
+      this.settingsModel.ci_template_script = resp.data;
+    });  
+
+    console.log(this.settingsModel.ci_template_script);
   }
 
   saveScript(){

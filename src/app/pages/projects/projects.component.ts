@@ -160,7 +160,7 @@ export class ProjectsComponent implements OnInit {
           }, 1000);
         });
       }
-    }else {
+    } else {
       if(!this.isAppsNeedToCleanup(project)){
         this.modal.confirm(
             `Confirm deleting project "${project.project_name}"`,
@@ -179,7 +179,7 @@ export class ProjectsComponent implements OnInit {
           }, 1000);
         });
       }else{
-        this.modal.alert('PLease first cleanup all apps in project', 'Important!', 'I understand!');
+        this.modal.alert('Please first cleanup all apps in project', 'Important!', 'I understand!');
       }
     }
   }
