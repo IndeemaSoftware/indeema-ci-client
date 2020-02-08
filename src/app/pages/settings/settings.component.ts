@@ -17,7 +17,7 @@ export class SettingsComponent implements OnInit {
   };
 
   settingsModel: any = {};
-  ci_template: null
+  ci: null
   new_template_name: null
 
   server: null
@@ -44,29 +44,29 @@ export class SettingsComponent implements OnInit {
 //Working with CI templates
 //Start
   updateCITemplatesList() {
-    this.api.get(`ci_template/listAll`).then((resp) => {
-      this.settingsModel.ci_template_list = resp.data;
+    this.api.get(`ci/script/listAll`).then((resp) => {
+      this.settingsModel.ci_script_list = resp.data;
     });  
   }
 
   templateSelected() {
-    this.api.get(`ci_template/download/${this.settingsModel.ci_template}`).then((resp) => {
-      this.settingsModel.ci_template_setup_script = resp.data;
+    this.api.get(`ci/script/download/${this.settingsModel.ci}`).then((resp) => {
+      this.settingsModel.ci_script = resp.data;
     });  
   }
 
   duplicateCITemplate() {
-    this.settingsModel.ci_template_list.forEach(item => {
+    this.settingsModel.ci_script_list.forEach(item => {
       if (item == this.settingsModel.new_template_name){
         this.modal.alert(`Template with this name already exist, please change the name`);
         return;
       }
     });
 
-    this.api.create(`ci_template/${this.settingsModel.new_template_name}`, this.settingsModel.ci_template_setup_script).then((resp) => {
+    this.api.create(`ci/script/${this.settingsModel.new_template_name}`, this.settingsModel.ci_script).then((resp) => {
       if (resp.status == "ok")  {
         this.settingsModel.new_template_name = "";
-        this.settingsModel.ci_template = resp.data;
+        this.settingsModel.ci = resp.data;
         this.templateSelected();
         this.updateCITemplatesList();
       }
@@ -76,20 +76,20 @@ export class SettingsComponent implements OnInit {
   deleteCITemplate(){
     //Ask to delete CI template
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.ci_template}" template`,
+      `Confirm deletion of "${this.settingsModel.ci}" template`,
       "Do you really want to delete this template?<br>If yes, please input template name.",
       (value) => {
-        if(value !== this.settingsModel.ci_template)
+        if(value !== this.settingsModel.ci)
           return 'Template name is incorrect!';
       },
       'Yes, please remove!',
       'Don`t remove'
   ).then((res) => {
-    this.api.remove(`ci_template/${this.settingsModel.ci_template}`).then((resp) => {
+    this.api.remove(`ci/script/${this.settingsModel.ci}`).then((resp) => {
       if (resp.status == "ok")  {
         this.settingsModel.new_template_name = "";
-        this.settingsModel.ci_template_setup_script = "";
-        this.settingsModel.ci_template = null;
+        this.settingsModel.ci_script = "";
+        this.settingsModel.ci = null;
         this.updateCITemplatesList();
       }
     });
@@ -100,19 +100,19 @@ export class SettingsComponent implements OnInit {
 
   saveTemplateScript() {
     this.modal.confirm(
-      `Confirm saving of updates of "${this.settingsModel.ci_template}" script`,
+      `Confirm saving of updates of "${this.settingsModel.ci}" script`,
       "Do you really want to save changes of script?<br>If yes, please input template name.",
       (value) => {
-        if(value !== this.settingsModel.ci_template)
+        if(value !== this.settingsModel.ci)
           return 'Template name is incorrect!';
       },
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
-    this.api.create(`ci_template/${this.settingsModel.ci_template}`, this.settingsModel.ci_template_setup_script).then((resp) => {
+    this.api.create(`ci/script/${this.settingsModel.ci}`, this.settingsModel.ci_script).then((resp) => {
       if (resp.status == "ok")  {
         this.settingsModel.new_template_name = "";
-        this.settingsModel.ci_template = resp.data;
+        this.settingsModel.ci = resp.data;
         this.templateSelected();
         this.updateCITemplatesList();
       }
