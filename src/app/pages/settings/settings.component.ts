@@ -34,7 +34,7 @@ export class SettingsComponent implements OnInit {
     this.auth.getUser().then((user) => {
       this.switchSetting('General');
 
-      this.updateServersList();
+      this.updatePlatformList();
       this.updateCITemplatesList();
     }, (err) => {
       this.route.navigate(['signin']);
@@ -125,54 +125,54 @@ export class SettingsComponent implements OnInit {
 //Finish
 //Working with CI templates
 
-//Working with Servers
+//Working with Platforms
 //Start
-updateServersList() {
-  this.api.get(`servers/listAll`).then((resp) => {
-    this.settingsModel.server_list = resp.data;
+updatePlatformList() {
+  this.api.get(`platform/listAll`).then((resp) => {
+    this.settingsModel.platform_list = resp.data;
   });  
 }
 
-serverSelected(){
-  this.api.get(`servers/download/${this.settingsModel.server}`).then((resp) => {
-    this.settingsModel.server_script = resp.data;
+platformSelected(){
+  this.api.get(`platform/download/${this.settingsModel.platform}`).then((resp) => {
+    this.settingsModel.platform_script = resp.data;
   });  
 }
 
-duplicateServer(){
-  this.settingsModel.server_list.forEach(item => {
-    if (item == this.settingsModel.new_server_name){
+duplicatePlatform(){
+  this.settingsModel.platform_list.forEach(item => {
+    if (item == this.settingsModel.new_platform_name){
       this.modal.alert(`Template with this name already exist, please change the name`);
       return;
     }
   });
 
-  this.api.create(`servers/${this.settingsModel.new_server_name}`, this.settingsModel.server_script).then((resp) => {
+  this.api.create(`platform/${this.settingsModel.new_platform_name}`, this.settingsModel.platform_script).then((resp) => {
     if (resp.status == "ok")  {
-      this.settingsModel.new_server_name = "";
-      this.settingsModel.server = resp.data;
-      this.serverSelected();
-      this.updateServersList();
+      this.settingsModel.new_platform_name = "";
+      this.settingsModel.platform = resp.data;
+      this.platformSelected();
+      this.updatePlatformList();
     }
   });}
 
-deleteServer() {
+deletePlatform() {
   this.modal.confirm(
-    `Confirm deletion of "${this.settingsModel.server}" template`,
+    `Confirm deletion of "${this.settingsModel.platform}" template`,
     "Do you really want to delete this template?<br>If yes, please input template name.",
     (value) => {
-      if(value !== this.settingsModel.server)
+      if(value !== this.settingsModel.platform)
         return 'Template name is incorrect!';
     },
     'Yes, please remove!',
     'Don`t remove'
 ).then((res) => {
-  this.api.remove(`servers/${this.settingsModel.server}`).then((resp) => {
+  this.api.remove(`platform/${this.settingsModel.platform}`).then((resp) => {
     if (resp.status == "ok")  {
-      this.settingsModel.new_server_name = "";
-      this.settingsModel.server_script = "";
-      this.settingsModel.server = null;
-      this.updateServersList();
+      this.settingsModel.new_platform_name = "";
+      this.settingsModel.platform_script = "";
+      this.settingsModel.platform = null;
+      this.updatePlatformList();
     }
   });
   }, (err) => {
@@ -180,23 +180,23 @@ deleteServer() {
   })
 }
 
-saveServerScript(){
+savePlatformScript(){
   this.modal.confirm(
-    `Confirm saving of updates of "${this.settingsModel.server}" script`,
+    `Confirm saving of updates of "${this.settingsModel.platform}" script`,
     "Do you really want to save changes of script?<br>If yes, please input template name.",
     (value) => {
-      if(value !== this.settingsModel.server)
+      if(value !== this.settingsModel.platform)
         return 'Template name is incorrect!';
     },
     'Yes, please save!',
     'Don`t save'
 ).then((res) => {
-  this.api.create(`servers/${this.settingsModel.server}`, this.settingsModel.server_script).then((resp) => {
+  this.api.create(`platform/${this.settingsModel.platform}`, this.settingsModel.platform_script).then((resp) => {
     if (resp.status == "ok")  {
-      this.settingsModel.new_server_name = "";
-      this.settingsModel.server = resp.data;
-      this.serverSelected();
-      this.updateServersList();
+      this.settingsModel.new_platform_name = "";
+      this.settingsModel.platform = resp.data;
+      this.platformSelected();
+      this.updatePlatformList();
     }
   });
 

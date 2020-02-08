@@ -4,7 +4,7 @@
     <button class="tablinks" (click)="switchSetting('General')">        General</button>
     <button class="tablinks" (click)="switchSetting('Authentication')"> Authentication</button>
     <button class="tablinks" (click)="switchSetting('Templates')">      Templates</button>
-    <button class="tablinks" (click)="switchSetting('Servers')">        Servers</button>
+    <button class="tablinks" (click)="switchSetting('Platforms')">      Platforms</button>
   </div>
 
     <!-- Tab content -->
@@ -92,31 +92,31 @@
   <!-- Finish -->
   <!-- Authentication settings -->
 
-  <!-- Servers settings -->
+  <!-- Platforms settings -->
   <!-- Start -->
-  <div id="Servers" class="tabcontent">
-    <h3>Servers</h3>
+  <div id="Platforms" class="tabcontent">
+    <h3>Platforms</h3>
     <div class="form-group required">
-      <label for="server">Server setup script</label>
-      <select (change)="serverSelected()" [(ngModel)]="settingsModel.server" enabled class="form-control" name="server{{ pId }}">
-        <option [value]="null"  disabled>Chose server setup script</option>
-        <ng-container *ngFor="let item of settingsModel.server_list">
+      <label for="platform">Platform setup script</label>
+      <select (change)="platformSelected()" [(ngModel)]="settingsModel.platform" enabled class="form-control" name="platform{{ pId }}">
+        <option [value]="null"  disabled>Chose platform setup script</option>
+        <ng-container *ngFor="let item of settingsModel.platform_list">
           <option [value]="item">{{ item }}</option>
         </ng-container>
       </select>
       </div>
     <div class="form-group">
-      <label for="new_server_name">New server setup script name</label>
-      <input [(ngModel)]="settingsModel.new_server_name" class="form-control" id="new_server_name" name="new_server_name" placeholder="Please enter name for new server setup script">
+      <label for="new_platform_name">New platform setup script name</label>
+      <input [(ngModel)]="settingsModel.new_platform_name" class="form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform setup script">
     </div>   
-    <button (click)="duplicateServer()" class="btn btn-primary" [disabled]="!settingsModel.new_server_name">Duplicate</button>
-    <button (click)="deleteServer()" class="btn btn-primary" [disabled]="!settingsModel.server" class="btn btn-danger">Delete</button>
+    <button (click)="duplicatePlatform()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name">Duplicate</button>
+    <button (click)="deletePlatform()" class="btn btn-primary" [disabled]="!settingsModel.platform" class="btn btn-danger">Delete</button>
     <div class="form-group">
       <label for="desc">Script</label>
-      <textarea [(ngModel)]="settingsModel.server_script" [(value)]="settingsModel.server_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <textarea [(ngModel)]="settingsModel.platform_script" [(value)]="settingsModel.splatform_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="saveServerScript()" class="btn btn-primary" >Save script</button>
+    <button (click)="savePlatformScript()" class="btn btn-primary" >Save script</button>
   </div>
   <!-- Finish -->
-  <!-- Servers settings -->
+  <!-- Platforms settings -->
 </div>
