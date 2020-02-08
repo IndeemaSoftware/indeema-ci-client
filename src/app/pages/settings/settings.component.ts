@@ -51,7 +51,7 @@ export class SettingsComponent implements OnInit {
 
   templateSelected() {
     this.api.get(`ci_template/download/${this.settingsModel.ci_template}`).then((resp) => {
-      this.settingsModel.ci_template_script = resp.data;
+      this.settingsModel.ci_template_setup_script = resp.data;
     });  
   }
 
@@ -63,7 +63,7 @@ export class SettingsComponent implements OnInit {
       }
     });
 
-    this.api.create(`ci_template/${this.settingsModel.new_template_name}`, this.settingsModel.ci_template_script).then((resp) => {
+    this.api.create(`ci_template/${this.settingsModel.new_template_name}`, this.settingsModel.ci_template_setup_script).then((resp) => {
       if (resp.status == "ok")  {
         this.settingsModel.new_template_name = "";
         this.settingsModel.ci_template = resp.data;
@@ -88,7 +88,7 @@ export class SettingsComponent implements OnInit {
     this.api.remove(`ci_template/${this.settingsModel.ci_template}`).then((resp) => {
       if (resp.status == "ok")  {
         this.settingsModel.new_template_name = "";
-        this.settingsModel.ci_template_script = "";
+        this.settingsModel.ci_template_setup_script = "";
         this.settingsModel.ci_template = null;
         this.updateCITemplatesList();
       }
@@ -109,7 +109,7 @@ export class SettingsComponent implements OnInit {
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
-    this.api.create(`ci_template/${this.settingsModel.ci_template}`, this.settingsModel.ci_template_script).then((resp) => {
+    this.api.create(`ci_template/${this.settingsModel.ci_template}`, this.settingsModel.ci_template_setup_script).then((resp) => {
       if (resp.status == "ok")  {
         this.settingsModel.new_template_name = "";
         this.settingsModel.ci_template = resp.data;
@@ -127,6 +127,21 @@ export class SettingsComponent implements OnInit {
 
 //Working with Platforms
 //Start
+updatePlatformFields(data) {
+  this.settingsModel.new_platform_name = "";
+  this.settingsModel.platform = data;
+  this.platformSelected();
+  this.updatePlatformList();
+}
+
+cleanPlatfomFields() {
+  this.settingsModel.new_platform_name = "";
+  this.settingsModel.platform_setup_script = "";
+  this.settingsModel.platform_cleanup_script = "";
+  this.settingsModel.platform = null;
+  this.updatePlatformList();
+}
+
 updatePlatformList() {
   this.api.get(`platform/listAll`).then((resp) => {
     this.settingsModel.platform_list = resp.data;
@@ -135,7 +150,11 @@ updatePlatformList() {
 
 platformSelected(){
   this.api.get(`platform/download/${this.settingsModel.platform}`).then((resp) => {
-    this.settingsModel.platform_script = resp.data;
+    this.settingsModel.platform_setup_script = resp.data;
+  });  
+
+  this.api.get(`platform/cleanup/download/${this.settingsModel.platform}`).then((resp) => {
+    this.settingsModel.platform_cleanup_script = resp.data;
   });  
 }
 
@@ -147,14 +166,18 @@ duplicatePlatform(){
     }
   });
 
-  this.api.create(`platform/${this.settingsModel.new_platform_name}`, this.settingsModel.platform_script).then((resp) => {
+  this.api.create(`platform/${this.settingsModel.new_platform_name}`, this.settingsModel.platform_setup_script).then((resp) => {
     if (resp.status == "ok")  {
-      this.settingsModel.new_platform_name = "";
-      this.settingsModel.platform = resp.data;
-      this.platformSelected();
-      this.updatePlatformList();
+      this.updatePlatformFields(resp.data);
     }
-  });}
+  });
+
+  this.api.create(`platform/cleanup/${this.settingsModel.new_platform_name}`, this.settingsModel.platform_cleanup_script).then((resp) => {
+    if (resp.status == "ok")  {
+      this.updatePlatformFields(resp.data);
+    }
+  });
+}
 
 deletePlatform() {
   this.modal.confirm(
@@ -169,10 +192,12 @@ deletePlatform() {
 ).then((res) => {
   this.api.remove(`platform/${this.settingsModel.platform}`).then((resp) => {
     if (resp.status == "ok")  {
-      this.settingsModel.new_platform_name = "";
-      this.settingsModel.platform_script = "";
-      this.settingsModel.platform = null;
-      this.updatePlatformList();
+      this.cleanPlatfomFields();
+    }
+  });
+  this.api.remove(`platform/cleanup/${this.settingsModel.platform}`).then((resp) => {
+    if (resp.status == "ok")  {
+      this.cleanPlatfomFields();
     }
   });
   }, (err) => {
@@ -191,15 +216,16 @@ savePlatformScript(){
     'Yes, please save!',
     'Don`t save'
 ).then((res) => {
-  this.api.create(`platform/${this.settingsModel.platform}`, this.settingsModel.platform_script).then((resp) => {
+  this.api.create(`platform/${this.settingsModel.platform}`, this.settingsModel.platform_setup_script).then((resp) => {
     if (resp.status == "ok")  {
-      this.settingsModel.new_platform_name = "";
-      this.settingsModel.platform = resp.data;
-      this.platformSelected();
-      this.updatePlatformList();
+      this.updatePlatformFields(resp.data);
     }
   });
-
+  this.api.create(`platform/cleanup/${this.settingsModel.platform}`, this.settingsModel.platform_cleanup_script).then((resp) => {
+    if (resp.status == "ok")  {
+      this.updatePlatformFields(resp.data);
+    }
+  });
   }, (err) => {
     this.modal.alert(err);
   })

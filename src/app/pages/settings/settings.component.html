@@ -84,10 +84,14 @@
     <button (click)="duplicateCITemplate()" class="btn btn-primary" [disabled]="!settingsModel.new_template_name">Duplicate</button>
     <button (click)="deleteCITemplate()" class="btn btn-primary" [disabled]="!settingsModel.ci_template" class="btn btn-danger">Delete</button>
     <div class="form-group">
-      <label for="desc">Script</label>
-      <textarea [(ngModel)]="settingsModel.ci_template_script" [(value)]="settingsModel.ci_template_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <label for="desc">Setup script</label>
+      <textarea [(ngModel)]="settingsModel.ci_template_setup_script" [(value)]="settingsModel.ci_template_setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="saveTemplateScript()" class="btn btn-primary" >Save script</button>
+    <div class="form-group">
+      <label for="desc">Cleanup script</label>
+      <textarea [(ngModel)]="settingsModel.ci_template_cleanup_script" [(value)]="settingsModel.ci_template_cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+    </div>
+    <button (click)="saveTemplateScript()" class="btn btn-primary" >Save scripts</button>
   </div>
   <!-- Finish -->
   <!-- Authentication settings -->
@@ -112,10 +116,14 @@
     <button (click)="duplicatePlatform()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name">Duplicate</button>
     <button (click)="deletePlatform()" class="btn btn-primary" [disabled]="!settingsModel.platform" class="btn btn-danger">Delete</button>
     <div class="form-group">
-      <label for="desc">Script</label>
-      <textarea [(ngModel)]="settingsModel.platform_script" [(value)]="settingsModel.splatform_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <label for="desc">Setup script</label>
+      <textarea [(ngModel)]="settingsModel.platform_setup_script" [(value)]="settingsModel.splatform_setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="savePlatformScript()" class="btn btn-primary" >Save script</button>
+    <div class="form-group">
+      <label for="desc">Cleanup script</label>
+      <textarea [(ngModel)]="settingsModel.platform_cleanup_script" [(value)]="settingsModel.splatform_cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+    </div>
+    <button (click)="savePlatformScript()" class="btn btn-primary" >Save scripts</button>
   </div>
   <!-- Finish -->
   <!-- Platforms settings -->
