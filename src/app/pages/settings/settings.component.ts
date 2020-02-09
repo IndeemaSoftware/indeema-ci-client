@@ -18,7 +18,8 @@ export class SettingsComponent implements OnInit {
 
   settingsModel: any = {};
   ci: null
-  new_template_name: null
+  new_ci_name: null
+  ci_template: null
 
   server: null
   new_server_name: null
@@ -35,7 +36,7 @@ export class SettingsComponent implements OnInit {
       this.switchSetting('General');
 
       this.updatePlatformList();
-      this.updateCITemplatesList();
+      this.updateCIList();
     }, (err) => {
       this.route.navigate(['signin']);
     });
@@ -43,54 +44,95 @@ export class SettingsComponent implements OnInit {
 
 //Working with CI templates
 //Start
-  updateCITemplatesList() {
+  updateCiFields(data) {
+    this.settingsModel.new_ci_name = "";
+    this.settingsModel.ci_script = data;
+    this.ciSelected();
+    this.updateCIList();
+  }
+
+  updateTemplateFields(data) {
+    this.settingsModel.new_template_name = "";
+    this.settingsModel.ci_template_script = data;
+    this.templateSelected();
+    this.updateTemplatesList();
+  }
+
+  updateCIList() {
     this.api.get(`ci/script/listAll`).then((resp) => {
       this.settingsModel.ci_script_list = resp.data;
     });  
   }
 
-  templateSelected() {
-    this.api.get(`ci/script/download/${this.settingsModel.ci}`).then((resp) => {
-      this.settingsModel.ci_script = resp.data;
+  updateTemplatesList() {
+    //getting list of templates for selected script
+    this.api.get(`ci/template/listAll/${this.settingsModel.ci}`).then((resp) => {
+      this.settingsModel.ci_template_list = resp.data;
     });  
   }
 
-  duplicateCITemplate() {
+  ciSelected() {
+    this.api.get(`ci/script/download/${this.settingsModel.ci}`).then((resp) => {
+      this.settingsModel.ci_script = resp.data;
+    });  
+
+    this.updateTemplatesList();
+  }
+
+  templateSelected() {
+    this.api.get(`ci/template/download/${this.settingsModel.ci}/${this.settingsModel.ci_template}`).then((resp) => {
+      this.settingsModel.template_script = resp.data;
+    });  
+  }
+
+  duplicateCI() {
     this.settingsModel.ci_script_list.forEach(item => {
-      if (item == this.settingsModel.new_template_name){
+      if (item == this.settingsModel.new_ci_name){
         this.modal.alert(`Template with this name already exist, please change the name`);
         return;
       }
     });
 
-    this.api.create(`ci/script/${this.settingsModel.new_template_name}`, this.settingsModel.ci_script).then((resp) => {
+    this.api.create(`ci/script/${this.settingsModel.new_ci_name}`, this.settingsModel.ci_script).then((resp) => {
       if (resp.status == "ok")  {
-        this.settingsModel.new_template_name = "";
-        this.settingsModel.ci = resp.data;
-        this.templateSelected();
-        this.updateCITemplatesList();
+        this.updateCiFields(resp.data);
       }
     });
   }
 
-  deleteCITemplate(){
+  duplicateTemplate() {
+    this.settingsModel.ci_script_list.forEach(item => {
+      if (item == this.settingsModel.new_ci_name){
+        this.modal.alert(`Template with this name already exist, please change the name`);
+        return;
+      }
+    });
+
+    this.api.create(`ci/template/${this.settingsModel.ci}/${this.settingsModel.new_template_name}`, this.settingsModel.template_script).then((resp) => {
+      if (resp.status == "ok")  {
+        this.updateTemplateFields(resp.data);
+      }
+    });
+  }
+
+  deleteCI(){
     //Ask to delete CI template
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.ci}" template`,
-      "Do you really want to delete this template?<br>If yes, please input template name.",
+      `Confirm deletion of "${this.settingsModel.ci}" ci`,
+      "Do you really want to delete this ci?<br>If yes, please input ci name.",
       (value) => {
         if(value !== this.settingsModel.ci)
-          return 'Template name is incorrect!';
+          return 'Ci name is incorrect!';
       },
       'Yes, please remove!',
       'Don`t remove'
   ).then((res) => {
     this.api.remove(`ci/script/${this.settingsModel.ci}`).then((resp) => {
       if (resp.status == "ok")  {
-        this.settingsModel.new_template_name = "";
+        this.settingsModel.new_ci_name = "";
         this.settingsModel.ci_script = "";
         this.settingsModel.ci = null;
-        this.updateCITemplatesList();
+        this.updateCIList();
       }
     });
     }, (err) => {
@@ -98,23 +140,67 @@ export class SettingsComponent implements OnInit {
     })
   }
 
-  saveTemplateScript() {
+  deleteTemplate(){
+    //Ask to delete CI template
+    this.modal.confirm(
+      `Confirm deletion of "${this.settingsModel.ci_template}" template`,
+      "Do you really want to delete this template?<br>If yes, please input template name.",
+      (value) => {
+        if(value !== this.settingsModel.ci_template)
+          return 'Template name is incorrect!';
+      },
+      'Yes, please remove!',
+      'Don`t remove'
+  ).then((res) => {
+    this.api.remove(`ci/template/${this.settingsModel.ci}/${this.settingsModel.ci_template}`).then((resp) => {
+      if (resp.status == "ok")  {
+        this.settingsModel.new_template_name = "";
+        this.settingsModel.template_script = "";
+        this.settingsModel.ci_template = null;
+        this.updateTemplatesList();
+      }
+    });
+    }, (err) => {
+      this.modal.alert(err);
+    })
+  }
+
+  saveCIScript() {
     this.modal.confirm(
       `Confirm saving of updates of "${this.settingsModel.ci}" script`,
       "Do you really want to save changes of script?<br>If yes, please input template name.",
       (value) => {
         if(value !== this.settingsModel.ci)
-          return 'Template name is incorrect!';
+          return 'Ci name is incorrect!';
       },
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
     this.api.create(`ci/script/${this.settingsModel.ci}`, this.settingsModel.ci_script).then((resp) => {
       if (resp.status == "ok")  {
-        this.settingsModel.new_template_name = "";
-        this.settingsModel.ci = resp.data;
-        this.templateSelected();
-        this.updateCITemplatesList();
+        this.updateCiFields(resp.data);
+      }
+    });
+
+    }, (err) => {
+      this.modal.alert(err);
+    })
+  }
+
+  saveTemplateScript() {
+    this.modal.confirm(
+      `Confirm saving of updates of "${this.settingsModel.ci_template}" template`,
+      "Do you really want to save changes of template?<br>If yes, please input template name.",
+      (value) => {
+        if(value !== this.settingsModel.ci_template)
+          return 'Template name is incorrect!';
+      },
+      'Yes, please save!',
+      'Don`t save'
+  ).then((res) => {
+    this.api.create(`ci/template/${this.settingsModel.ci}/${this.settingsModel.ci_template}`, this.settingsModel.template_script).then((resp) => {
+      if (resp.status == "ok")  {
+        this.updateTemplateFields(resp.data);
       }
     });
 
