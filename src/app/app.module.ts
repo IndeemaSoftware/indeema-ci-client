@@ -37,6 +37,8 @@ import { ProjectsComponent } from './pages/projects/projects.component';
 import { UsersComponent } from './pages/users/users.component';
 import { EditComponent } from './pages/projects/edit/edit.component';
 import { ConsoleComponent } from './pages/console/console.component';
+import { ServersComponent } from './pages/servers/servers.component';
+import { EditServerComponent } from './pages/servers/edit/edit_server.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 
 
@@ -51,6 +53,8 @@ import { SettingsComponent } from './pages/settings/settings.component';
     UsersComponent,
     EditComponent,
     ConsoleComponent,
+    ServersComponent,
+    EditServerComponent,
     SettingsComponent
   ],
   imports: [

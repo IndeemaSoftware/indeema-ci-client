@@ -1,0 +1,85 @@
+<app-header></app-header>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <h2 style="margin-top: 2rem">
+        Servers list
+        <a class="btn btn-success right" routerLink="/edit_server">Setup server</a>
+      </h2>
+      <h4 *ngIf="servers && servers.length" class="badge-splited">
+        <span *ngIf="statuses.progress" class="badge badge-warning">{{ statuses.progress }} In progress...</span>
+        <span *ngIf="statuses.success" class="badge badge-success">{{ statuses.success }} Setup success!</span>
+        <span *ngIf="statuses.failed" class="badge badge-danger">{{ statuses.failed }} Setup failed</span>
+        <span *ngIf="statuses.cleanup" class="badge badge-warning">{{ statuses.cleanup }} Cleanup in progress...</span>
+        <span *ngIf="statuses.cleanup_success" class="badge badge-success">{{ statuses.cleanup_success }} Cleanup success!</span>
+        <span *ngIf="statuses.cleanup_failed" class="badge badge-danger">{{ statuses.cleanup_failed }} Cleanup failed</span>
+      </h4>
+      <p *ngIf="!servers" class="text-muted text-center">Loading...</p>
+      <p *ngIf="servers && !servers.length" class="text-muted text-center">Servers not found</p>
+      <table *ngIf="servers && servers.length" class="table editable-table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Server name</th>
+            <th scope="col">Server apps</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let server of servers">
+            <th scope="row">
+              {{ server.server_name }}<br/><i style="font-weight: 400">{{ server.user.username || 'User not found' }}</i>
+            </th>
+            <td>
+
+              <table *ngIf="server.apps && server.apps.length" class="table editable-table">
+                <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Env</th>
+                  <th scope="col">SSH</th>
+                  <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let app of server.apps">
+                  <th scope="row">
+                    {{ app.app_name }}
+                    <span *ngIf="app.app_status === 'progress'" class="badge badge-warning">In progress...</span>
+                    <span *ngIf="app.app_status === 'success'" class="badge badge-success">Setup success!</span>
+                    <span *ngIf="app.app_status === 'failed'" class="badge badge-danger">Setup failed!</span>
+                    <span *ngIf="app.app_status === 'cleanup'" class="badge badge-warning">Cleanup in progress...</span>
+                    <span *ngIf="app.app_status === 'cleanup_success'" class="badge badge-success">Cleanup success!</span>
+                    <span *ngIf="app.app_status === 'cleanup_failed'" class="badge badge-danger">Cleanup failed!</span>
+                  </th>
+                  <td>{{ app.project_type.label }}</td>
+                  <th scope="row">{{ app.environment }}</th>
+                  <td>
+                    <div *ngIf="app.os !== 'aws_s3'">{{ app.ssh_username }}@{{ app.ssh_host }}</div>
+                    <div *ngIf="app.os === 'aws_s3'">Using AWS S3</div>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-toggle">
+                      <button *ngIf="app.app_status !== 'failed'" (click)="startProject(project, app)" class="btn btn-success" [ngClass]="{'disabled': app.app_status === 'progress' || app.app_status === 'cleanup'}" type="button">Start</button>
+                      <button *ngIf="app.app_status === 'failed'" (click)="startProject(project, app)" class="btn btn-success" type="button">Restart</button>
+                      <button (click)="toConsole(project, app)" class="btn btn-primary" type="button">Console</button>
+                      <button (click)="cleanupProject(project, app)" [ngClass]="{'disabled': app.app_status === 'cleanup' || app.app_status === 'cleanup_success'}" class="btn btn-light" type="button">Cleanup</button>
+                      <button (click)="deleteProject(project, app)" [ngClass]="{'disabled': app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'}" class="btn btn-danger" type="button">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <div class="btn-group btn-group-toggle">
+                <button (click)="editProject(project)" class="btn btn-warning" type="button">Edit</button>
+                <button (click)="deleteProject(project)" [ngClass]="{'disabled': isAppsNeedToCleanup(project)}" class="btn btn-danger" type="button">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

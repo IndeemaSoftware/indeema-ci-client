@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {HomeComponent} from "./pages/home/home.component";
-import {RunnerComponent} from "./pages/runner/runner.component";
-import {SigninComponent} from "./pages/signin/signin.component";
-import {ProjectsComponent} from './pages/projects/projects.component';
-import {UsersComponent} from './pages/users/users.component';
-import {EditComponent} from './pages/projects/edit/edit.component';
-import {ConsoleComponent} from './pages/console/console.component';
-import {SettingsComponent} from './pages/settings/settings.component';
+import { HomeComponent } from "./pages/home/home.component";
+import { RunnerComponent } from "./pages/runner/runner.component";
+import { SigninComponent } from "./pages/signin/signin.component";
+import { ProjectsComponent } from './pages/projects/projects.component';
+import { UsersComponent } from './pages/users/users.component';
+import { EditComponent } from './pages/projects/edit/edit.component';
+import { ConsoleComponent } from './pages/console/console.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { ServersComponent } from './pages/servers/servers.component';
+import { EditServerComponent } from './pages/servers/edit/edit_server.component';
 
 const routes: Routes = [
   {
@@ -37,6 +39,14 @@ const routes: Routes = [
   {
     path: 'users',
     component: UsersComponent
+  },
+  {
+    path: 'edit_server',
+    component: EditServerComponent
+  },
+  {
+    path: 'servers',
+    component: ServersComponent
   },
   {
     path: 'settings',

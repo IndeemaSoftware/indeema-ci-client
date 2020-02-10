@@ -107,6 +107,28 @@ export class SettingsComponent implements OnInit {
     })
   }
 
+  saveMaintenanceScript() {
+    this.modal.confirm(
+      `Confirm saving of updates of "${this.settingsModel.maintenance}" template`,
+      "Do you really want to save changes of template?<br>If yes, please input template name.",
+      (value) => {
+        if(value !== this.settingsModel.maintenance)
+          return 'Template name is incorrect!';
+      },
+      'Yes, please save!',
+      'Don`t save'
+  ).then((res) => {
+    this.api.create(`ci/template/${this.settingsModel.ci}/${this.settingsModel.maintenance}`, this.settingsModel.maintenance_script).then((resp) => {
+      if (resp.status == "ok")  {
+        this.updateTemplateFields(resp.data);
+      }
+    });
+
+    }, (err) => {
+      this.modal.alert(err);
+    })
+  }
+
 //Finish
 //Working with CI templates
 

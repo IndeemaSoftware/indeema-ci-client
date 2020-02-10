@@ -88,6 +88,7 @@
       <label for="desc">Setup script</label>
       <textarea [(ngModel)]="settingsModel.maintenance_script" [(value)]="settingsModel.maintenance_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
+    <button (click)="saveMaintenanceScript()" class="btn btn-primary" >Save maintenance script</button>
   </div>
   <!-- Finish -->
   <!-- Maintenance settings -->
