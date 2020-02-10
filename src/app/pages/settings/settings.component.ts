@@ -4,7 +4,6 @@ import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { ModalService } from '../../services/modal.service';
 
-
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -17,6 +16,8 @@ export class SettingsComponent implements OnInit {
   };
 
   settingsModel: any = {};
+  maintenance: null
+  new_naimtenance_name: null
   ci: null
   new_ci_name: null
   ci_template: null
@@ -35,12 +36,79 @@ export class SettingsComponent implements OnInit {
     this.auth.getUser().then((user) => {
       this.switchSetting('General');
 
+      this.updateMaintenanceList();
       this.updatePlatformList();
       this.updateCIList();
     }, (err) => {
       this.route.navigate(['signin']);
     });
   }
+
+//Working with CI templates
+//Start
+  updateMaintenanceFields(data) {
+    this.settingsModel.new_maintenance_name = "";
+    this.settingsModel.maintenance_script = data;
+    this.maintenanceSelected();
+    this.updateMaintenanceList();
+  }
+
+  updateMaintenanceList() {
+    this.api.get(`maintenance/listAll`).then((resp) => {
+    this.settingsModel.maintenance_list = resp.data;
+    });  
+  }
+
+  maintenanceSelected() {
+    this.api.get(`maintenance/download/${this.settingsModel.maintenance}`).then((resp) => {
+      this.settingsModel.maintenance_script = resp.data;
+    });  
+
+    this.updateMaintenanceList();
+  }
+
+  duplicateMaintenance() {
+    this.settingsModel.maintenance_list.forEach(item => {
+      if (item == this.settingsModel.new_maintenance_name){
+        this.modal.alert(`Maintenance page with this name already exist, please change the name`);
+        return;
+      }
+    });
+
+    this.api.create(`maintenance/${this.settingsModel.new_maintenance_name}`, {"data":this.settingsModel.maintenance_script}).then((resp) => {
+      if (resp.status == "ok")  {
+        this.updateMaintenanceFields(resp.data);
+      }
+    });
+  }
+
+  deleteMaintenance() {
+    //Ask to delete CI template
+    this.modal.confirm(
+      `Confirm deletion of "${this.settingsModel.maintenance}" maintenance`,
+      "Do you really want to delete this maintenance?<br>If yes, please input maintenance name.",
+      (value) => {
+        if(value !== this.settingsModel.maintenance)
+          return 'Template name is incorrect!';
+      },
+      'Yes, please remove!',
+      'Don`t remove'
+  ).then((res) => {
+    this.api.remove(`maintenance/${this.settingsModel.maintenance}`).then((resp) => {
+      if (resp.status == "ok")  {
+        this.settingsModel.new_maintenance_name = "";
+        this.settingsModel.maintenance_script = "";
+        this.settingsModel.maintenance = null;
+        this.updateMaintenanceList();
+      }
+    });
+    }, (err) => {
+      this.modal.alert(err);
+    })
+  }
+
+//Finish
+//Working with CI templates
 
 //Working with CI templates
 //Start
@@ -66,9 +134,18 @@ export class SettingsComponent implements OnInit {
 
   updateTemplatesList() {
     //getting list of templates for selected script
-    this.api.get(`ci/template/listAll/${this.settingsModel.ci}`).then((resp) => {
-      this.settingsModel.ci_template_list = resp.data;
-    });  
+    if (this.settingsModel.ci) {
+      this.api.get(`ci/template/listAll/${this.settingsModel.ci}`).then((resp) => {
+        this.settingsModel.ci_template_list = resp.data;
+      });  
+    }
+  }
+
+  cleanupTemplateFields(){
+    this.settingsModel.new_template_name = "";
+    this.settingsModel.template_script = "";
+    this.settingsModel.ci_template = null;
+    this.updateTemplatesList();
   }
 
   ciSelected() {
@@ -88,12 +165,12 @@ export class SettingsComponent implements OnInit {
   duplicateCI() {
     this.settingsModel.ci_script_list.forEach(item => {
       if (item == this.settingsModel.new_ci_name){
-        this.modal.alert(`Template with this name already exist, please change the name`);
+        this.modal.alert(`Ci with this name already exist, please change the name`);
         return;
       }
     });
 
-    this.api.create(`ci/script/${this.settingsModel.new_ci_name}`, this.settingsModel.ci_script).then((resp) => {
+    this.api.create(`ci/script/${this.settingsModel.new_ci_name}`, {"data":this.settingsModel.ci_script}).then((resp) => {
       if (resp.status == "ok")  {
         this.updateCiFields(resp.data);
       }
@@ -108,7 +185,7 @@ export class SettingsComponent implements OnInit {
       }
     });
 
-    this.api.create(`ci/template/${this.settingsModel.ci}/${this.settingsModel.new_template_name}`, this.settingsModel.template_script).then((resp) => {
+    this.api.create(`ci/template/${this.settingsModel.ci}/${this.settingsModel.new_template_name}`, {"data":this.settingsModel.template_script}).then((resp) => {
       if (resp.status == "ok")  {
         this.updateTemplateFields(resp.data);
       }
@@ -133,6 +210,7 @@ export class SettingsComponent implements OnInit {
         this.settingsModel.ci_script = "";
         this.settingsModel.ci = null;
         this.updateCIList();
+        this.cleanupTemplateFields();
       }
     });
     }, (err) => {
@@ -154,10 +232,7 @@ export class SettingsComponent implements OnInit {
   ).then((res) => {
     this.api.remove(`ci/template/${this.settingsModel.ci}/${this.settingsModel.ci_template}`).then((resp) => {
       if (resp.status == "ok")  {
-        this.settingsModel.new_template_name = "";
-        this.settingsModel.template_script = "";
-        this.settingsModel.ci_template = null;
-        this.updateTemplatesList();
+        this.cleanupTemplateFields();
       }
     });
     }, (err) => {
@@ -188,6 +263,9 @@ export class SettingsComponent implements OnInit {
   }
 
   saveTemplateScript() {
+    if (!this.settingsModel.ci_template) {
+      this.settingsModel.ci_template = this.settingsModel.new_template_name;
+    }
     this.modal.confirm(
       `Confirm saving of updates of "${this.settingsModel.ci_template}" template`,
       "Do you really want to save changes of template?<br>If yes, please input template name.",
@@ -252,13 +330,13 @@ duplicatePlatform(){
     }
   });
 
-  this.api.create(`platform/${this.settingsModel.new_platform_name}`, this.settingsModel.platform_setup_script).then((resp) => {
+  this.api.create(`platform/${this.settingsModel.new_platform_name}`, {"data":this.settingsModel.platform_setup_script}).then((resp) => {
     if (resp.status == "ok")  {
       this.updatePlatformFields(resp.data);
     }
   });
 
-  this.api.create(`platform/cleanup/${this.settingsModel.new_platform_name}`, this.settingsModel.platform_cleanup_script).then((resp) => {
+  this.api.create(`platform/cleanup/${this.settingsModel.new_platform_name}`, {"data":this.settingsModel.platform_cleanup_script}).then((resp) => {
     if (resp.status == "ok")  {
       this.updatePlatformFields(resp.data);
     }
