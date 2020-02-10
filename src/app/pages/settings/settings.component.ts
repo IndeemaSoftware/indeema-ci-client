@@ -302,6 +302,7 @@ cleanPlatfomFields() {
   this.settingsModel.new_platform_name = "";
   this.settingsModel.platform_setup_script = "";
   this.settingsModel.platform_cleanup_script = "";
+  this.settingsModel.platform_firewall_script = "";
   this.settingsModel.platform = null;
   this.updatePlatformList();
 }
@@ -319,6 +320,10 @@ platformSelected(){
 
   this.api.get(`platform/cleanup/download/${this.settingsModel.platform}`).then((resp) => {
     this.settingsModel.platform_cleanup_script = resp.data;
+  });  
+
+  this.api.get(`platform/firewall/download/${this.settingsModel.platform}`).then((resp) => {
+    this.settingsModel.platform_firewall_script = resp.data;
   });  
 }
 
@@ -341,6 +346,12 @@ duplicatePlatform(){
       this.updatePlatformFields(resp.data);
     }
   });
+
+  this.api.create(`platform/firewall/${this.settingsModel.new_platform_name}`, {"data":this.settingsModel.platform_firewall_script}).then((resp) => {
+    if (resp.status == "ok")  {
+      this.updatePlatformFields(resp.data);
+    }
+  });
 }
 
 deletePlatform() {
@@ -359,7 +370,14 @@ deletePlatform() {
       this.cleanPlatfomFields();
     }
   });
+
   this.api.remove(`platform/cleanup/${this.settingsModel.platform}`).then((resp) => {
+    if (resp.status == "ok")  {
+      this.cleanPlatfomFields();
+    }
+  });
+
+  this.api.remove(`platform/firewall/${this.settingsModel.platform}`).then((resp) => {
     if (resp.status == "ok")  {
       this.cleanPlatfomFields();
     }
@@ -380,12 +398,19 @@ savePlatformScript(){
     'Yes, please save!',
     'Don`t save'
 ).then((res) => {
-  this.api.create(`platform/${this.settingsModel.platform}`, this.settingsModel.platform_setup_script).then((resp) => {
+  this.api.create(`platform/${this.settingsModel.platform}`, {"data":this.settingsModel.platform_setup_script}).then((resp) => {
     if (resp.status == "ok")  {
       this.updatePlatformFields(resp.data);
     }
   });
-  this.api.create(`platform/cleanup/${this.settingsModel.platform}`, this.settingsModel.platform_cleanup_script).then((resp) => {
+
+  this.api.create(`platform/cleanup/${this.settingsModel.platform}`, {"data":this.settingsModel.platform_cleanup_script}).then((resp) => {
+    if (resp.status == "ok")  {
+      this.updatePlatformFields(resp.data);
+    }
+  });
+
+  this.api.create(`platform/firewall/${this.settingsModel.platform}`, {"data":this.settingsModel.platform_firewall_script}).then((resp) => {
     if (resp.status == "ok")  {
       this.updatePlatformFields(resp.data);
     }

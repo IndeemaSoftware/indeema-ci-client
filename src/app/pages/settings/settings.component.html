@@ -162,13 +162,17 @@
     <button (click)="deletePlatform()" class="btn btn-primary" [disabled]="!settingsModel.platform" class="btn btn-danger">Delete</button>
     <div class="form-group">
       <label for="desc">Setup script</label>
-      <textarea [(ngModel)]="settingsModel.platform_setup_script" [(value)]="settingsModel.splatform_setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <textarea [(ngModel)]="settingsModel.platform_setup_script" [(value)]="settingsModel.platform_setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
     <div class="form-group">
       <label for="desc">Cleanup script</label>
-      <textarea [(ngModel)]="settingsModel.platform_cleanup_script" [(value)]="settingsModel.splatform_cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <textarea [(ngModel)]="settingsModel.platform_cleanup_script" [(value)]="settingsModel.platform_cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="savePlatformScript()" class="btn btn-primary" >Save scripts</button>
+    <div class="form-group">
+      <label for="desc">Firewall script</label>
+      <textarea [(ngModel)]="settingsModel.platform_firewall_script" [(value)]="settingsModel.platform_firewall_script" class="form-control" id="script" name="script" rows="10"></textarea>
+    </div>
+    <button (click)="savePlatformScript()" class="btn btn-primary" >Save platform scripts</button>
   </div>
   <!-- Finish -->
   <!-- Platforms settings -->
