@@ -151,7 +151,7 @@
       <select (change)="platformSelected()" [(ngModel)]="settingsModel.platform" enabled class="form-control" name="platform{{ pId }}">
         <option [value]="null"  disabled>Chose platform setup script</option>
         <ng-container *ngFor="let item of settingsModel.platform_list">
-          <option [value]="item">{{ item }}</option>
+          <option [ngValue]="item">{{ item.platform_name}}</option>
         </ng-container>
       </select>
       </div>
@@ -159,21 +159,23 @@
       <label for="new_platform_name">New platform setup script name</label>
       <input [(ngModel)]="settingsModel.new_platform_name" class="form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform setup script">
     </div>   
-    <button (click)="duplicatePlatform()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name">Duplicate</button>
+    <button (click)="duplicatePlatform()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name || !settingsModel.platform">Duplicate</button>
     <button (click)="deletePlatform()" class="btn btn-primary" [disabled]="!settingsModel.platform" class="btn btn-danger">Delete</button>
     <div class="form-group">
-      <label for="desc">Setup script</label>
-      <textarea [(ngModel)]="settingsModel.platform_setup_script" [(value)]="settingsModel.platform_setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <div>
+        <input type="checkbox" [(ngModel)]="settingsModel.platform.setup_script"/> Setup script
+      </div>
+      <textarea [(ngModel)]="settingsModel.platform_setup_script" [(value)]="settingsModel.platform_setup_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.setup_script"></textarea>
     </div>
     <div class="form-group">
       <label for="desc">Cleanup script</label>
-      <textarea [(ngModel)]="settingsModel.platform_cleanup_script" [(value)]="settingsModel.platform_cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <textarea [(ngModel)]="settingsModel.platform_cleanup_script" [(value)]="settingsModel.platform_cleanup_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.cleanup_script"></textarea>
     </div>
     <div class="form-group">
       <label for="desc">Firewall script</label>
-      <textarea [(ngModel)]="settingsModel.platform_firewall_script" [(value)]="settingsModel.platform_firewall_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <textarea [(ngModel)]="settingsModel.platform_firewall_script" [(value)]="settingsModel.platform_firewall_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.firewall_script"></textarea>
     </div>
-    <button (click)="savePlatformScript()" class="btn btn-primary" >Save platform scripts</button>
+    <button (click)="savePlatformScript()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name && !settingsModel.platform">Save platform scripts</button>
   </div>
   <!-- Finish -->
   <!-- Platforms settings -->

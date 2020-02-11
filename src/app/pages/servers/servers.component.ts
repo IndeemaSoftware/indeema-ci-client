@@ -40,8 +40,6 @@ export class ServersComponent implements OnInit {
     this.api.get('server').then((servers) => {
       this.servers = servers;
 
-      console.log(servers);
-
       this.statuses = {
         waiting: 0,
         progress: 0,
@@ -53,9 +51,9 @@ export class ServersComponent implements OnInit {
       };
 
       //Setup counters
-      for(let project of this.servers){
-        if(project.apps && project.apps.length){
-          for(let app of project.apps){
+      for(let server of this.servers){
+        if(server.apps && server.apps.length){
+          for(let app of server.apps){
             if(app.app_status === 'waiting')
               this.statuses.waiting++;
 
@@ -96,25 +94,25 @@ export class ServersComponent implements OnInit {
     })
   }
 
-  startProject(project, app){
+  startProject(server, app){
     if(app.app_status === 'progress' || app.app_status === 'cleanup')
       return;
 
-    this.route.navigate([`console/${project.id}/${app.id}`], { queryParams: { start: 'true' } });
+    this.route.navigate([`console/${server.id}/${app.id}`], { queryParams: { start: 'true' } });
   }
 
-  toConsole(project, app, cleanup = false){
+  toConsole(server, app, cleanup = false){
     if(cleanup)
-      this.route.navigate([`console/${project.id}/${app.id}`], { queryParams: { cleanup: 'true' } });
+      this.route.navigate([`console/${server.id}/${app.id}`], { queryParams: { cleanup: 'true' } });
     else
-      this.route.navigate([`console/${project.id}/${app.id}`]);
+      this.route.navigate([`console/${server.id}/${app.id}`]);
   }
 
-  editProject(project){
-    this.route.navigate([`projects/${project.id}`]);
+  editServer(server){
+    this.route.navigate([`servers/${server.id}`]);
   }
 
-  cleanupProject(project, app){
+  cleanupProject(server, app){
     if(app.app_status === 'cleanup' || app.app_status === 'cleanup_success')
       return;
 
@@ -129,18 +127,18 @@ export class ServersComponent implements OnInit {
         'Yes, please cleanup!',
         'Don`t cleanup'
     ).then((res) => {
-      this.api.remove(`projects/cleanup/${project.id}/${app.id}`).then(() => {
-        this.toConsole(project, app, true);
+      this.api.remove(`servers/cleanup/${server.id}/${app.id}`).then(() => {
+        this.toConsole(server, app, true);
       }, (err) => {
         this.modal.alert(err);
       })
       setTimeout(() => {
-        this.toConsole(project, app, true);
+        this.toConsole(server, app, true);
       }, 500);
     });
   }
 
-  deleteProject(project, app = null) {
+  deleteProject(server, app = null) {
     if (app){
       if(app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'){
         this.modal.alert('Before delete app, please cleanup this app!', 'Important!', 'I understand!');
@@ -153,7 +151,7 @@ export class ServersComponent implements OnInit {
                 return 'App name is incorrect!';
             }
         ).then((res) => {
-          this.api.remove(`projects/${project.id}/${app.id}`).then(() => {
+          this.api.remove(`servers/${server.id}/${app.id}`).then(() => {
             this.getServers();
           }, (err) => {
           });
@@ -163,38 +161,23 @@ export class ServersComponent implements OnInit {
         });
       }
     } else {
-      if(!this.isAppsNeedToCleanup(project)){
-        this.modal.confirm(
-            `Confirm deleting project "${project.project_name}"`,
-            "Do you really want to remove this project?<br>If yes, please input project name.",
-            (value) => {
-              if(value !== project.project_name)
-                return 'Project name is incorrect!';
-            }
-        ).then((res) => {
-          this.api.remove(`projects/remove/${project.id}`).then(() => {
-            this.getServers();
-          }, (err) => {
-          });
-          setTimeout(() => {
-            this.getServers();
-          }, 1000);
+      this.modal.confirm(
+          `Confirm deleting server "${server.server_name}"`,
+          "Do you really want to remove this server?<br>If yes, please input server name.",
+          (value) => {
+            if(value !== server.server_name)
+              return 'server name is incorrect!';
+          }
+      ).then((res) => {
+        this.api.remove(`server/remove/${server.id}`).then(() => {
+          this.getServers();
+        }, (err) => {
         });
-      }else{
-        this.modal.alert('Please first cleanup all apps in project', 'Important!', 'I understand!');
-      }
+        setTimeout(() => {
+          this.getServers();
+        }, 1000);
+      });
     }
-  }
-
-  isAppsNeedToCleanup(project){
-    let isNeed = false;
-    for(let app of project.apps){
-      if(app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'){
-        isNeed = true;
-        break;
-      }
-    }
-    return isNeed;
   }
 
 }

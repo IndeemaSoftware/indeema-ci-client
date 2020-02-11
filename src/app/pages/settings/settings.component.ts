@@ -11,11 +11,12 @@ import { ModalService } from '../../services/modal.service';
 })
 export class SettingsComponent implements OnInit {
 
-  modelDefault: any = {
-    project_path: "/home/$USER",
-  };
-
   settingsModel: any = {};
+  defaultPlatform: any = {
+    setup_script: false,
+    cleanup_script: false,
+    firewall_script: false
+  };
   maintenance: null
   new_naimtenance_name: null
   ci: null
@@ -39,6 +40,8 @@ export class SettingsComponent implements OnInit {
       this.updateMaintenanceList();
       this.updatePlatformList();
       this.updateCIList();
+
+      this.settingsModel.platform = this.defaultPlatform;
     }, (err) => {
       this.route.navigate(['signin']);
     });
@@ -331,20 +334,21 @@ cleanPlatfomFields() {
 
 updatePlatformList() {
   this.api.get(`platform/listAll`).then((resp) => {
-    this.settingsModel.platform_list = resp.data;
+    this.settingsModel.platform_list = resp;
   });  
 }
 
 platformSelected(){
-  this.api.get(`platform/download/${this.settingsModel.platform}`).then((resp) => {
+  console.log(this.settingsModel.platform);
+  this.api.get(`platform/download/${this.settingsModel.platform.platform_name}`).then((resp) => {
     this.settingsModel.platform_setup_script = resp.data;
   });  
 
-  this.api.get(`platform/cleanup/download/${this.settingsModel.platform}`).then((resp) => {
+  this.api.get(`platform/cleanup/download/${this.settingsModel.platform.platform_name}`).then((resp) => {
     this.settingsModel.platform_cleanup_script = resp.data;
   });  
 
-  this.api.get(`platform/firewall/download/${this.settingsModel.platform}`).then((resp) => {
+  this.api.get(`platform/firewall/download/${this.settingsModel.platform.platform_name}`).then((resp) => {
     this.settingsModel.platform_firewall_script = resp.data;
   });  
 }
@@ -378,28 +382,28 @@ duplicatePlatform(){
 
 deletePlatform() {
   this.modal.confirm(
-    `Confirm deletion of "${this.settingsModel.platform}" template`,
+    `Confirm deletion of "${this.settingsModel.platform.platform_name}" template`,
     "Do you really want to delete this template?<br>If yes, please input template name.",
     (value) => {
-      if(value !== this.settingsModel.platform)
+      if(value !== this.settingsModel.platform.platform_name)
         return 'Template name is incorrect!';
     },
     'Yes, please remove!',
     'Don`t remove'
 ).then((res) => {
-  this.api.remove(`platform/${this.settingsModel.platform}`).then((resp) => {
+  this.api.remove(`platform/${this.settingsModel.platform.platform_name}`).then((resp) => {
     if (resp.status == "ok")  {
       this.cleanPlatfomFields();
     }
   });
 
-  this.api.remove(`platform/cleanup/${this.settingsModel.platform}`).then((resp) => {
+  this.api.remove(`platform/cleanup/${this.settingsModel.platform.platform_name}`).then((resp) => {
     if (resp.status == "ok")  {
       this.cleanPlatfomFields();
     }
   });
 
-  this.api.remove(`platform/firewall/${this.settingsModel.platform}`).then((resp) => {
+  this.api.remove(`platform/firewall/${this.settingsModel.platform.platform_name}`).then((resp) => {
     if (resp.status == "ok")  {
       this.cleanPlatfomFields();
     }
@@ -409,30 +413,37 @@ deletePlatform() {
   })
 }
 
-savePlatformScript(){
+savePlatformScript() {
+  var name = this.settingsModel.platform.platform_name
+if (!name) {
+  return 0;
+} else {
+  name = this.settingsModel.new_platform_name;
+}
+
   this.modal.confirm(
-    `Confirm saving of updates of "${this.settingsModel.platform}" script`,
+    `Confirm saving of updates of "${this.settingsModel.platform.platform_name}" script`,
     "Do you really want to save changes of script?<br>If yes, please input template name.",
     (value) => {
-      if(value !== this.settingsModel.platform)
+      if(value !== this.settingsModel.platform.platform_name)
         return 'Template name is incorrect!';
     },
     'Yes, please save!',
     'Don`t save'
 ).then((res) => {
-  this.api.create(`platform/${this.settingsModel.platform}`, {"data":this.settingsModel.platform_setup_script}).then((resp) => {
+  this.api.create(`platform/${name}`, {"data":this.settingsModel.platform_setup_script}).then((resp) => {
     if (resp.status == "ok")  {
       this.updatePlatformFields(resp.data);
     }
   });
 
-  this.api.create(`platform/cleanup/${this.settingsModel.platform}`, {"data":this.settingsModel.platform_cleanup_script}).then((resp) => {
+  this.api.create(`platform/cleanup/${name}`, {"data":this.settingsModel.platform_cleanup_script}).then((resp) => {
     if (resp.status == "ok")  {
       this.updatePlatformFields(resp.data);
     }
   });
 
-  this.api.create(`platform/firewall/${this.settingsModel.platform}`, {"data":this.settingsModel.platform_firewall_script}).then((resp) => {
+  this.api.create(`platform/firewall/${name}`, {"data":this.settingsModel.platform_firewall_script}).then((resp) => {
     if (resp.status == "ok")  {
       this.updatePlatformFields(resp.data);
     }

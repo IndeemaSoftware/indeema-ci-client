@@ -41,7 +41,7 @@ const routes: Routes = [
     component: UsersComponent
   },
   {
-    path: 'edit_server',
+    path: 'servers/:id',
     component: EditServerComponent
   },
   {

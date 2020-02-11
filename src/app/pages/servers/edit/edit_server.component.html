@@ -1,213 +1,83 @@
 <app-header></app-header>
 <div class="container">
-  <div *ngIf="project && project.id" class="row">
+  <div *ngIf="server && server.id" class="row">
     <div class="col-sm-12 col-md-6 col-lg-6 center-content-item">
       <h2>
-        {{ project.project_name }}
+        {{ server.Server_name }}
       </h2>
       <form (submit)="proceedToUpdate(false)">
         <div class="form-container">
-          <h3>Project config:</h3>
+          <h3>Server config:</h3>
           <div class="form-group required">
-            <label for="project_name">Project name</label>
-            <input [(ngModel)]="projectModel.project_name"  type="text" class="form-control" name="project_name" placeholder="Enter project name">
-            <small class="form-text text-muted">This name will be used for project root folder in ubuntu user home path.</small>
+            <label for="server_name">Server name</label>
+            <input [(ngModel)]="serverModel.Server_name"  type="text" class="form-control" name="Server_name" placeholder="Enter server name">
+            <small class="form-text text-muted">This name should be unique.</small>
           </div>
           <div class="form-group">
-            <label for="desc">Project description</label>
-            <textarea [(ngModel)]="projectModel.desc" class="form-control" id="desc" name="desc" rows="3"></textarea>
+            <label for="description">Server description</label>
+            <textarea [(ngModel)]="serverModel.description" class="form-control" id="description" name="description" rows="3"></textarea>
           </div>
         </div>
         <div class="form-container">
-          <h3>Project apps:</h3>
-          <div class="app-tabs">
-            <div class="app-control">
-              <div *ngFor="let model of projectModel.apps; let i = index">
-                <a (click)="openTab(model.appId || model.id)" [ngClass]="{'active': activeTab === model.appId || activeTab === model.id}" href="javascript:void(0)">
-                  {{ model.app_name || 'App #' + (i + 1) }} <span *ngIf="model.errorMsg" class="text-danger">(validation error)</span>
-                </a>
-                <button *ngIf="projectModel.apps.length > 1 && !model.id" (click)="removeApp(i)" type="button" class="btn btn-outline-danger">Remove</button>
+
+          <div class="form-container">
+
+            <div class="form-group required">
+              <label for="platform">Platform</label>
+              <select (change)="platformSelected()" [(ngModel)]="server.platform" enabled class="form-control" name="platform{{ pId }}">
+                <option [value]="null"  disabled>Chose platform setup script</option>
+                <ng-container *ngFor="let item of platform_list">
+                  <option [value]="item">{{ item }}</option>
+                </ng-container>
+              </select>
               </div>
-              <div>
-                <a (click)="addNewApp()" href="javascript:void(0)" class="action-tab">
-                  + Create new app
-                </a>
-              </div>
+            <div class="form-group">
+              <label for="serverModel.ports">List ports to open by firewall</label>
+              <input [(ngModel)]="serverModel.ports" type="text" class="form-control" name="ports{{ pId }}" placeholder="Enter avaliable ports">
+              <small class="form-text text-muted">This prots will be enabled in firewall</small>
             </div>
-            <div  *ngFor="let model of projectModel.apps; let pId = index; trackBy: trackByFn" class="app-tab-body {{ model.appId || model.id }}" [ngClass]="{'visible': activeTab === model.appId || activeTab === model.id}">
-
-              <div *ngIf="model.errorMsg" class="alert alert-danger text-center">{{ model.errorMsg }}</div>
-              <div class="form-container">
-                <div class="form-group required">
-                  <label for="app_name">App name</label>
-                  <input [(ngModel)]="model.app_name" type="text" class="form-control" name="app_name{{ pId }}" placeholder="Enter app name">
-                  <small class="form-text text-muted">Each project could have few applications that are working together or even independently. You can setup only one app at one run of script.</small>
-                </div>
-                <div class="form-group">
-                  <label for="desc{{ pId }}">App description</label>
-                  <textarea [(ngModel)]="model.desc" class="form-control" id="desc{{ pId }}" name="desc{{ pId }}" rows="3"></textarea>
-                </div>
-                <div class="form-group required">
-                  <label for="ci_template">CI Template</label>
-                  <select [(ngModel)]="projectModel.apps[pId].ci_template" disabled class="form-control" name="ci_template{{ pId }}">
-                    <option [value]="'gitlab_ci'"  disabled>GitLab CI</option>
-                  </select>
-                </div>
-                <div class="form-group required">
-                  <label for="project_type">App type</label>
-                  <select [(ngModel)]="model.project_type" class="form-control" name="project_type{{ pId }}">
-                    <option [value]="null"  disabled>Chose app type</option>
-                    <ng-container *ngFor="let item of projectTypes">
-                      <option *ngIf="projectModel.apps[pId].os !== 'aws_s3' || (projectModel.apps[pId].os === 'aws_s3' && item.s3_support)" [value]="item.id">{{ item.label }}</option>
-                    </ng-container>
-                  </select>
-                </div>
-                <div class="form-group required">
-                  <label for="environment">App environment</label>
-                  <select [(ngModel)]="model.environment" class="form-control" name="environment{{ pId }}">
-                    <option [value]="'development'">Development</option>
-                    <option [value]="'staging'">Staging</option>
-                    <option [value]="'beta'">Beta</option>
-                    <option [value]="'production'">Production</option>
-                  </select>
-                </div>
-                <div class="form-group required border-top">
-                  <label for="os">OS</label>
-                  <select [(ngModel)]="projectModel.apps[pId].os" class="form-control" name="os{{ pId }}">
-                    <option [value]="'ubuntu'">Ubuntu OS</option>
-                    <option [value]="'aws_s3'">AWS S3 Static website hosting</option>
-                  </select>
-                </div>
-                <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-group">
-                  <label for="app_port">App port</label>
-                  <input [(ngModel)]="model.app_port" type="text" class="form-control" name="app_port{{ pId }}" placeholder="Enter app port">
-                  <small class="form-text text-muted">Specify port to be used by application. By default port 8080 is used.</small>
-                </div>
-                <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-group">
-                  <label for="avaliable_ports">Avaliable ports</label>
-                  <input [(ngModel)]="model.avaliable_ports" type="text" class="form-control" name="avaliable_ports{{ pId }}" placeholder="Enter avaliable ports">
-                  <small class="form-text text-muted">This prots will be enabled in firewall</small>
-                </div>
-              </div>
-              <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-container">
-                <h3>Domain and HTTPS setttings:</h3>
-                <div class="form-group" [ngClass]="{'required': model.lets_encrypt}">
-                  <label for="domain_name">Domain name</label>
-                  <input [(ngModel)]="model.domain_name" type="text" class="form-control" name="domain_name{{ pId }}" placeholder="Enter domain name">
-                </div>
-                <div class="form-group">
-                  <div class="form-check">
-                    <input [(ngModel)]="model.lets_encrypt" class="form-check-input" type="checkbox" name="lets_encrypt{{ pId }}">
-                    <label class="form-check-label" for="defaultCheck1">
-                      Use Let's Encrypt (self-signed certificates)
-                    </label>
-                  </div>
-                </div>
-                <div *ngIf="!model.lets_encrypt">
-                  <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
-                    <label for="custom_ssl_key">SSL Key file</label>
-                    <input (change)="addKeySSLFile($event, model)" type="file" accept=".key" class="form-control" name="custom_ssl_key{{ pId }}" placeholder="Upload SSL Key file">
-                    <small *ngIf="project.apps[pId] && project.apps[pId].custom_ssl_key && project.apps[pId].custom_ssl_key.name" class="form-text text-muted">SSL Key: {{ project.apps[pId].custom_ssl_key.name }} <a target="_blank" href="{{api_url}}{{ project.apps[pId].custom_ssl_key.url }}">Download</a></small>
-                  </div>
-                  <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
-                    <label for="custom_ssl_crt">SSL Crt file</label>
-                    <input (change)="addCrtSSLFile($event, model)" type="file" accept=".crt" class="form-control" name="custom_ssl_crt{{ pId }}" placeholder="Upload SSL Crt file">
-                    <small *ngIf="project.apps[pId] && project.apps[pId].custom_ssl_crt && project.apps[pId].custom_ssl_crt.name" class="form-text text-muted">SSL Crt: {{ project.apps[pId].custom_ssl_crt.name }} <a target="_blank" href="{{api_url}}{{ project.apps[pId].custom_ssl_crt.url }}">Download</a></small>
-                  </div>
-                  <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem}">
-                    <label for="custom_ssl_key">SSL Pem file</label>
-                    <input (change)="addPemSSLFile($event, model)" type="file" class="form-control" name="custom_ssl_pem{{ pId }}" placeholder="Upload SSL Pem file">
-                    <small *ngIf="project.apps[pId] && project.apps[pId].custom_ssl_pem && project.apps[pId].custom_ssl_pem.name" class="form-text text-muted">SSL Pem: {{ project.apps[pId].custom_ssl_pem.name }} <a target="_blank" href="{{api_url}}{{ project.apps[pId].custom_ssl_pem.url }}">Download</a></small>
-                  </div>
-                </div>
-              </div>
-              <div *ngIf="projectModel.apps[pId].os === 'aws_s3'" class="form-container">
-                <h3>AWS S3 Static website configure:</h3>
-                <div class="form-container">
-                  <div class="form-group required">
-                    <label for="s3_bucket_name">AWS S3 Bucket name</label>
-                    <input [(ngModel)]="model.s3_bucket_name" type="text" class="form-control" name="s3_bucket_name{{ pId }}" placeholder="Enter AWS Bucket name">
-                  </div>
-                  <div class="form-group required">
-                    <label for="s3_user">AWS User</label>
-                    <input [(ngModel)]="model.s3_user" type="text" class="form-control" name="s3_user{{ pId }}" placeholder="Enter AWS User">
-                  </div>
-                  <div class="form-group required">
-                    <label for="aws_access_key_id">AWS ACCESS KEY ID</label>
-                    <input [(ngModel)]="model.aws_access_key_id" type="text" class="form-control" name="aws_access_key_id{{ pId }}" placeholder="AWS ACCESS KEY ID">
-                    <small class="form-text text-muted">Note! You need to add variable $AWS_ACCESS_KEY_ID to GitLab project, without this key your deploy will be crash.</small>
-                  </div>
-                  <div class="form-group required">
-                    <label for="aws_secret_access_key">AWS SECRET ACCESS KEY</label>
-                    <input [(ngModel)]="model.aws_secret_access_key" type="text" class="form-control" name="aws_secret_access_key{{ pId }}" placeholder="AWS SECRET ACCESS KEY">
-                    <small class="form-text text-muted">Note! You need to add variable $AWS_SECRET_ACCESS_KEY to GitLab project, without this key your deploy will be crash.</small>
-                  </div>
-                  <div class="form-group">
-                    <div class="form-check">
-                      <input [(ngModel)]="model.s3_https" class="form-check-input" type="checkbox" name="s3_https{{ pId }}">
-                      <label class="form-check-label" for="defaultCheck1">
-                        Use HTTPS only for AWS CloudFront
-                      </label>
-                    </div>
-                  </div>
-                  <div class="form-group required">
-                    <label for="s3_region">AWS S3 Region</label>
-                    <select [(ngModel)]="model.s3_region" class="form-control" name="s3_region{{ pId }}">
-                      <option [value]="null"  disabled>Chose AWS S3 Region</option>
-                      <ng-container *ngFor="let item of awsRegions">
-                        <option [value]="item.name">{{ item.displayName }}({{ item.continentCode }})</option>
-                      </ng-container>
-                    </select>
-                    <small class="form-text text-muted">Note! Script will automatically create new bucket for this region.</small>
-                  </div>
-                </div>
-              </div>
-              <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-container">
-                <h3>Server credentials:</h3>
-                <div class="form-group required">
-                  <label for="ssh_host">SSH host or IP address</label>
-                  <input [(ngModel)]="model.ssh_host" type="text" class="form-control" name="ssh_host{{ pId }}" placeholder="Enter SSH host or IP address">
-                </div>
-                <div class="form-group required">
-                  <label for="ssh_username">SSH username</label>
-                  <input [(ngModel)]="model.ssh_username" type="text" class="form-control" name="ssh_username{{ pId }}" placeholder="SSH username">
-                  <small class="form-text text-muted">User name to access server with provided key under -s.</small>
-                </div>
-                <div class="form-group required">
-                  <label for="ssh_pem">SSH pem key</label>
-                  <input (change)="addPemFile($event, model)" type="file" class="form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH pem key">
-                  <small *ngIf="project.apps[pId] && project.apps[pId].ssh_pem && project.apps[pId].ssh_pem.name" class="form-text text-muted">SSH Pem: {{ project.apps[pId].ssh_pem.name }} <a target="_blank" href="{{api_url}}{{ project.apps[pId].ssh_pem.url }}">Download</a></small>
-                  <small class="form-text text-muted">Server ssh key to be used to login to server remotely.</small>
-                </div>
-              </div>
-              <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-container">
-                <h3>Server dependencies:</h3>
-                <div *ngFor="let item of projectModel.apps[pId].server_dependency; let i = index" class="form-group repeated">
-                  <select [(ngModel)]="projectModel.apps[pId].server_dependency[i].value" class="form-control" name="server_dependency[{{ pId }}{{ i }}]">
-                    <option [value]="null"  disabled>Chose dependency for server</option>
-                    <option *ngFor="let item of serversDeps" [value]="item.id">{{ item.label }}</option>
-                  </select>
-                  <span (click)="removeRepeatField(projectModel.apps[pId].server_dependency, i)" *ngIf="projectModel.apps[pId].server_dependency && projectModel.apps[pId].server_dependency.length > 1" class="text-danger remove-btn">Remove</span>
-                  <span (click)="cleanFields(projectModel.apps[pId].server_dependency)" *ngIf="projectModel.apps[pId].server_dependency && projectModel.apps[pId].server_dependency.length === 1 && projectModel.apps[pId].server_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
-                </div>
-                <button (click)="addRepeatField(projectModel.apps[pId].server_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
-              </div>
-              <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-container">
-                <h3>Node.JS Global dependencies:</h3>
-                <div *ngFor="let item of projectModel.apps[pId].node_dependency; let i = index" class="form-group repeated">
-                  <select [(ngModel)]="projectModel.apps[pId].node_dependency[i].value" class="form-control" name="node_dependency[{{ pId }}{{ i }}]">
-                    <option [value]="'null'" disabled>Chose dependency for Node.JS</option>
-                    <option *ngFor="let item of nodejsDeps" [value]="item.id">{{ item.label }}</option>
-                  </select>
-                  <span (click)="removeRepeatField(projectModel.apps[pId].node_dependency, i)" *ngIf="projectModel.apps[pId].node_dependency && projectModel.apps[pId].node_dependency.length > 1" class="text-danger remove-btn">Remove</span>
-                  <span (click)="cleanFields(projectModel.apps[pId].node_dependency)" *ngIf="projectModel.apps[pId].node_dependency && projectModel.apps[pId].node_dependency.length === 1 && projectModel.apps[pId].node_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
-                </div>
-                <button (click)="addRepeatField(projectModel.apps[pId].node_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
-              </div>
-
-              <button *ngIf="projectModel.apps[pId].app_status === 'success'" (click)="downloadTemplate(projectModel.apps[pId])" style="margin-left: 5px;" type="button" class="btn btn-success">Download CI template</button>
-
+          </div>
+          <div class="form-container">
+            <h3>Server credentials:</h3>
+            <div class="form-group required">
+              <label for="ssh_host">SSH host or IP address</label>
+              <input [(ngModel)]="serverModel.ssh_ip" type="text" class="form-control" name="ssh_ip{{ pId }}" placeholder="Enter SSH host or IP address">
             </div>
+            <div class="form-group required">
+              <label for="ssh_username">SSH username</label>
+              <input [(ngModel)]="serverModel.ssh_username" type="text" class="form-control" name="ssh_username{{ pId }}" placeholder="SSH username">
+              <small class="form-text text-muted">User name to access server with provided key under -s.</small>
+            </div>
+            <div class="form-group required">
+              <label for="ssh_pem">SSH pem key</label>
+              <input (change)="addPemFile($event, model)" type="file" class="form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH pem key">
+              <small *ngIf="serverModel.ssh_key && serverModel.ssh_key.name" class="form-text text-muted">SSH Pem: {{ serverModel.ssh_key.name }} <a target="_blank" href="{{api_url}}{{ serverModel.ssh_key.url }}">Download</a></small>
+              <small class="form-text text-muted">Server ssh key to be used to login to server remotely.</small>
+            </div>
+          </div>
+          <div class="form-container">
+            <h3>Server dependencies:</h3>
+            <div *ngFor="let item of serverModel.server_dependency; let i = index" class="form-group repeated">
+              <select [(ngModel)]="serverModel.server_dependency[i].value" class="form-control" name="server_dependency[{{ pId }}{{ i }}]">
+                <option [value]="null"  disabled>Chose dependency for server</option>
+                <option *ngFor="let item of serversDeps" [value]="item.id">{{ item.label }}</option>
+              </select>
+              <span (click)="removeRepeatField(serverModel.server_dependency, i)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length > 1" class="text-danger remove-btn">Remove</span>
+              <span (click)="cleanFields(serverModel.server_dependency)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length === 1 && serverModel.server_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+            </div>
+            <button (click)="addRepeatField(serverModel.server_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
+          </div>
+          <div class="form-container">
+            <h3>Custom dependencies:</h3>
+            <div *ngFor="let item of serverModel.node_dependency; let i = index" class="form-group repeated">
+              <select [(ngModel)]="serverModel.node_dependency[i].value" class="form-control" name="node_dependency[{{ pId }}{{ i }}]">
+                <option [value]="'null'" disabled>Chose dependency for Node.JS</option>
+                <option *ngFor="let item of nodejsDeps" [value]="item.id">{{ item.label }}</option>
+              </select>
+              <span (click)="removeRepeatField(serverModel.node_dependency, i)" *ngIf="serverModel.node_dependency && serverModel.node_dependency.length > 1" class="text-danger remove-btn">Remove</span>
+              <span (click)="cleanFields(serverModel.node_dependency)" *ngIf="serverModel.node_dependency && serverModel.node_dependency.length === 1 && serverModel.node_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+            </div>
+            <button (click)="addRepeatField(serverModel.node_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
           </div>
         </div>
         <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>
