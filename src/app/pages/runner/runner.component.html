@@ -180,7 +180,7 @@
                 <h3>Server dependencies:</h3>
                 <div *ngFor="let item of projectModel.apps[pId].server_dependency; let i = index" class="form-group repeated">
                   <select [(ngModel)]="projectModel.apps[pId].server_dependency[i].value" class="form-control" name="server_dependency[{{ pId }}{{ i }}]">
-                    <option [value]="null"  disabled>Chose dependency for server</option>
+                    <option [value]="null"  disabled>Choose dependency for server</option>
                     <option *ngFor="let item of serversDeps" [value]="item.id">{{ item.label }}</option>
                   </select>
                   <span (click)="removeRepeatField(projectModel.apps[pId].server_dependency, i)" *ngIf="projectModel.apps[pId].server_dependency && projectModel.apps[pId].server_dependency.length > 1" class="text-danger remove-btn">Remove</span>

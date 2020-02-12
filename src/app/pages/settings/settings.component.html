@@ -150,22 +150,16 @@
       <label for="platform">Platform setup script</label>
       <select (change)="platformSelected()" [(ngModel)]="settingsModel.platform" enabled class="form-control" name="platform" id="platform">
         <option [value]="null"  disabled>Chose platform setup script</option>
-        <ng-container *ngFor="let item of settingsModel.platform_list">
-          <option [ngValue]="item">{{ item.platform_name}}</option>
+        <ng-container *ngFor="let item of settingsModel.platform_list let i = index">
+          <option [ngValue]="settingsModel.platform_list[i]">{{ item.platform_name}}</option>
         </ng-container>
       </select>
       </div>
-    <div class="form-group">
-      <label for="new_platform_name">New platform setup script name</label>
-      <input [(ngModel)]="settingsModel.new_platform_name" class="form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform setup script">
-    </div>   
-    <button (click)="duplicatePlatform()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name || !settingsModel.platform.platform_name">Duplicate</button>
-    <button (click)="deletePlatform()" class="btn btn-primary" [disabled]="!settingsModel.platform" class="btn btn-danger">Delete</button>
     <div class="form-container">
       <h4>Platform variables</h4>
       <div *ngFor="let item of settingsModel.platform.variables let i = index" class="form-group repeated">
-        <input [(ngModel)]="item.name"  class="form-control" id="variable" name="variable" placeholder="Enter variable key">
-        <input [(ngModel)]="item.value" class="form-control" id="variable" name="variable" placeholder="Enter variable value">
+        <input [(ngModel)]="settingsModel.platform.variables[i].name"  class="form-control" id="variable" name="variable" placeholder="Enter variable key">
+        <input [(ngModel)]="settingsModel.platform.variables[i].value" class="form-control" id="variable" name="variable" placeholder="Enter variable value">
         <span (click)="removeRepeatField(settingsModel.platform.variables, i)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length > 1" class="text-danger remove-btn">Remove</span>
         <span (click)="cleanFields(settingsModel.platform.variables)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length === 1 && settingsModel.platform.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
       </div>
@@ -173,6 +167,18 @@
     </div>
     <div class="form-group">
       <div>
+        <div>Parameters to be provided when calling Setup script <br/>
+              -n  Server Name<br/>
+              -d  Server description<br/>
+              -o  Platform<br/>
+              -p  ports, separated with comma<br/>
+              -i  ip address of server<br/>
+              -u  user name of user that has permissions to server with ip address provided faster<br/>
+              -k  private ssh key of user to access server<br/>
+              -r  list of dependencies to be installed<br/>
+              -c  list of custom dependencies to be installed<br/>
+
+        </div>
         <input type="checkbox" name="setup_script" [(ngModel)]="settingsModel.platform.setup_script"/> Setup script
       </div>
       <textarea [(ngModel)]="settingsModel.platform_setup_script" [(value)]="settingsModel.platform_setup_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.setup_script"></textarea>
@@ -182,10 +188,16 @@
       <textarea [(ngModel)]="settingsModel.platform_cleanup_script" [(value)]="settingsModel.platform_cleanup_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.cleanup_script"></textarea>
     </div>
     <div class="form-group">
-      <input type="checkbox" [(ngModel)]="settingsModel.platform.firewall_script"/> Firewall script
-      <textarea [(ngModel)]="settingsModel.platform_firewall_script" [(value)]="settingsModel.platform_firewall_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.firewall_script"></textarea>
+      <h4>Platform documentation</h4>
+      <textarea [(ngModel)]="settingsModel.platform.doc" [(value)]="settingsModel.platform.doc" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform"></textarea>
     </div>
-    <button (click)="savePlatformScript()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name && !settingsModel.platform">Save changes</button>
+    <div class="form-group">
+      <label for="new_platform_name">New platform setup script name</label>
+      <input [(ngModel)]="settingsModel.new_platform_name" class="form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform setup script">
+    </div>   
+    <button (click)="duplicatePlatform()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name || !settingsModel.platform.platform_name">Duplicate</button>
+    <button (click)="deletePlatform()" class="btn btn-primary" [disabled]="!settingsModel.platform.platform_name" class="btn btn-danger">Delete</button>
+    <button (click)="savePlatformScript()" class="btn btn-primary" [disabled]="(settingsModel.new_platform_name && settingsModel.platform.platform_name) || (!settingsModel.new_platform_name && !settingsModel.platform.platform_name)">Save changes</button>
   </div>
   <!-- Finish -->
   <!-- Platforms settings -->
