@@ -21,7 +21,9 @@ export class ConsoleComponent implements OnInit {
   //Project data
   project = null as any;
   app = null as any;
+  key = null as any;
   projectId = null as any;
+  serverId = null as any;
   appId = null as any;
 
   //Auto start setup
@@ -42,23 +44,32 @@ export class ConsoleComponent implements OnInit {
     private modal: ModalService
   ) {
 
-    this.projectId = this.activatedRoute.snapshot.params['id'];
-    if(!this.projectId){
-      this.route.navigate([`projects`]);
-      return;
+    this.key = this.activatedRoute.snapshot.params['id'];
+    if (this.key === "server") {
+      this.serverId = this.activatedRoute.snapshot.params['app_id'];
+      if(!this.serverId) {
+        this.route.navigate([`servers`]);
+        return;
+      }  
+    } else {
+      this.projectId = this.activatedRoute.snapshot.params['id'];
+      if (!this.projectId) {
+        this.route.navigate([`projects`]);
+        return;
+      }
+  
+      this.appId = this.activatedRoute.snapshot.params['app_id'];
+      if(!this.appId){
+        this.route.navigate([`projects`]);
+        return;
+      }
+  
+      //Get params
+      this.activatedRoute.queryParams.subscribe(params => {
+        this.autoStart = params['start']? true : false;
+        this.isCleanup = params['cleanup']? true : false;
+      });  
     }
-
-    this.appId = this.activatedRoute.snapshot.params['app_id'];
-    if(!this.appId){
-      this.route.navigate([`projects`]);
-      return;
-    }
-
-    //Get params
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.autoStart = params['start']? true : false;
-      this.isCleanup = params['cleanup']? true : false;
-    });
   }
 
   ngOnInit() {
@@ -67,6 +78,8 @@ export class ConsoleComponent implements OnInit {
       this.consoleLive = this.socket.ioSocket.connected;
     }, 1000);
 
+    console.log("ROCK");
+    if (this.projectId) {
     //Get project
     this.api.get(`/projects/${this.projectId}`)
       .then(data => {
@@ -85,46 +98,86 @@ export class ConsoleComponent implements OnInit {
         this.modal.alert(err);
         this.route.navigate([`projects`]);
       });
+    } else if (this.serverId) {
+      this.api.get(`/server/${this.serverId}`)
+        .then(data => {
+          this.app = data;
+          this.prepareConsole();
+        }, err => {
+          this.modal.alert(err);
+          this.route.navigate([`servers`]);
+      });
+    }
   }
 
   prepareConsole(){
-    if(this.app.app_status === 'success'){
+    if (this.app.app_status === 'success'){
       this.enableDownloadBtn = true;
-    }else{
+    } else {
       this.enableDownloadBtn = false;
     }
 
-    if(this.autoStart){
-      this.connectToChannel(this.appId);
+    if (this.autoStart) {
+      if (this.projectId) {
+        this.connectToChannel(this.appId);
 
-      this.setupProject();
-    }else{
+        this.setupProject();  
+      } else if (this.serverId) {
+
+      }
+    } else {
+      if (this.projectId) {
       //Get project console output
       this.api.get(`/console/app/${this.appId}`)
-          .then(data => {
-            const list = Object.values(data) as any;
-            for(let item of list){
-              if(item && item.type && item.message)
-                this.addMessage(item.type, item.message);
-            }
+        .then(data => {
+          const list = Object.values(data) as any;
+          for(let item of list){
+            if(item && item.type && item.message)
+              this.addMessage(item.type, item.message);
+          }
 
-            //Connect to project stream
-            this.connectToChannel(this.appId);
-          }, err => {
-            this.modal.alert(err);
-            this.route.navigate([`projects`]);
-          });
+          //Connect to project stream
+          this.connectToChannel(this.appId);
+        }, err => {
+          this.modal.alert(err);
+          this.route.navigate([`projects`]);
+        });
+      } else {
+        this.api.get(`/console/server/${this.serverId}`)
+        .then(data => {
+          const list = Object.values(data) as any;
+          for(let item of list){
+            if(item && item.type && item.message)
+              this.addMessage(item.type, item.message);
+          }
+
+          //Connect to project stream
+          this.connectToChannel(this.serverId);
+        }, err => {
+          this.modal.alert(err);
+          this.route.navigate([`projects`]);
+        });
+      }
     }
   }
 
-  setupProject(){
-    this.api.create(`/console/setup/${this.projectId}/${this.appId}`, {}).then(() => {
-      this.cleanConsole();
-    }, (err) => {
-      this.modal.alert(err);
-      this.route.navigate([`projects`]);
-    })
-  }
+  setupProject() {
+    if (this.projectId) {
+      this.api.create(`/console/setup/${this.projectId}/${this.appId}`, {}).then(() => {
+        this.cleanConsole();
+      }, (err) => {
+        this.modal.alert(err);
+        this.route.navigate([`projects`]);
+      })
+    } else if (this.serverId) {
+      this.api.create(`/console/setup_server/${this.serverId}`, {}).then(() => {
+        this.cleanConsole();
+      }, (err) => {
+        this.modal.alert(err);
+        this.route.navigate([`servers`]);
+      })
+    }
+  }  
 
   downloadTemplate(){
     window.open(environment.API_URL + `/app/download/yml/${this.appId}`,'_blank');
@@ -136,16 +189,24 @@ export class ConsoleComponent implements OnInit {
   }
 
   disableConsole(){
-    this.route.navigate([`projects/${this.projectId}`]);
+    if (this.projectId) {
+      this.route.navigate([`projects/${this.projectId}`]);
+    } else if (this.serverId) {
+      this.route.navigate([`servers/${this.serverId}`]);
+    }
   }
 
   cleanupProject(){
-    this.api.remove(`projects/cleanup/${this.projectId}/${this.appId}`).then(() => {
-      this.cleanConsole();
-    }, (err) => {
-      this.modal.alert(err);
-      this.route.navigate([`projects`]);
-    })
+    if (this.projectId) {
+      this.api.remove(`projects/cleanup/${this.projectId}/${this.appId}`).then(() => {
+        this.cleanConsole();
+      }, (err) => {
+        this.modal.alert(err);
+        this.route.navigate([`projects`]);
+      })
+    } else if (this.serverId) {
+      console.log("Cleanup server");
+    }
   }
 
   addMessage(type, msg){
@@ -174,7 +235,6 @@ export class ConsoleComponent implements OnInit {
   }
 
   connectToChannel(channel){
-
     //Remove all listeners
     this.socket.removeAllListeners();
 

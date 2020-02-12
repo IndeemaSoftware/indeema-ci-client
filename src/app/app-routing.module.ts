@@ -37,6 +37,10 @@ const routes: Routes = [
     component: ConsoleComponent
   },
   {
+    path: 'console/server/:id',
+    component: ConsoleComponent
+  },
+  {
     path: 'users',
     component: UsersComponent
   },

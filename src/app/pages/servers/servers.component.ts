@@ -94,11 +94,11 @@ export class ServersComponent implements OnInit {
     })
   }
 
-  startProject(server, app){
-    if(app.app_status === 'progress' || app.app_status === 'cleanup')
+  setupServer(server){
+    if(server.app_status === 'progress' || server.app_status === 'cleanup')
       return;
 
-    this.route.navigate([`console/${server.id}/${app.id}`], { queryParams: { start: 'true' } });
+    this.route.navigate([`console/server/${server._id}`], { queryParams: { start: 'true' } });
   }
 
   toConsole(server, app, cleanup = false){

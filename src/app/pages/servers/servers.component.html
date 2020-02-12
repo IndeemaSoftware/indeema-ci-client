@@ -36,6 +36,7 @@
             <td>
               <div class="btn-group btn-group-toggle">
                 <div >{{ server.ssh_username }}@{{ server.ssh_ip }}</div>
+                <button (click)="setupServer(server)" class="btn btn-success" type="button">Setup</button>
                 <button (click)="editServer(server)" class="btn btn-warning" type="button">Edit</button>
                 <button (click)="deleteProject(server)" class="btn btn-danger" type="button">Delete</button>
               </div>
