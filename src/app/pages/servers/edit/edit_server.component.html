@@ -27,7 +27,7 @@
               <select (change)="platformSelected()" [(ngModel)]="server.platform" enabled class="form-control" name="platform{{ pId }}">
                 <option [value]="null"  disabled>Chose platform setup script</option>
                 <ng-container *ngFor="let item of platform_list">
-                  <option [value]="item">{{ item.platform_name }}</option>
+                  <option [ngValue]="item">{{ item.platform_name }}</option>
                 </ng-container>
               </select>
               </div>

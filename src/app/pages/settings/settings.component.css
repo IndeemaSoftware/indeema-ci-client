@@ -42,6 +42,11 @@
   border-left: none;
   height: auto;
 }
+
+.variable {display: inline-block; width:47%;}
+
+.variable .cf-medium {width:97%;}
+
   
   /* Go from zero to full opacity */
   @keyframes fadeEffect {

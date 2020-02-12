@@ -13,6 +13,10 @@ export class SettingsComponent implements OnInit {
 
   settingsModel: any = {
     platform: {
+      variables: {
+        key: "",
+        value: ""
+      },
       setup_script: false,
       cleanup_script: false,
       firewall_script: false      
@@ -482,6 +486,18 @@ savePlatformScript() {
 }
 //Finish
 //Working with Servers
+
+addRepeatField(arr){
+  arr.push({value: null});
+}
+
+removeRepeatField(arr, key){
+  arr.splice(key, 1);
+}
+
+cleanFields(arr){
+  arr[0].value = null;
+}
 
 //Tab bar navigation
 //Start

@@ -161,6 +161,16 @@
     </div>   
     <button (click)="duplicatePlatform()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name || !settingsModel.platform.platform_name">Duplicate</button>
     <button (click)="deletePlatform()" class="btn btn-primary" [disabled]="!settingsModel.platform" class="btn btn-danger">Delete</button>
+    <div class="form-container">
+      <h4>Platform variables</h4>
+      <div *ngFor="let item of settingsModel.platform.variables let i = index" class="form-group repeated">
+        <input [(ngModel)]="item.name"  class="form-control" id="variable" name="variable" placeholder="Enter variable key">
+        <input [(ngModel)]="item.value" class="form-control" id="variable" name="variable" placeholder="Enter variable value">
+        <span (click)="removeRepeatField(settingsModel.platform.variables, i)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length > 1" class="text-danger remove-btn">Remove</span>
+        <span (click)="cleanFields(settingsModel.platform.variables)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length === 1 && settingsModel.platform.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+      </div>
+    <button (click)="addRepeatField(settingsModel.platform.variables)" type="button" class="btn btn-warning">Add another variable</button>
+    </div>
     <div class="form-group">
       <div>
         <input type="checkbox" name="setup_script" [(ngModel)]="settingsModel.platform.setup_script"/> Setup script
@@ -175,7 +185,7 @@
       <input type="checkbox" [(ngModel)]="settingsModel.platform.firewall_script"/> Firewall script
       <textarea [(ngModel)]="settingsModel.platform_firewall_script" [(value)]="settingsModel.platform_firewall_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.firewall_script"></textarea>
     </div>
-    <button (click)="savePlatformScript()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name && !settingsModel.platform">Save platform scripts</button>
+    <button (click)="savePlatformScript()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name && !settingsModel.platform">Save changes</button>
   </div>
   <!-- Finish -->
   <!-- Platforms settings -->
