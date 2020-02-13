@@ -195,16 +195,21 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
-  cleanupProject(){
+  startCleanupScript(){
     if (this.projectId) {
       this.api.remove(`projects/cleanup/${this.projectId}/${this.appId}`).then(() => {
         this.cleanConsole();
       }, (err) => {
         this.modal.alert(err);
         this.route.navigate([`projects`]);
-      })
+      });
     } else if (this.serverId) {
-      console.log("Cleanup server");
+      this.api.remove(`console/cleanup_server/${this.serverId}/`).then(() => {
+        this.cleanConsole();
+      }, (err) => {
+        this.modal.alert(err);
+        this.route.navigate([`servers`]);
+      });
     }
   }
 
@@ -219,12 +224,12 @@ export class ConsoleComponent implements OnInit {
     });
 
     if(type === 'build_success') {
-      this.consoleTitle = 'Setup project is success!';
+      this.consoleTitle = `Setup ${this.projectId?"project":"server"} is success!`;
       this.enableDownloadBtn = true;
     }
 
     if(type === 'build_error') {
-      this.consoleTitle = 'Setup project is failed!';
+      this.consoleTitle = `Setup ${this.projectId?"project":"server"} is failed!`;
       this.enableDownloadBtn = false;
     }
 

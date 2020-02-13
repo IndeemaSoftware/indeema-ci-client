@@ -103,9 +103,9 @@ export class ServersComponent implements OnInit {
 
   toConsole(server, app, cleanup = false){
     if(cleanup)
-      this.route.navigate([`console/${server.id}/${app.id}`], { queryParams: { cleanup: 'true' } });
+      this.route.navigate([`console/cleanup_server/${server.id}`], { queryParams: { cleanup: 'true' } });
     else
-      this.route.navigate([`console/${server.id}/${app.id}`]);
+      this.route.navigate([`console/cleanup_server/${server.id}`]);
   }
 
   editServer(server){

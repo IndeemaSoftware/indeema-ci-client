@@ -21,7 +21,7 @@
         <button (click)="cleanConsole()" type="button" class="btn">Clear</button>
         <button (click)="disableConsole()" type="button" class="btn btn-warning">Back to setup</button>
         <button *ngIf="!isCleanup" (click)="startSetupScript()" type="button" class="btn btn-danger">Reload script</button>
-        <button *ngIf="isCleanup" (click)="cleanupProject()" type="button" class="btn btn-danger">Reload cleanup</button>
+        <button *ngIf="isCleanup" (click)="startCleanupScript()" type="button" class="btn btn-danger">Reload cleanup</button>
         <button *ngIf="enableDownloadBtn" (click)="downloadTemplate()" type="button" class="btn btn-success">Download CI template</button>
       </div>
     </div>
