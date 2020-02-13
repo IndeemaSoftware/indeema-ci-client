@@ -27,7 +27,7 @@
         <tbody>
           <tr *ngFor="let server of servers">
             <th scope="row">
-              {{ server.Server_name }}<br/>
+              {{ server.server_name }}<br/>
               <tr *ngFor="let user of server.users">
                 <th scope="row">
                   <i style="font-weight: 400">{{ user.username || 'User not found' }}</i>
@@ -38,7 +38,8 @@
                 <div >{{ server.ssh_username }}@{{ server.ssh_ip }}</div>
                 <button (click)="setupServer(server)" class="btn btn-success" type="button">Setup</button>
                 <button (click)="editServer(server)" class="btn btn-warning" type="button">Edit</button>
-                <button (click)="deleteProject(server)" class="btn btn-danger" type="button">Delete</button>
+                <button (click)="cleanupServer(server)" [ngClass]="{'disabled': server.server_status === 'cleanup' || server.server_status === 'cleanup_success'}" class="btn btn-light" type="button">Cleanup</button>
+                <button (click)="deleteServer(server)" class="btn btn-danger" type="button">Delete</button>
               </div>
             </td>
           </tr>

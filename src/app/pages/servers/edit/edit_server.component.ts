@@ -234,7 +234,7 @@ export class EditServerComponent implements OnInit {
 
   validateModel(model){
     if(
-        !model.Server_name
+        !model.server_name
     )
       return 'Please input all required fields.';
 
@@ -308,12 +308,12 @@ export class EditServerComponent implements OnInit {
       return false;
     }
     this.errorMsg = '';
-    if(!this.serverModel.Server_name) {
+    if(!this.serverModel.server_name) {
       this.errorMsg = 'Server name is required';
       return false;
     } else {
       const serverNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
-      if(!serverNameRegex.test(this.serverModel.Server_name)){
+      if(!serverNameRegex.test(this.serverModel.server_name)){
         this.errorMsg = 'Server name is invalid. Please use: alphabetic characters, numbers, "-" or "_"';
         return false;
       }

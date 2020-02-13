@@ -27,7 +27,12 @@
         <tbody>
           <tr *ngFor="let project of projects">
             <th scope="row">
-              {{ project.project_name }}<br/><i style="font-weight: 400">{{ project.user.username || 'User not found' }}</i>
+              {{ project.project_name }}<br/>
+              <tr *ngFor="let user of project.users">
+                <th scope="row">
+                  <i style="font-weight: 400">{{ user.username || 'User not found' }}</i>
+                </th>
+                <td>    
             </th>
             <td>
 

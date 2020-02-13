@@ -78,7 +78,6 @@ export class ConsoleComponent implements OnInit {
       this.consoleLive = this.socket.ioSocket.connected;
     }, 1000);
 
-    console.log("ROCK");
     if (this.projectId) {
     //Get project
     this.api.get(`/projects/${this.projectId}`)
@@ -120,11 +119,11 @@ export class ConsoleComponent implements OnInit {
     if (this.autoStart) {
       if (this.projectId) {
         this.connectToChannel(this.appId);
-
-        this.setupProject();  
       } else if (this.serverId) {
-
+        this.connectToChannel(this.serverId);
       }
+      
+      this.startSetupScript();  
     } else {
       if (this.projectId) {
       //Get project console output
@@ -142,7 +141,7 @@ export class ConsoleComponent implements OnInit {
           this.modal.alert(err);
           this.route.navigate([`projects`]);
         });
-      } else {
+      } else if (this.serverId) {
         this.api.get(`/console/server/${this.serverId}`)
         .then(data => {
           const list = Object.values(data) as any;
@@ -161,7 +160,7 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
-  setupProject() {
+  startSetupScript() {
     if (this.projectId) {
       this.api.create(`/console/setup/${this.projectId}/${this.appId}`, {}).then(() => {
         this.cleanConsole();

@@ -112,64 +112,45 @@ export class ServersComponent implements OnInit {
     this.route.navigate([`servers/${server.id}`]);
   }
 
-  cleanupProject(server, app){
-    if(app.app_status === 'cleanup' || app.app_status === 'cleanup_success')
+  cleanupServer(server){
+    if(server.server_status === 'cleanup' || server.server_status === 'cleanup_success')
       return;
 
     //Ask to cleanup server
     this.modal.confirm(
-        `Confirm cleanup app "${app.app_name}"`,
+        `Confirm cleanup app "${server.server_name}"`,
         "Do you really want to cleanup this app on server?<br>If yes, please input app name.",
         (value) => {
-          if(value !== app.app_name)
+          if(value !== server.server_name)
             return 'App name is incorrect!';
         },
         'Yes, please cleanup!',
         'Don`t cleanup'
     ).then((res) => {
-      this.api.remove(`servers/cleanup/${server.id}/${app.id}`).then(() => {
-        this.toConsole(server, app, true);
+      this.api.remove(`server/cleanup/${server.id}`).then(() => {
+        this.toConsole(server, true);
       }, (err) => {
         this.modal.alert(err);
       })
       setTimeout(() => {
-        this.toConsole(server, app, true);
+        this.toConsole(server, true);
       }, 500);
     });
   }
 
-  deleteProject(server, app = null) {
-    if (app){
-      if(app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'){
-        this.modal.alert('Before delete app, please cleanup this app!', 'Important!', 'I understand!');
-      }else{
-        this.modal.confirm(
-            `Confirm deleting app "${app.app_name}"`,
-            "Do you really want to remove this app?<br>If yes, please input app name.",
-            (value) => {
-              if(value !== app.app_name)
-                return 'App name is incorrect!';
-            }
-        ).then((res) => {
-          this.api.remove(`servers/${server.id}/${app.id}`).then(() => {
-            this.getServers();
-          }, (err) => {
-          });
-          setTimeout(() => {
-            this.getServers();
-          }, 1000);
-        });
-      }
+  deleteServer(server) {
+    if(server.app_status !== 'cleanup_success' && server.app_status !== 'cleanup_failed'){
+      this.modal.alert('Before delete app, please cleanup this app!', 'Important!', 'I understand!');
     } else {
       this.modal.confirm(
-          `Confirm deleting server "${server.server_name}"`,
-          "Do you really want to remove this server?<br>If yes, please input server name.",
+          `Confirm deleting app "${server.server_name}"`,
+          "Do you really want to remove this app?<br>If yes, please input app name.",
           (value) => {
             if(value !== server.server_name)
-              return 'server name is incorrect!';
+              return 'App name is incorrect!';
           }
       ).then((res) => {
-        this.api.remove(`server/remove/${server.id}`).then(() => {
+        this.api.remove(`servers/${server.id}`).then(() => {
           this.getServers();
         }, (err) => {
         });
@@ -179,5 +160,4 @@ export class ServersComponent implements OnInit {
       });
     }
   }
-
 }
