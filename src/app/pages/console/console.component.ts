@@ -21,6 +21,7 @@ export class ConsoleComponent implements OnInit {
   //Project data
   project = null as any;
   app = null as any;
+  server = null as any;
   key = null as any;
   projectId = null as any;
   serverId = null as any;
@@ -31,6 +32,7 @@ export class ConsoleComponent implements OnInit {
 
   //Download btn
   enableDownloadBtn = false;
+  hideDownloadBtn = true;
 
   //Is cleanup feature
   isCleanup = false;
@@ -63,13 +65,13 @@ export class ConsoleComponent implements OnInit {
         this.route.navigate([`projects`]);
         return;
       }
-  
-      //Get params
-      this.activatedRoute.queryParams.subscribe(params => {
-        this.autoStart = params['start']? true : false;
-        this.isCleanup = params['cleanup']? true : false;
-      });  
     }
+
+    //Get params
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.autoStart = params['start'];
+      this.isCleanup = params['cleanup'];
+      });      
   }
 
   ngOnInit() {
@@ -79,6 +81,7 @@ export class ConsoleComponent implements OnInit {
     }, 1000);
 
     if (this.projectId) {
+    console.log("if (this.projectId) {" );
     //Get project
     this.api.get(`/projects/${this.projectId}`)
       .then(data => {
@@ -100,7 +103,7 @@ export class ConsoleComponent implements OnInit {
     } else if (this.serverId) {
       this.api.get(`/server/${this.serverId}`)
         .then(data => {
-          this.app = data;
+          this.server = data;
           this.prepareConsole();
         }, err => {
           this.modal.alert(err);
@@ -110,22 +113,29 @@ export class ConsoleComponent implements OnInit {
   }
 
   prepareConsole(){
-    if (this.app.app_status === 'success'){
-      this.enableDownloadBtn = true;
-    } else {
-      this.enableDownloadBtn = false;
+    if (this.projectId) {
+      this.hideDownloadBtn = false;;
+      if (this.server.server_status === 'success'){
+        this.enableDownloadBtn = true;
+      } else {
+        this.enableDownloadBtn = false;
+      }
     }
 
     if (this.autoStart) {
-      if (this.projectId) {
+      if (this.appId) {
         this.connectToChannel(this.appId);
       } else if (this.serverId) {
         this.connectToChannel(this.serverId);
       }
-      
-      this.startSetupScript();  
+
+      if (this.isCleanup) {
+        this.startCleanupScript();
+      } else {
+        this.startSetupScript();  
+      }
     } else {
-      if (this.projectId) {
+      if (this.appId) {
       //Get project console output
       this.api.get(`/console/app/${this.appId}`)
         .then(data => {
@@ -154,7 +164,7 @@ export class ConsoleComponent implements OnInit {
           this.connectToChannel(this.serverId);
         }, err => {
           this.modal.alert(err);
-          this.route.navigate([`projects`]);
+          this.route.navigate([`servers`]);
         });
       }
     }
@@ -197,14 +207,14 @@ export class ConsoleComponent implements OnInit {
 
   startCleanupScript(){
     if (this.projectId) {
-      this.api.remove(`projects/cleanup/${this.projectId}/${this.appId}`).then(() => {
+      this.api.remove(`projects/cleanup/${this.projectId}/${this.appId}`).then((resp) => {
         this.cleanConsole();
       }, (err) => {
         this.modal.alert(err);
         this.route.navigate([`projects`]);
       });
     } else if (this.serverId) {
-      this.api.remove(`console/cleanup_server/${this.serverId}/`).then(() => {
+      this.api.remove(`server/cleanup/${this.serverId}/`).then((resp) => {
         this.cleanConsole();
       }, (err) => {
         this.modal.alert(err);
@@ -224,12 +234,12 @@ export class ConsoleComponent implements OnInit {
     });
 
     if(type === 'build_success') {
-      this.consoleTitle = `Setup ${this.projectId?"project":"server"} is success!`;
+      this.consoleTitle = `Setup ${this.projectId?"project":"server"} has success!`;
       this.enableDownloadBtn = true;
     }
 
     if(type === 'build_error') {
-      this.consoleTitle = `Setup ${this.projectId?"project":"server"} is failed!`;
+      this.consoleTitle = `Setup ${this.projectId?"project":"server"} has failed!`;
       this.enableDownloadBtn = false;
     }
 

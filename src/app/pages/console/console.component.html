@@ -3,14 +3,14 @@
   <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 center-content-item">
       <h2  style="margin-top: 1rem">
-        {{ consoleTitle }}
         <span *ngIf="consoleLive" class="badge badge-success">Online</span>
         <span *ngIf="!consoleLive && consoleLive !== null" class="badge badge-danger">Offline</span>
+        {{ consoleTitle }}
       </h2>
       <h2 *ngIf="project && app" style="margin-top: 1rem">
+        <span *ngIf="consoleLive" width=100 class="badge badge-success">Online</span>
+        <span *ngIf="!consoleLive && consoleLive !== null" width=100 class="badge badge-danger">Offline</span>
         {{ project.project_name }} {{ app.app_name }}
-        <span *ngIf="consoleLive" class="badge badge-success">Online</span>
-        <span *ngIf="!consoleLive && consoleLive !== null" class="badge badge-danger">Offline</span>
       </h2>
       <div class="console">
         <div id="consoleOutput">
@@ -20,9 +20,8 @@
       <div class="action">
         <button (click)="cleanConsole()" type="button" class="btn">Clear</button>
         <button (click)="disableConsole()" type="button" class="btn btn-warning">Back to setup</button>
-        <button *ngIf="!isCleanup" (click)="startSetupScript()" type="button" class="btn btn-danger">Reload script</button>
-        <button *ngIf="isCleanup" (click)="startCleanupScript()" type="button" class="btn btn-danger">Reload cleanup</button>
-        <button *ngIf="enableDownloadBtn" (click)="downloadTemplate()" type="button" class="btn btn-success">Download CI template</button>
+        <button (click)="startSetupScript()" type="button" class="btn btn-danger">Reload script</button>
+        <button *ngIf="enableDownloadBtn && !hideDownloadBtn" (click)="downloadTemplate()" type="button" class="btn btn-success">Download CI template</button>
       </div>
     </div>
   </div>

@@ -98,18 +98,8 @@ export class ServersComponent implements OnInit {
     if(server.app_status === 'progress' || server.app_status === 'cleanup')
       return;
 
-    this.route.navigate([`console/server/${server._id}`], { queryParams: { start: 'true' } });
-  }
-
-  toConsole(server, app, cleanup = false){
-    if(cleanup)
-      this.route.navigate([`console/cleanup_server/${server.id}`], { queryParams: { cleanup: 'true' } });
-    else
-      this.route.navigate([`console/cleanup_server/${server.id}`]);
-  }
-
-  editServer(server){
-    this.route.navigate([`servers/${server.id}`]);
+    this.toConsole(server, false, true);
+    // this.route.navigate([`console/server/${server.id}`], { queryParams: { start: 'true' } });
   }
 
   cleanupServer(server){
@@ -128,14 +118,22 @@ export class ServersComponent implements OnInit {
         'Don`t cleanup'
     ).then((res) => {
       this.api.remove(`server/cleanup/${server.id}`).then(() => {
-        this.toConsole(server, true);
+        this.toConsole(server, true, true);
       }, (err) => {
         this.modal.alert(err);
       })
       setTimeout(() => {
-        this.toConsole(server, true);
+        this.toConsole(server, true, true);
       }, 500);
     });
+  }
+
+  toConsole(server, cleanup = false, autostart = false){
+    this.route.navigate([`console/server/${server.id}`], { queryParams: { start: autostart, cleanup: cleanup } });
+  }
+
+  editServer(server){
+    this.route.navigate([`servers/${server.id}`]);
   }
 
   deleteServer(server) {
