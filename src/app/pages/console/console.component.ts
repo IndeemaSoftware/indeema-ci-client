@@ -45,7 +45,12 @@ export class ConsoleComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private modal: ModalService
   ) {
-
+    //Get params
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.autoStart = params['start']==="true";
+      this.isCleanup = params['cleanup']==="true";
+    });      
+    
     this.key = this.activatedRoute.snapshot.params['id'];
     if (this.key === "server") {
       this.serverId = this.activatedRoute.snapshot.params['app_id'];
@@ -66,12 +71,6 @@ export class ConsoleComponent implements OnInit {
         return;
       }
     }
-
-    //Get params
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.autoStart = params['start'];
-      this.isCleanup = params['cleanup'];
-      });      
   }
 
   ngOnInit() {
@@ -81,7 +80,6 @@ export class ConsoleComponent implements OnInit {
     }, 1000);
 
     if (this.projectId) {
-    console.log("if (this.projectId) {" );
     //Get project
     this.api.get(`/projects/${this.projectId}`)
       .then(data => {
@@ -179,7 +177,7 @@ export class ConsoleComponent implements OnInit {
         this.route.navigate([`projects`]);
       })
     } else if (this.serverId) {
-      this.api.create(`/console/setup_server/${this.serverId}`, {}).then(() => {
+      this.api.create(`/server/setup/${this.serverId}`, {}).then(() => {
         this.cleanConsole();
       }, (err) => {
         this.modal.alert(err);
@@ -205,7 +203,15 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
-  startCleanupScript(){
+  reloadScript() {
+    if (this.isCleanup) {
+      this.startCleanupScript();
+    } else {
+      this.startSetupScript();
+    }
+  }
+
+  startCleanupScript() {
     if (this.projectId) {
       this.api.remove(`projects/cleanup/${this.projectId}/${this.appId}`).then((resp) => {
         this.cleanConsole();
