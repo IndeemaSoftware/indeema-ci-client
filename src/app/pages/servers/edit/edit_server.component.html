@@ -1,6 +1,6 @@
 <app-header></app-header>
 <div class="container">
-  <div *ngIf="server && server.id" class="row">
+  <div *ngIf="server" class="row">
     <div class="col-sm-12 col-md-6 col-lg-6 center-content-item">
       <h2>
         {{ server.server_name }}
@@ -22,7 +22,7 @@
 
           <div class="form-container">
 
-            <div class="form-group required">
+            <div *ngIf="platform_list" class="form-group required">
               <label for="platform">Platform</label>
               <select (change)="platformSelected()" [(ngModel)]="server.platform" enabled class="form-control" name="platform{{ pId }}">
                 <option [value]="null"  disabled>Chose platform setup script</option>
@@ -81,7 +81,12 @@
           </div>
         </div>
         <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>
-        <button (click)="proceedToUpdate(false)" type="button" class="btn btn-warning">Update</button>
+        <div *ngIf="!isNew">
+          <button (click)="proceedToUpdate(false)" type="button" class="btn btn-warning">Update</button>
+        </div>
+        <div *ngIf="isNew">
+          <button (click)="proceedToSetop(false)" type="button" class="btn btn-warning">Setup</button>
+        </div>
       </form>
     </div>
   </div>

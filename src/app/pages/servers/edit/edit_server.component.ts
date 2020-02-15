@@ -44,7 +44,7 @@ export class EditServerComponent implements OnInit {
   };
 
   serverModel: any = {};
-  platform_list: any = {};
+  platform_list: any = [];
 
   modelApi: any = {};
 
@@ -56,8 +56,12 @@ export class EditServerComponent implements OnInit {
   errorMsg = false as any;
 
   //Server data
-  server = null as any;
+  server: any = {
+    platform: ""
+  };
   serverId = null as any;
+
+  isNew = false as boolean;
 
   //Upload model index
   uploadModelIndex = 0;
@@ -69,24 +73,18 @@ export class EditServerComponent implements OnInit {
       private activatedRoute: ActivatedRoute,
       private modal: ModalService
   ) {
-    this.serverId = this.activatedRoute.snapshot.params['id'];
-    if(!this.serverId){
-      this.route.navigate([`servers`]);
-      return;
+    let value = this.activatedRoute.snapshot.params['id'];
+    if (value !== "new") {
+      this.serverId = value;
+    } else {
+      this.isNew = true;
     }
   }
 
   ngOnInit() {
-    //Get server dependencies list
-    this.api.get('/server-dependencies')
-        .then(data => this.serversDeps = data, err => this.serversDeps = []);
-
-    //Get nodejs dependencies list
-    this.api.get('/nodejs-dependencies')
-        .then(data => this.nodejsDeps = data, err => this.nodejsDeps = []);
-
-    //Get project
-    this.api.get(`/server/${this.serverId}`)
+    //Get server
+    if (!this.isNew) {
+      this.api.get(`/server/${this.serverId}`)
         .then(data => {
           this.server = data;
           this.setupServer();
@@ -94,6 +92,15 @@ export class EditServerComponent implements OnInit {
           this.modal.alert(err);
           this.route.navigate([`servers`]);
         });
+    }
+
+    //Get server dependencies list
+    this.api.get('/server-dependencies')
+    .then(data => this.serversDeps = data, err => this.serversDeps = []);
+
+    //Get nodejs dependencies list
+    this.api.get('/nodejs-dependencies')
+        .then(data => this.nodejsDeps = data, err => this.nodejsDeps = []);
 
     this.api.get(`platform/listAll`).then((resp) => {
       this.platform_list = resp.data;
@@ -326,10 +333,10 @@ export class EditServerComponent implements OnInit {
     this.uploader.queue = [];
 
     //Check if user upload any files
-    if(this.isFileUploaded()){
+    if (this.isFileUploaded()) {
       this.uploadModelIndex = 0;
       this.uploadFiles();
-    }else{
+    } else {
       const proceed_setup = this.modelApi.proceed_setup;
       delete this.modelApi.proceed_setup;
 

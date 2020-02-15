@@ -4,7 +4,7 @@
     <div class="col-sm-12 col-md-12 col-lg-12">
       <h2 style="margin-top: 2rem">
         Servers list
-        <a class="btn btn-success right" routerLink="/edit_server">Setup new server</a>
+        <a class="btn btn-success right" routerLink="/servers/new">Setup new server</a>
       </h2>
       <h4 *ngIf="servers && servers.length" class="badge-splited">
         <span *ngIf="statuses.progress" class="badge badge-warning">{{ statuses.progress }} In progress...</span>
