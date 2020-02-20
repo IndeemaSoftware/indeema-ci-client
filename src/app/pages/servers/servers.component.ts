@@ -52,29 +52,27 @@ export class ServersComponent implements OnInit {
 
       //Setup counters
       for(let server of this.servers){
-        if(server.apps && server.apps.length){
-          for(let app of server.apps){
-            if(app.app_status === 'waiting')
-              this.statuses.waiting++;
+        if(server) { 
+          if(server.server_status === 'waiting')
+            this.statuses.waiting++;
 
-            if(app.app_status === 'progress')
-              this.statuses.progress++;
+          if(server.server_status === 'progress')
+            this.statuses.progress++;
 
-            if(app.app_status === 'success')
-              this.statuses.success++;
+          if(server.server_status === 'success')
+            this.statuses.success++;
 
-            if(app.app_status === 'failed')
-              this.statuses.failed++;
+          if(server.server_status === 'failed')
+            this.statuses.failed++;
 
-            if(app.app_status === 'cleanup')
-              this.statuses.cleanup++;
+          if(server.server_status === 'cleanup')
+            this.statuses.cleanup++;
 
-            if(app.app_status === 'cleanup_success')
-              this.statuses.cleanup_success++;
+          if(server.server_status === 'cleanup_success')
+            this.statuses.cleanup_success++;
 
-            if(app.app_status === 'cleanup_failed')
-              this.statuses.cleanup_failed++;
-          }
+          if(server.server_status === 'cleanup_failed')
+            this.statuses.cleanup_failed++;
         }
       }
 
@@ -133,7 +131,7 @@ export class ServersComponent implements OnInit {
   }
 
   deleteServer(server) {
-    if(server.app_status !== 'cleanup_success' && server.app_status !== 'cleanup_failed'){
+    if(server.server_status !== 'cleanup_success' && server.server_status !== 'cleanup_failed'){
       this.modal.alert('Before delete app, please cleanup this app!', 'Important!', 'I understand!');
     } else {
       this.modal.confirm(

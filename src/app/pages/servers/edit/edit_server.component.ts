@@ -252,7 +252,7 @@ export class EditServerComponent implements OnInit {
     if(
         !model.server_name
     )
-      return 'Please input all required fields.';
+    return 'Please input all required fields.';
 
     if(model.avaliable_ports){
       const portRegex = new RegExp('^[0-9]+$', 'gm');
