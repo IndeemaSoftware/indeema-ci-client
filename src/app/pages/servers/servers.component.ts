@@ -144,7 +144,7 @@ export class ServersComponent implements OnInit {
               return 'App name is incorrect!';
           }
       ).then((res) => {
-        this.api.remove(`servers/${server.id}`).then(() => {
+        this.api.remove(`server/${server.id}`).then(() => {
           this.getServers();
         }, (err) => {
         });

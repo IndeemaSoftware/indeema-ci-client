@@ -24,7 +24,7 @@
 
             <div *ngIf="platform_list" class="form-group required">
               <label for="platform">Platform</label>
-              <select (change)="platformSelected()" [(ngModel)]="server.platform" enabled class="form-control" name="platform{{ pId }}">
+              <select (change)="platformSelected()" [(ngModel)]="serverModel.platform" enabled class="form-control" name="platform{{ pId }}">
                 <option [value]="null"  disabled>Chose platform setup script</option>
                 <ng-container *ngFor="let item of platform_list">
                   <option [ngValue]="item">{{ item.platform_name }}</option>
@@ -50,7 +50,7 @@
             </div>
             <div class="form-group required">
               <label for="ssh_pem">SSH pem key</label>
-              <input (change)="addPemFile($event, model)" type="file" class="form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH pem key">
+              <input (change)="addPemFile($event, serverModel)" type="file" class="form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH pem key">
               <small *ngIf="serverModel.ssh_key && serverModel.ssh_key.name" class="form-text text-muted">SSH Pem: {{ serverModel.ssh_key.name }} <a target="_blank" href="{{api_url}}{{ serverModel.ssh_key.url }}">Download</a></small>
               <small class="form-text text-muted">Server ssh key to be used to login to server remotely.</small>
             </div>
@@ -60,7 +60,7 @@
             <div *ngFor="let item of serverModel.server_dependency; let i = index" class="form-group repeated">
               <select [(ngModel)]="serverModel.server_dependency[i].value" class="form-control" name="server_dependency[{{ pId }}{{ i }}]">
                 <option [value]="null"  disabled>Chose dependency for server</option>
-                <option *ngFor="let item of serversDeps" [value]="item.id">{{ item.label }}</option>
+                <option *ngFor="let item of server_dependency_list" [value]="item.id">{{ item.label }}</option>
               </select>
               <span (click)="removeRepeatField(serverModel.server_dependency, i)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length > 1" class="text-danger remove-btn">Remove</span>
               <span (click)="cleanFields(serverModel.server_dependency)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length === 1 && serverModel.server_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
@@ -69,24 +69,19 @@
           </div>
           <div class="form-container">
             <h3>Custom dependencies:</h3>
-            <div *ngFor="let item of serverModel.node_dependency; let i = index" class="form-group repeated">
-              <select [(ngModel)]="serverModel.node_dependency[i].value" class="form-control" name="node_dependency[{{ pId }}{{ i }}]">
+            <div *ngFor="let item of serverModel.custom_dependency; let i = index" class="form-group repeated">
+              <select [(ngModel)]="serverModel.custom_dependency[i].value" class="form-control" name="custom_dependency[{{ pId }}{{ i }}]">
                 <option [value]="'null'" disabled>Chose dependency for Node.JS</option>
-                <option *ngFor="let item of nodejsDeps" [value]="item.id">{{ item.label }}</option>
+                <option *ngFor="let item of serverModel.custom_dependency" [value]="item.id">{{ item.label }}</option>
               </select>
-              <span (click)="removeRepeatField(serverModel.node_dependency, i)" *ngIf="serverModel.node_dependency && serverModel.node_dependency.length > 1" class="text-danger remove-btn">Remove</span>
-              <span (click)="cleanFields(serverModel.node_dependency)" *ngIf="serverModel.node_dependency && serverModel.node_dependency.length === 1 && serverModel.node_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+              <span (click)="removeRepeatField(serverModel.custom_dependency, i)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length > 1" class="text-danger remove-btn">Remove</span>
+              <span (click)="cleanFields(serverModel.custom_dependency)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length === 1 && serverModel.custom_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
             </div>
-            <button (click)="addRepeatField(serverModel.node_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
+            <button (click)="addRepeatField(serverModel.custom_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
           </div>
         </div>
         <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>
-        <div *ngIf="!isNew">
-          <button (click)="proceedToUpdate(false)" type="button" class="btn btn-warning">Update</button>
-        </div>
-        <div *ngIf="isNew">
-          <button (click)="proceedToSetop(false)" type="button" class="btn btn-warning">Setup</button>
-        </div>
+        <button (click)="proceedToUpdate(false)" type="button" class="btn btn-warning">{{isNew?"Setup":"Update"}}</button>
       </form>
     </div>
   </div>

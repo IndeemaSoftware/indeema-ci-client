@@ -30,27 +30,25 @@ export class EditServerComponent implements OnInit {
     ssh_key: null,
 
     //Server dependencies
-    server_dependency: [
-      {value: null}
-    ],
-
-    //Node.JS dependencies
-    node_dependency: [
-      {value: null}
-    ],
+    serverModel: { server_dependency: [
+                                    { value: null }
+                                    ],
+                  custom_dependency: [
+                                    { value: null }
+                                    ]},
 
     //Validation error
     errorMsg: ''
   };
-
+  
   serverModel: any = {};
   platform_list: any = [];
 
   modelApi: any = {};
 
   //Lists
-  serversDeps = [] as any;
-  nodejsDeps = [] as any;
+  server_dependency_list = [] as any;
+  custom_dependency_list = [] as any;
 
   //Error
   errorMsg = false as any;
@@ -96,11 +94,11 @@ export class EditServerComponent implements OnInit {
 
     //Get server dependencies list
     this.api.get('/server-dependencies')
-    .then(data => this.serversDeps = data, err => this.serversDeps = []);
+    .then(data => this.server_dependency_list = data, err => this.server_dependency_list = []);
 
     //Get nodejs dependencies list
     this.api.get('/nodejs-dependencies')
-        .then(data => this.nodejsDeps = data, err => this.nodejsDeps = []);
+        .then(data => this.custom_dependency_list = data, err => this.custom_dependency_list = []);
 
     this.api.get(`platform/listAll`).then((resp) => {
       this.platform_list = resp.data;
@@ -111,8 +109,8 @@ export class EditServerComponent implements OnInit {
     console.log("Platform selected");
   }
 
-  prepareToEdit(){
-    this.serverModel = _.cloneDeep(this.server.plain());
+  prepareToEdit() {
+    this.serverModel = _.cloneDeep(this.server);
     this.modelApi = {};
 
     //Remove exist cert
@@ -133,23 +131,35 @@ export class EditServerComponent implements OnInit {
     }
 
     //Prepare nodejs dependencies
-    if(this.serverModel.nodejs_dependencies && this.serverModel.nodejs_dependencies.length){
-      this.serverModel.node_dependency = [];
-      for(let dep of this.serverModel.nodejs_dependencies){
-        this.serverModel.node_dependency.push({value: dep.id});
+    if (this.serverModel.custom_dependency && this.serverModel.custom_dependency.length) {
+      this.serverModel.custom_dependency = [];
+      for (let dep of this.serverModel.custom_dependency) {
+        this.serverModel.custom_dependency.push({value: dep.id});
       }
-      delete this.serverModel.nodejs_dependencies;
-    }else{
-      this.serverModel.node_dependency = [
+      delete this.serverModel.custom_dependency;
+    } else {
+      this.serverModel.custom_dependency = [
         {value: null}
       ];
-      delete this.serverModel.nodejs_dependencies;
+      delete this.serverModel.custom_dependency;
     }
   }
 
-  setupServer(){
+   async createServer() {
+    return new Promise((rs, rj) => {
+      this.api.create(`server`, {}).then((server) => {
+        this.server = server;
+        this.serverId = server.id;
+        rs();
+      });
+    })
+  }
+
+  async setupServer() {
     //Prepare form model
-    this.prepareToEdit();
+    if (!this.isNew) {
+      this.prepareToEdit();
+    }
 
     const jwt = this.auth.getJWT();
 
@@ -166,65 +176,64 @@ export class EditServerComponent implements OnInit {
     };
 
     //Trigger for creating project
-    let isUpdateProject = false;
+    let isUpdateServer = false;
 
     this.uploader.onSuccessItem = (item: any, response: any, status: any, headers: any) => {
       //Additional check for create project
-      if(isUpdateProject)
+      if (isUpdateServer)
         return
 
-      isUpdateProject = true;
+      isUpdateServer = true;
 
       response = JSON.parse(response);
-      if(!response.length){
+      if (!response.length) {
         this.errorMsg = 'File not uploaded properly!';
         return;
       }
 
-      if(this.modelApi){
+      if (this.modelApi) {
         //Setup files id`s
-        for(let file of response){
-          if(this.modelApi.ssh_key && this.modelApi.ssh_key.name === file.name)
+        for (let file of response) {
+          if (this.modelApi.ssh_key && this.modelApi.ssh_key.name === file.name)
             this.modelApi.ssh_key = file.id;
         }
       }
 
-      //Timeout for fix multiple responses
-      setTimeout(() => {
+      return new Promise((rs, rj) => {
 
-        //Increase index and re-upload
-        this.uploadModelIndex++;
-
-        const isAvaliable = this.uploadFiles();
-        if(!isAvaliable){
+        //Timeout for fix multiple responses
+        setTimeout(() => {
           const proceed_setup = this.modelApi.proceed_setup;
           delete this.modelApi.proceed_setup;
 
-          //Update project
-          this.api.update(`server/${this.serverId}`, this.modelApi).then((project) => {
-            isUpdateProject = false;
+          //Update server
+          this.api.update(`server/${this.serverId}`, this.modelApi).then((server) => {
+            isUpdateServer = false;
 
-            //PROJECT CREATED
-            if(proceed_setup){
-              this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
-            }else{
+            //SERVER CREATED
+            if (proceed_setup) {
+              this.route.navigate([`console/${server.id}`], { queryParams: { start: 'true' } });
+            } else {
               this.route.navigate([`servers`]);
             }
-          }, (err) => {
-            isUpdateProject = false;
-            this.errorMsg = err;
-          });
-        }else{
-          isUpdateProject = false;
-        }
 
-      }, 250);
+            rs();
+          }, (err) => {
+            isUpdateServer = false;
+            this.errorMsg = err;
+            rs();
+          });
+  
+        }, 250);
+
+      });
 
     };
   }
 
   addPemFile(ev, model){
     model.ssh_key = ev.target.files[0];
+    console.log(model.ssh_key);
   }
 
   addRepeatField(arr){
@@ -270,17 +279,17 @@ export class EditServerComponent implements OnInit {
     const newModel = _.cloneDeep(model);
 
     //Create new model fields
-    newModel.server_dependencies = [];
-    newModel.nodejs_dependencies = [];
+    newModel.server_dependency = [];
+    newModel.custom_dependency = [];
 
     //Fill model fields
-    for(let obj of newModel.server_dependency){
+    for (let obj of newModel.server_dependency) {
       if(obj.value)
-        newModel.server_dependencies.push(obj.value);
+        newModel.server_dependency.push(obj.value);
     }
-    for(let obj of newModel.node_dependency){
-      if(obj.value)
-        newModel.nodejs_dependencies.push(obj.value);
+    for (let obj of newModel.custom_dependency) {
+      if (obj.value)
+        newModel.custom_dependency.push(obj.value);
     }
 
     if(!newModel.ssh_key)
@@ -288,7 +297,7 @@ export class EditServerComponent implements OnInit {
 
     //Cleanup model fields
     delete newModel.server_dependency;
-    delete newModel.node_dependency;
+    delete newModel.custom_dependency;
 
     return newModel;
   }
@@ -296,34 +305,36 @@ export class EditServerComponent implements OnInit {
   isFileUploaded(){
     let hasFiles = false;
 
-    for(let server of this.modelApi.servers){
-      if(server.ssh_key){
+    if (this.server.ssh_key) {
         hasFiles = true;
-        break;
-      }
     }
 
     return hasFiles;
   }
 
-  proceedToUpdate(start = false){
+  async proceedToUpdate(start = false){
     //Validate models
     let hasErrors = false;
 
-    if(hasErrors){
+    if (hasErrors) {
       window.scrollTo(0, 1);
       return false;
     }
     this.errorMsg = '';
-    if(!this.serverModel.server_name) {
+    if (!this.serverModel.server_name) {
       this.errorMsg = 'Server name is required';
       return false;
     } else {
       const serverNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
-      if(!serverNameRegex.test(this.serverModel.server_name)){
+      if (!serverNameRegex.test(this.serverModel.server_name)) {
         this.errorMsg = 'Server name is invalid. Please use: alphabetic characters, numbers, "-" or "_"';
         return false;
       }
+    }
+
+    if (this.isNew) {
+      await this.createServer();
+      await this.setupServer();        
     }
 
     //Prepare model for api
@@ -342,18 +353,18 @@ export class EditServerComponent implements OnInit {
 
       //Cleanup server
       delete this.modelApi.ssh_key;
-
-      //Update project
-      this.api.update(`server/${this.serverId}`, this.modelApi).then((project) => {
-        //PROJECT CREATED
-        if(proceed_setup){
-          this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
-        }else{
+        //Update server
+      this.api.update(`server/${this.serverId}`, this.modelApi).then((server) => {
+        //SERVER CREATED
+        if (proceed_setup) {
+          this.route.navigate([`console/server/${server.id}`], { queryParams: { start: 'true',cleanup: 'false' } });
+        } else {
           this.route.navigate([`servers`]);
         }
       }, (err) => {
         this.errorMsg = err;
       });
+
     }
 
     return false;
