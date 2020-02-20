@@ -6,9 +6,6 @@
   <div *ngIf="user" class="collapse navbar-collapse">
     <ul class="navbar-nav">
       <li routerLinkActive="active" class="nav-item">
-        <a class="nav-link" routerLink="/runner">Setup project <span class="sr-only">(current)</span></a>
-      </li>
-      <li routerLinkActive="active" class="nav-item">
         <a class="nav-link" routerLink="/projects">Projects</a>
       </li>
       <li routerLinkActive="active" class="nav-item">
@@ -17,9 +14,6 @@
       <li routerLinkActive="active" class="nav-item">
         <a class="nav-link" routerLink="/settings">Settings</a>
       </li>
-      <!--<li *ngIf="user.role.type === 'administrator'" routerLinkActive="active" class="nav-item">
-        <a class="nav-link" routerLink="/users">Users</a>
-      </li>-->
     </ul>
   </div>
   <form (submit)="logout()" class="form-inline">

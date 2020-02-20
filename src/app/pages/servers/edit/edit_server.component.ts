@@ -35,7 +35,11 @@ export class EditServerComponent implements OnInit {
                                     ],
                   custom_dependency: [
                                     { value: null }
-                                    ]},
+                                    ],
+                  platform: {
+                    platform_name: ""
+                  }
+                  },
 
     //Validation error
     errorMsg: ''
@@ -54,15 +58,10 @@ export class EditServerComponent implements OnInit {
   errorMsg = false as any;
 
   //Server data
-  server: any = {
-    platform: ""
-  };
+  server: any = {};
   serverId = null as any;
 
   isNew = false as boolean;
-
-  //Upload model index
-  uploadModelIndex = 0;
 
   constructor(
       private api: ApiService,
@@ -103,10 +102,6 @@ export class EditServerComponent implements OnInit {
     this.api.get(`platform/listAll`).then((resp) => {
       this.platform_list = resp.data;
     });  
-  }
-
-  platformSelected() {
-    console.log("Platform selected");
   }
 
   prepareToEdit() {
@@ -339,13 +334,13 @@ export class EditServerComponent implements OnInit {
 
     //Prepare model for api
     this.modelApi = this.prepareModel(this.serverModel);
+    console.log(this.modelApi);
 
     //Remove all files from queue
     this.uploader.queue = [];
 
     //Check if user upload any files
     if (this.isFileUploaded()) {
-      this.uploadModelIndex = 0;
       this.uploadFiles();
     } else {
       const proceed_setup = this.modelApi.proceed_setup;
@@ -381,11 +376,6 @@ export class EditServerComponent implements OnInit {
     //Prepare files list
     const files = [];
     files.push(this.modelApi.ssh_key);
-
-    if(!files.length){
-      this.uploadModelIndex++;
-      return this.uploadFiles();
-    }
 
     //Attach file
     this.uploader.addToQueue(files);
