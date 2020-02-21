@@ -105,7 +105,6 @@ export class EditServerComponent implements OnInit {
 
   prepareToEdit() {
     this.serverModel = _.cloneDeep(this.server);
-    console.log(this.serverModel);
     this.modelApi = {};
 
     //Remove exist cert
