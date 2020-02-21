@@ -26,11 +26,7 @@ export class CIScriptsComponent implements OnInit {
   ) { };
 
   ngOnInit() {
-    this.auth.getUser().then((user) => {
-      this.updateCIList();
-    }, (err) => {
-      this.route.navigate(['signin']);
-    });
+    this.updateCIList();
   }
 
 updateCiFields(data) {

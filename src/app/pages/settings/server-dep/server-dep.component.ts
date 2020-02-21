@@ -11,13 +11,50 @@ import { ModalService } from '../../../services/modal.service';
 })
 export class ServerDepComponent implements OnInit {
 
-  constructor(
-    private api: ApiService,
-    private auth: AuthService,
-    private route: Router,
-    private modal: ModalService
-  ) { };
+    newDependency: {
+        name:"",
+        label:"",
+        package:"",
+        pre_install_script:"",
+        post_install_script:""
+    };
 
-  ngOnInit() {
-  }
+    settingsModel: any = {
+        dependency: {
+            name:"",
+            label:"",
+            package:"",
+            pre_install_script:"",
+            post_install_script:""
+        }
+    } as any;
+
+    constructor(
+        private api: ApiService,
+        private auth: AuthService,
+        private route: Router,
+        private modal: ModalService
+    ) { };
+
+    ngOnInit() {
+        this.updateList();
+    }
+
+    updateList() {
+        this.api.get(`server-dependencies`).then((resp) => {
+            this.settingsModel.dependency_list = resp;
+        });  
+    }
+
+    cleanFields() {
+        this.settingsModel.dependency = this.newDependency;
+    }
+
+    createNew() {
+        console.log("Create new");
+    }
+
+    dependencySelected() {
+        console.log("Dependency selected");
+    }
 }

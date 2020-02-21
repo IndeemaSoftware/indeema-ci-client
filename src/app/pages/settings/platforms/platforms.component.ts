@@ -30,11 +30,7 @@ export class PlatformsComponent implements OnInit {
   ) { };
 
   ngOnInit() {
-    this.auth.getUser().then((user) => {
-      this.updatePlatformList();
-    }, (err) => {
-      this.route.navigate(['signin']);
-    });
+    this.updatePlatformList();
   }
 
   updatePlatformFields(data) {
