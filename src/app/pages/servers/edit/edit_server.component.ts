@@ -35,9 +35,7 @@ export class EditServerComponent implements OnInit {
                                     ],
                   custom_dependency: [ {value:""}
                                     ],
-                  platform: {
-                    platform_name: ""
-                  }
+                  platform: ""
                   },
 
     //Validation error
@@ -46,8 +44,9 @@ export class EditServerComponent implements OnInit {
   
   serverModel: any = {};
   platform_list: any = [];
-
   modelApi: any = {};
+
+  platform: any;
 
   //Lists
   server_dependency_list = [] as any;
@@ -106,6 +105,7 @@ export class EditServerComponent implements OnInit {
 
   prepareToEdit() {
     this.serverModel = _.cloneDeep(this.server);
+    console.log(this.serverModel);
     this.modelApi = {};
 
     //Remove exist cert
@@ -122,7 +122,12 @@ export class EditServerComponent implements OnInit {
       this.serverModel.server_dependency = [{value:""}];
       delete this.serverModel.server_dependencies;
     }
-    console.log(this.serverModel.server_dependency);
+
+    if (this.serverModel.platform) {
+      this.platform = this.serverModel.platform.id;
+    } else {
+      this.platform = "";
+    }
 
     //Prepare nodejs dependencies
     if (this.serverModel.custom_dependency && this.serverModel.custom_dependency.length) {
@@ -207,7 +212,6 @@ export class EditServerComponent implements OnInit {
 
   addPemFile(ev, model){
     model.ssh_key = ev.target.files[0];
-    console.log(model.ssh_key);
   }
 
   addRepeatField(arr){
@@ -252,6 +256,7 @@ export class EditServerComponent implements OnInit {
   prepareModel(model){
     const newModel = _.cloneDeep(model);
 
+    newModel.platform = this.platform;
     //Create new model fields
     delete newModel.server_dependencies;
     newModel.server_dependencies = [];

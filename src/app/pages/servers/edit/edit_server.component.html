@@ -24,10 +24,10 @@
 
             <div *ngIf="platform_list" class="form-group required">
               <label for="platform">Platform</label>
-              <select [(ngModel)]="serverModel.platform" enabled class="form-control" name="platform{{ pId }}">
+              <select [(ngModel)]="platform" enabled class="form-control" name="platform{{ pId }}">
                 <option [value]="null"  disabled>Chose platform setup script</option>
                 <ng-container *ngFor="let item of platform_list">
-                  <option [ngValue]="item">{{ item.platform_name }}</option>
+                  <option [ngValue]="item.id">{{ item.platform_name }}</option>
                 </ng-container>
               </select>
               </div>
