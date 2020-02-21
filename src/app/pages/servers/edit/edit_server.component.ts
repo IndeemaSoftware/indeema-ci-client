@@ -6,6 +6,7 @@ import { ApiService } from '../../../services/api.service';
 import { MultipleFileUploaderService } from '../../../services/multiple-file-uploader.service';
 import * as _ from 'lodash';
 import { ModalService} from '../../../services/modal.service';
+import { ConsoleComponent } from '../../console/console.component';
 
 @Component({
   selector: 'edit_server',
@@ -30,11 +31,9 @@ export class EditServerComponent implements OnInit {
     ssh_key: null,
 
     //Server dependencies
-    serverModel: { server_dependency: [
-                                    { value: null }
+    serverModel: { server_dependency: [{value:""}
                                     ],
-                  custom_dependency: [
-                                    { value: null }
+                  custom_dependency: [ {value:""}
                                     ],
                   platform: {
                     platform_name: ""
@@ -73,6 +72,7 @@ export class EditServerComponent implements OnInit {
     let value = this.activatedRoute.snapshot.params['id'];
     if (value !== "new") {
       this.serverId = value;
+      this.isNew = false;
     } else {
       this.isNew = true;
     }
@@ -115,27 +115,24 @@ export class EditServerComponent implements OnInit {
     if(this.serverModel.server_dependencies && this.serverModel.server_dependencies.length) {
       this.serverModel.server_dependency = [];
       for(let dep of this.serverModel.server_dependencies){
-        this.serverModel.server_dependency.push({value: dep.id});
+        this.serverModel.server_dependency.push({value:dep.id});
       }
       delete this.serverModel.server_dependencies;
     } else {
-      this.serverModel.server_dependency = [
-        {value: null}
-      ];
+      this.serverModel.server_dependency = [{value:""}];
       delete this.serverModel.server_dependencies;
     }
+    console.log(this.serverModel.server_dependency);
 
     //Prepare nodejs dependencies
     if (this.serverModel.custom_dependency && this.serverModel.custom_dependency.length) {
       this.serverModel.custom_dependency = [];
       for (let dep of this.serverModel.custom_dependency) {
-        this.serverModel.custom_dependency.push({value: dep.id});
+        this.serverModel.custom_dependency.push({id:dep.id});
       }
       delete this.serverModel.custom_dependency;
     } else {
-      this.serverModel.custom_dependency = [
-        {value: null}
-      ];
+      this.serverModel.custom_dependency = [ null ];
       delete this.serverModel.custom_dependency;
     }
   }
@@ -195,34 +192,16 @@ export class EditServerComponent implements OnInit {
       }
 
       return new Promise((rs, rj) => {
-
         //Timeout for fix multiple responses
         setTimeout(() => {
           const proceed_setup = this.modelApi.proceed_setup;
           delete this.modelApi.proceed_setup;
 
-          //Update server
-          this.api.update(`server/${this.serverId}`, this.modelApi).then((server) => {
-            isUpdateServer = false;
-
-            //SERVER CREATED
-            if (proceed_setup) {
-              this.route.navigate([`console/${server.id}`], { queryParams: { start: 'true' } });
-            } else {
-              this.route.navigate([`servers`]);
-            }
-
-            rs();
-          }, (err) => {
-            isUpdateServer = false;
-            this.errorMsg = err;
-            rs();
-          });
+          this.updateServer(this.modelApi, proceed_setup);
+          rs();
   
         }, 250);
-
       });
-
     };
   }
 
@@ -232,7 +211,7 @@ export class EditServerComponent implements OnInit {
   }
 
   addRepeatField(arr){
-    arr.push({value: null});
+    arr.push({value:""});
   }
 
   removeRepeatField(arr, key){
@@ -240,7 +219,7 @@ export class EditServerComponent implements OnInit {
   }
 
   cleanFields(arr){
-    arr[0].value = null;
+    arr[0] = null;
   }
 
   validateModel(model){
@@ -274,25 +253,26 @@ export class EditServerComponent implements OnInit {
     const newModel = _.cloneDeep(model);
 
     //Create new model fields
-    newModel.server_dependency = [];
-    newModel.custom_dependency = [];
+    delete newModel.server_dependencies;
+    newModel.server_dependencies = [];
+    // newModel.custom_dependency = [];
 
     //Fill model fields
     for (let obj of newModel.server_dependency) {
-      if(obj.value)
-        newModel.server_dependency.push(obj.value);
+      if(obj)
+        newModel.server_dependencies.push(obj.value);
     }
-    for (let obj of newModel.custom_dependency) {
-      if (obj.value)
-        newModel.custom_dependency.push(obj.value);
-    }
+    // for (let obj of newModel.custom_dependency) {
+    //   if (obj)
+    //     newModel.custom_dependency.push(obj);
+    // }
 
-    if(!newModel.ssh_key)
-      delete newModel.ssh_key;
+    // if(!newModel.ssh_key)
+    //   delete newModel.ssh_key;
 
     //Cleanup model fields
-    delete newModel.server_dependency;
-    delete newModel.custom_dependency;
+    //delete newModel.server_dependency;
+    // delete newModel.custom_dependency;
 
     return newModel;
   }
@@ -334,13 +314,12 @@ export class EditServerComponent implements OnInit {
 
     //Prepare model for api
     this.modelApi = this.prepareModel(this.serverModel);
-    console.log(this.modelApi);
 
     //Remove all files from queue
     this.uploader.queue = [];
 
     //Check if user upload any files
-    if (this.isFileUploaded()) {
+    if (!this.isFileUploaded()) {
       this.uploadFiles();
     } else {
       const proceed_setup = this.modelApi.proceed_setup;
@@ -348,21 +327,25 @@ export class EditServerComponent implements OnInit {
 
       //Cleanup server
       delete this.modelApi.ssh_key;
-        //Update server
-      this.api.update(`server/${this.serverId}`, this.modelApi).then((server) => {
-        //SERVER CREATED
-        if (proceed_setup) {
-          this.route.navigate([`console/server/${server.id}`], { queryParams: { start: 'true',cleanup: 'false' } });
-        } else {
-          this.route.navigate([`servers`]);
-        }
-      }, (err) => {
-        this.errorMsg = err;
-      });
 
+      this.updateServer(this.modelApi, proceed_setup);
     }
 
     return false;
+  }
+
+  updateServer(model, proceed_setup = false) {
+    //Update server
+    this.api.update(`server/${this.serverId}`, model).then((server) => {
+      //SERVER CREATED
+      if (proceed_setup) {
+        this.route.navigate([`console/server/${server.id}`], { queryParams: { start: 'true',cleanup: 'false' } });
+      } else {
+        this.route.navigate([`servers`]);
+      }
+    }, (err) => {
+      this.errorMsg = err;
+    });
   }
 
   uploadFiles(){
