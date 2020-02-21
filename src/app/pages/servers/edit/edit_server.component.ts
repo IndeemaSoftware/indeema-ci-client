@@ -95,7 +95,7 @@ export class EditServerComponent implements OnInit {
     .then(data => this.server_dependency_list = data, err => this.server_dependency_list = []);
 
     //Get nodejs dependencies list
-    this.api.get('/nodejs-dependencies')
+    this.api.get('/custom-dependencies')
         .then(data => this.custom_dependency_list = data, err => this.custom_dependency_list = []);
 
     this.api.get(`platform/listAll`).then((resp) => {
@@ -123,24 +123,25 @@ export class EditServerComponent implements OnInit {
       delete this.serverModel.server_dependencies;
     }
 
+    //Prepare custom dependencies
+    if(this.serverModel.custom_dependencies && this.serverModel.custom_dependencies.length) {
+      this.serverModel.custom_dependency = [];
+      for(let dep of this.serverModel.custom_dependencies){
+        this.serverModel.custom_dependency.push({value:dep.id});
+      }
+      delete this.serverModel.custom_dependencies;
+    } else {
+      this.serverModel.custom_dependency = [{value:""}];
+      delete this.serverModel.custom_dependencies;
+    }
+
     if (this.serverModel.platform) {
       this.platform = this.serverModel.platform.id;
     } else {
       this.platform = "";
     }
-
-    //Prepare nodejs dependencies
-    if (this.serverModel.custom_dependency && this.serverModel.custom_dependency.length) {
-      this.serverModel.custom_dependency = [];
-      for (let dep of this.serverModel.custom_dependency) {
-        this.serverModel.custom_dependency.push({id:dep.id});
-      }
-      delete this.serverModel.custom_dependency;
-    } else {
-      this.serverModel.custom_dependency = [ null ];
-      delete this.serverModel.custom_dependency;
-    }
   }
+
 
    async createServer() {
     return new Promise((rs, rj) => {
@@ -238,7 +239,7 @@ export class EditServerComponent implements OnInit {
 
       if(!portRegex.test(model.avaliable_ports)){
         if(!availiablePortRegex.test(model.avaliable_ports)){
-          return 'Avaliable ports is invalid. Please use: numbers. Separate ports by whitespace';
+          return 'Avaliable ports is invalid. Please use: numbers. Separate ports by comma with no whitespace';
         }
       }
     }
@@ -258,19 +259,20 @@ export class EditServerComponent implements OnInit {
 
     newModel.platform = this.platform;
     //Create new model fields
+
     delete newModel.server_dependencies;
     newModel.server_dependencies = [];
-    // newModel.custom_dependency = [];
-
-    //Fill model fields
     for (let obj of newModel.server_dependency) {
       if(obj)
         newModel.server_dependencies.push(obj.value);
     }
-    // for (let obj of newModel.custom_dependency) {
-    //   if (obj)
-    //     newModel.custom_dependency.push(obj);
-    // }
+
+    delete newModel.custom_dependencies;
+    newModel.custom_dependencies = [];
+    for (let obj of newModel.custom_dependency) {
+      if (obj)
+        newModel.custom_dependencies.push(obj.value);
+    }
 
     // if(!newModel.ssh_key)
     //   delete newModel.ssh_key;
