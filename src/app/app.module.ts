@@ -40,7 +40,10 @@ import { ConsoleComponent } from './pages/console/console.component';
 import { ServersComponent } from './pages/servers/servers.component';
 import { EditServerComponent } from './pages/servers/edit/edit_server.component';
 import { SettingsComponent } from './pages/settings/settings.component';
-
+import { ServerDepComponent } from './pages/settings/server-dep/server-dep.component';
+import { PlatformsComponent } from './pages/settings/platforms/platforms.component';
+import { CIScriptsComponent } from './pages/settings/ci-scripts/ci-scripts.component';
+import { MaintenanceComponent } from './pages/settings/maintenance/maintenance.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,11 @@ import { SettingsComponent } from './pages/settings/settings.component';
     ConsoleComponent,
     ServersComponent,
     EditServerComponent,
-    SettingsComponent
+    SettingsComponent,
+    ServerDepComponent,
+    PlatformsComponent,
+    CIScriptsComponent,
+    MaintenanceComponent
   ],
   imports: [
     BrowserModule,

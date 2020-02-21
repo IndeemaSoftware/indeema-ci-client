@@ -7,9 +7,9 @@ import { ProjectsComponent } from './pages/projects/projects.component';
 import { UsersComponent } from './pages/users/users.component';
 import { EditComponent } from './pages/projects/edit/edit.component';
 import { ConsoleComponent } from './pages/console/console.component';
-import { SettingsComponent } from './pages/settings/settings.component';
 import { ServersComponent } from './pages/servers/servers.component';
 import { EditServerComponent } from './pages/servers/edit/edit_server.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 const routes: Routes = [
   {
@@ -59,7 +59,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes)], 
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

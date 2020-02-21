@@ -1,204 +1,25 @@
 <app-header></app-header>
 <div class="container">
   <div class="tab">
-    <button class="tablinks" (click)="switchSetting('General')">        General</button>
-    <button class="tablinks" (click)="switchSetting('Authentication')"> Authentication</button>
     <button class="tablinks" (click)="switchSetting('Maintenance')">    Maintenance pages</button>
     <button class="tablinks" (click)="switchSetting('Templates')">      Templates</button>
+    <button class="tablinks" (click)="switchSetting('Server-Dep')">     Server Dependencies</button>
     <button class="tablinks" (click)="switchSetting('Platforms')">      Platforms</button>
   </div>
 
-    <!-- Tab content -->
-  <div id="General" class="tabcontent">
-    <!-- General settings -->
-    <!-- Start -->
-    <h3>General</h3>
-    <div class="form-group">
-      <label for="project_path">Project path</label>
-      <input [(ngModel)]="settingsModel.project_path" class="form-control" id="project_path" name="project_path" placeholder="Enter prefered project path on server">
-    </div>    
-    <div class="form-group">
-      <label for="maintenance_git_url">Maintenance git url</label>
-      <input [(ngModel)]="settingsModel.maintenance_git_url" class="form-control" id="maintenance_git_url" name="maintenance_git_url" placeholder="Enter git url to maintenance page">
-    </div>
-    <div class="form-group">
-      <label for="ssh_pem">SSH pem key</label>
-      <input (change)="addPemFile($event, model)" type="file" class="form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH key to access git repo if repo is private">
-      <small *ngIf="settingsModel.maintenance_git_ssh_key && settingsModel.maintenance_git_ssh_key.name" class="form-text text-muted">SSH Pem: {{ settingsModel.maintenance_git_ssh_key.name }} <a target="_blank" href="{{api_url}}{{ project.apps[pId].ssh_pem.url }}">Download</a></small>
-      <small class="form-text text-muted">Server ssh key to access git repo if repo is private.</small>
-    </div>
-    <div class="form-group"> 
-      <label for="maintenance_path">Maintenance path</label>
-      <input [(ngModel)]="settingsModel.maintenance_path" class="form-control" id="maintenance_path" name="maintenance_path" placeholder="Enter name of maintenance page folder that will be located inside the project path">
-    </div>
-  </div>
-  <!-- Finish -->
-  <!-- General settings -->
-
-  <!-- Authentication settings -->
-  <!-- Start -->
-  <div id="Authentication" class="tabcontent">
-    <h3>Authentication</h3>
-    <div class="form-group">
-      <div class="form-check">
-        <input [(ngModel)]="settingsModel.use_ldap" class="form-check-input" type="checkbox" name="use_ldap">
-        <label class="form-check-label" for="defaultCheck1">
-          Use LDAP auth
-        </label>
-      </div>
-      <div *ngIf="settingsModel.use_ldap">
-        <div class="form-group">
-          <label for="ldap_domain">LDAP domain</label>
-          <input [(ngModel)]="settingsModel.ldap_domain" class="form-control" id="ldap_domain" name="ldap_domain" placeholder="Enter LDAP server domain">
-        </div>    
-        <div class="form-group">
-          <label for="ldap_domain">User LDAP DN</label>
-          <input [(ngModel)]="settingsModel.ldap_user_db" class="form-control" id="ldap_user_db" name="ldap_user_db" placeholder="Enter user LDAP DN">
-        </div>   
-        <div class="form-group">
-          <label for="ldap_domain">Group LDAP DN</label>
-          <input [(ngModel)]="settingsModel.ldap_group_db" class="form-control" id="ldap_group_db" name="ldap_group_db" placeholder="Enter user LDAP DN">
-        </div>   
-      </div>
-    </div>
-  </div>
-  <!-- Finish -->
-  <!-- Authentication settings -->
-
-  <!-- Maintenance settings -->
-  <!-- Start -->
   <div id="Maintenance" class="tabcontent">
-    <h3>Maintenance pages</h3>
-    <div class="form-group required">
-      <label for="maintenance">Maintenance html page</label>
-      <select (change)="maintenanceSelected()" [(ngModel)]="settingsModel.maintenance" enabled class="form-control" name="maintenance{{ pId }}">
-        <option [value]="null"  disabled>Chose maintenance page</option>
-        <ng-container *ngFor="let item of settingsModel.maintenance_list">
-          <option [value]="item">{{ item }}</option>
-        </ng-container>
-      </select>
-      </div>
-    <div class="form-group">
-      <label for="new_maintenance_name">New maintenance page name</label>
-      <input [(ngModel)]="settingsModel.new_maintenance_name" class="form-control" id="new_maintenance_name" name="new_maintenance_name" placeholder="Please enter name for new maintenance page">
-    </div>   
-    <button (click)="duplicateMaintenance()" class="btn btn-primary" [disabled]="!settingsModel.new_maintenance_name">Duplicate</button>
-    <button (click)="deleteMaintenance()" class="btn btn-primary" [disabled]="!settingsModel.maintenance" class="btn btn-danger">Delete</button>
-    <div class="form-group">
-      <label for="desc">Setup script</label>
-      <textarea [(ngModel)]="settingsModel.maintenance_script" [(value)]="settingsModel.maintenance_script" class="form-control" id="script" name="script" rows="10"></textarea>
-    </div>
-    <button (click)="saveMaintenanceScript()" class="btn btn-primary" >Save maintenance script</button>
+    <maintenance></maintenance>
   </div>
-  <!-- Finish -->
-  <!-- Maintenance settings -->
 
-  <!-- Authentication settings -->
-  <!-- Start -->
   <div id="Templates" class="tabcontent">
-    <h3>CI scripts</h3>
-    <div class="form-group required">
-      <label for="ci">CI script</label>
-      <select (change)="ciSelected()" [(ngModel)]="settingsModel.ci" enabled class="form-control" name="ci{{ pId }}">
-        <option [value]="null"  disabled>Chose CI</option>
-        <ng-container *ngFor="let item of settingsModel.ci_script_list">
-          <option [value]="item">{{ item }}</option>
-        </ng-container>
-      </select>
-      </div>
-    <div class="form-group">
-      <label for="new_ci_name">New template name</label>
-      <input [(ngModel)]="settingsModel.new_ci_name" class="form-control" id="new_ci_name" name="new_ci_name" placeholder="Please enter name for new template">
-    </div>   
-    <button (click)="duplicateCI()" class="btn btn-primary" [disabled]="!settingsModel.new_ci_name || !settingsModel.ci">Duplicate</button>
-    <button (click)="deleteCI()" class="btn btn-primary" [disabled]="!settingsModel.ci" class="btn btn-danger">Delete</button>
-    <div class="form-group">
-      <label for="desc">Setup script</label>
-      <textarea [(ngModel)]="settingsModel.ci_script" [(value)]="settingsModel.ci_script" class="form-control" id="script" name="script" rows="10"></textarea>
-    </div>
-    <button (click)="saveCiScript()" class="btn btn-primary" >Save scripts</button>
-    <h3>CI templates</h3>
-    <div class="form-group required">
-      <label for="ci">CI template</label>
-      <select (change)="templateSelected()" [(ngModel)]="settingsModel.ci_template" enabled class="form-control" name="ci_template{{ pId }}">
-        <option [value]="null"  disabled>Chose CI template</option>
-        <ng-container *ngFor="let item of settingsModel.ci_template_list">
-          <option [value]="item">{{ item }}</option>
-        </ng-container>
-      </select>
-      </div>
-    <div class="form-group">
-      <label for="new_template_name">New template name</label>
-      <input [(ngModel)]="settingsModel.new_template_name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Please enter name for new template">
-    </div>   
-    <button (click)="duplicateTemplate()" class="btn btn-primary" [disabled]="!settingsModel.new_template_name || !settingsModel.ci_template">Duplicate</button>
-    <button (click)="deleteTemplate()" class="btn btn-primary" [disabled]="!settingsModel.ci_template" class="btn btn-danger">Delete</button>
-    <div class="form-group">
-      <label for="desc">Setup script</label>
-      <textarea [(ngModel)]="settingsModel.template_script" [(value)]="settingsModel.template_script" class="form-control" id="script" name="script" rows="10"></textarea>
-    </div>
-    <button (click)="saveTemplateScript()" class="btn btn-primary" >Save scripts</button>
+    <ci-scripts></ci-scripts>
   </div>
-  <!-- Finish -->
-  <!-- Authentication settings -->
 
-  <!-- Platforms settings -->
-  <!-- Start -->
+  <div id="Server-Dep" class="tabcontent">
+    <server-dep></server-dep>
+  </div>
+
   <div id="Platforms" class="tabcontent">
-    <h3>Platforms</h3>
-    <div class="form-group required">
-      <label for="platform">Platform setup script</label>
-      <select (change)="platformSelected()" [(ngModel)]="settingsModel.platform" enabled class="form-control" name="platform" id="platform">
-        <option [value]="null"  disabled>Chose platform setup script</option>
-        <ng-container *ngFor="let item of settingsModel.platform_list let i = index">
-          <option [ngValue]="settingsModel.platform_list[i]">{{ item.platform_name}}</option>
-        </ng-container>
-      </select>
-      </div>
-    <div class="form-container">
-      <h4>Platform variables</h4>
-      <div *ngFor="let item of settingsModel.platform.variables let i = index" class="form-group repeated">
-        <input [(ngModel)]="settingsModel.platform.variables[i].name"  class="form-control" id="variable" name="variable" placeholder="Enter variable key">
-        <input [(ngModel)]="settingsModel.platform.variables[i].value" class="form-control" id="variable" name="variable" placeholder="Enter variable value">
-        <span (click)="removeRepeatField(settingsModel.platform.variables, i)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length > 1" class="text-danger remove-btn">Remove</span>
-        <span (click)="cleanFields(settingsModel.platform.variables)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length === 1 && settingsModel.platform.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
-      </div>
-    <button (click)="addRepeatField(settingsModel.platform.variables)" type="button" class="btn btn-warning">Add another variable</button>
-    </div>
-    <div class="form-group">
-      <div>
-        <div>Parameters to be provided when calling Setup script <br/>
-              -n  Server Name<br/>
-              -d  Server description<br/>
-              -o  Platform name<br/>
-              -p  ports, separated with comma in brakets, like "100,200,300"<br/>
-              -i  ip address of server<br/>
-              -u  user name of user that has permissions to server with ip address provided faster<br/>
-              -k  private ssh key of user to access server<br/>
-              -r  list of dependencies to be installed<br/>
-              -z  path to all subscripts (pre, post and install). All the scrips are name `depandency name`_install or _pre or _post<br/>
-
-        </div>
-        <input type="checkbox" name="setup_script" [(ngModel)]="settingsModel.platform.setup_script"/> Setup script
-      </div>
-      <textarea [(ngModel)]="settingsModel.platform_setup_script" [(value)]="settingsModel.platform_setup_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.setup_script"></textarea>
-    </div>
-    <div class="form-group">
-      <input type="checkbox" [(ngModel)]="settingsModel.platform.cleanup_script"/> Cleanup script
-      <textarea [(ngModel)]="settingsModel.platform_cleanup_script" [(value)]="settingsModel.platform_cleanup_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.cleanup_script"></textarea>
-    </div>
-    <div class="form-group">
-      <h4>Platform documentation</h4>
-      <textarea [(ngModel)]="settingsModel.platform.doc" [(value)]="settingsModel.platform.doc" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform"></textarea>
-    </div>
-    <div class="form-group">
-      <label for="new_platform_name">New platform setup script name</label>
-      <input [(ngModel)]="settingsModel.new_platform_name" class="form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform setup script">
-    </div>   
-    <button (click)="duplicatePlatform()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name || !settingsModel.platform.platform_name">Duplicate</button>
-    <button (click)="deletePlatform()" class="btn btn-primary" [disabled]="!settingsModel.platform.platform_name" class="btn btn-danger">Delete</button>
-    <button (click)="savePlatformScript()" class="btn btn-primary" [disabled]="(settingsModel.new_platform_name && settingsModel.platform.platform_name) || (!settingsModel.new_platform_name && !settingsModel.platform.platform_name)">Save changes</button>
+    <platforms></platforms>
   </div>
-  <!-- Finish -->
-  <!-- Platforms settings -->
 </div>
