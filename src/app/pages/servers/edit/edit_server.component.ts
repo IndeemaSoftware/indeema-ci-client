@@ -30,19 +30,15 @@ export class EditServerComponent implements OnInit {
     ssh_username: '',
     ssh_key: null,
 
-    //Server dependencies
-    serverModel: { server_dependency: [{value:""}
-                                    ],
-                  custom_dependency: [ {value:""}
-                                    ],
-                  platform: ""
-                  },
-
     //Validation error
     errorMsg: ''
   };
   
-  serverModel: any = {};
+  serverModel: any = {server_dependency: [{value:""} ],
+                      custom_dependency: [ {value:""}],
+                      platform: "",
+                      ssh_key: {}
+                      };
   platform_list: any = [];
   modelApi: any = {};
 
@@ -88,6 +84,8 @@ export class EditServerComponent implements OnInit {
           this.modal.alert(err);
           this.route.navigate([`servers`]);
         });
+    } else {
+      this.setupServer();        
     }
 
     //Get server dependencies list
@@ -156,8 +154,13 @@ export class EditServerComponent implements OnInit {
     //Prepare form model
     if (!this.isNew) {
       this.prepareToEdit();
+    } else {
+      this.serverModel= { server_dependency: [{value:""}],
+                          custom_dependency: [ {value:""} ],
+                          platform: ""
+                        };
     }
-
+    
     const jwt = this.auth.getJWT();
 
     this.uploader = new MultipleFileUploaderService({
@@ -188,9 +191,12 @@ export class EditServerComponent implements OnInit {
         return;
       }
 
+      console.log(response);
+
       if (this.modelApi) {
         //Setup files id`s
         for (let file of response) {
+          console.log(file);
           if (this.modelApi.ssh_key && this.modelApi.ssh_key.name === file.name)
             this.modelApi.ssh_key = file.id;
         }
@@ -214,7 +220,7 @@ export class EditServerComponent implements OnInit {
     model.ssh_key = ev.target.files[0];
   }
 
-  addRepeatField(arr){
+  addRepeatField(arr) {
     arr.push({value:""});
   }
 
@@ -273,8 +279,10 @@ export class EditServerComponent implements OnInit {
         newModel.custom_dependencies.push(obj.value);
     }
 
-    // if(!newModel.ssh_key)
-    //   delete newModel.ssh_key;
+    console.log(model);
+    console.log(newModel);
+    if(!newModel.ssh_key)
+      delete newModel.ssh_key;
 
     //Cleanup model fields
     //delete newModel.server_dependency;
@@ -315,10 +323,10 @@ export class EditServerComponent implements OnInit {
 
     if (this.isNew) {
       await this.createServer();
-      await this.setupServer();        
     }
 
     //Prepare model for api
+    console.log(this.serverModel);
     this.modelApi = this.prepareModel(this.serverModel);
 
     //Remove all files from queue
@@ -365,6 +373,8 @@ export class EditServerComponent implements OnInit {
     //Prepare files list
     const files = [];
     files.push(this.modelApi.ssh_key);
+    console.log(files);
+    console.log(this.modelApi.ssh_key);
 
     //Attach file
     this.uploader.addToQueue(files);

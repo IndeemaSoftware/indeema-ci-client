@@ -71,7 +71,7 @@
             <h3>Custom dependencies:</h3>
             <div *ngFor="let item of serverModel.custom_dependency; let i = index" class="form-group repeated">
               <select [(ngModel)]="serverModel.custom_dependency[i].value" class="form-control" name="custom_dependency[{{ pId }}{{ i }}]">
-                <option [value]="'null'" disabled>Chose custom dependancies for server</option>
+                <option [value]="null" disabled>Chose custom dependancies for server</option>
                 <option *ngFor="let item of custom_dependency_list" [value]="item.id">{{ item.label }}</option>
               </select>
               <span (click)="removeRepeatField(serverModel.custom_dependency, i)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length > 1" class="text-danger remove-btn">Remove</span>
