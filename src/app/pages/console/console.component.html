@@ -5,6 +5,7 @@
       <h2  style="margin-top: 1rem">
         <span *ngIf="consoleLive" class="badge badge-success">Online</span>
         <span *ngIf="!consoleLive && consoleLive !== null" class="badge badge-danger">Offline</span>
+        <span *ngIf="consoleLive == null" class="badge badge-danger">Starting</span>
         {{ consoleTitle }}
       </h2>
       <h2 *ngIf="project && app" style="margin-top: 1rem">

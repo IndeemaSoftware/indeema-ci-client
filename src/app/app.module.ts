@@ -45,6 +45,7 @@ import { CustomDepComponent } from './pages/settings/custom-dep/custom-dep.compo
 import { PlatformsComponent } from './pages/settings/platforms/platforms.component';
 import { CIScriptsComponent } from './pages/settings/ci-scripts/ci-scripts.component';
 import { MaintenanceComponent } from './pages/settings/maintenance/maintenance.component';
+import { MaintenancePreviewComponent } from './pages/settings/maintenance/maintenance-preview.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { MaintenanceComponent } from './pages/settings/maintenance/maintenance.c
     CustomDepComponent,
     PlatformsComponent,
     CIScriptsComponent,
-    MaintenanceComponent
+    MaintenanceComponent,
+    MaintenancePreviewComponent
   ],
   imports: [
     BrowserModule,

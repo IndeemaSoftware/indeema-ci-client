@@ -110,4 +110,8 @@ export class MaintenanceComponent implements OnInit {
       this.modal.alert(err);
     })
   }
+
+  preview() {
+    window.open(`preview?id=${this.settingsModel.maintenance}`, '_blank');
+  }
 }

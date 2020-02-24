@@ -6,6 +6,7 @@
   height: 70vh;
   overflow: hidden;
 }
+
 #consoleOutput{
   overflow-y: scroll;
   width: calc(100% + 30px);
