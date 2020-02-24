@@ -1,0 +1,27 @@
+<div class="container">
+    <h3>Custom Dependencies</h3>
+    <div class="form-group required">
+      <label for="dependency">Custom dependency</label>
+      <select (change)="dependencySelected()" [(ngModel)]="settingsModel.dependency" enabled class="form-control" name="dependency" id="custom_dep">
+        <option [value]="newDependency">Create new</option>
+        <optgroup label="_________"></optgroup>
+        <ng-container *ngFor="let item of settingsModel.dependency_list let i = index">
+          <option [ngValue]="settingsModel.dependency_list[i]">{{ item.label}}</option>
+        </ng-container>
+      </select>
+
+      <h4>Name</h4>
+      <input [(ngModel)]="settingsModel.dependency.name"  class="form-control" id="custom-dep-name" name="custom-dep-name" placeholder="Enter name for dependancy with no whitespaces">
+
+      <h4>Label</h4>
+      <input [(ngModel)]="settingsModel.dependency.label"  class="form-control" id="custom-dep-label" name="custom-dep-label" placeholder="Enter label for dependancy">
+
+      <h4>Install script</h4>
+      <textarea  [(ngModel)]="settingsModel.dependency.install_script" [(value)]="settingsModel.install_script" class="form-control" id="script" name="script" rows="10" ></textarea>
+
+      <button (click)="update()" class="btn btn-primary" [disabled]="isNew">Update</button>
+      <button (click)="delete()" class="btn btn-danger" [disabled]="isNew">Delete</button>
+      <button (click)="createNew()" class="btn btn-primary" [disabled]="!isNew" class="btn btn-danger">Create new</button>  
+
+    </div>
+</div>

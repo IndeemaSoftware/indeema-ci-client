@@ -5,18 +5,16 @@ import { Router } from '@angular/router';
 import { ModalService } from '../../../services/modal.service';
 
 @Component({
-  selector: 'server-dep',
-  templateUrl: './server-dep.component.html',
-  styleUrls: ['./server-dep.component.css']
+  selector: 'custom-dep',
+  templateUrl: './custom-dep.component.html',
+  styleUrls: ['./custom-dep.component.css']
 })
-export class ServerDepComponent implements OnInit {
+export class CustomDepComponent implements OnInit {
 
     newDependency: {
         name:"",
         label:"",
-        package:"",
-        pre_install_script:"",
-        post_install_script:"",
+        install_script:"",
         is_new:true
     };
 
@@ -24,9 +22,7 @@ export class ServerDepComponent implements OnInit {
         dependency: {
             name:"",
             label:"",
-            package:"",
-            pre_install_script:"",
-            post_install_script:""
+            install_script:"",
         }
     } as any;
 
@@ -44,7 +40,7 @@ export class ServerDepComponent implements OnInit {
     }
 
     updateList() {
-        this.api.get(`server-dependencies`).then((resp) => {
+        this.api.get(`custom-dependencies`).then((resp) => {
             this.settingsModel.dependency_list = resp;
         });  
     }
@@ -54,14 +50,14 @@ export class ServerDepComponent implements OnInit {
     }
 
     update() {
-        this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
+        this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
             console.log(resp);
             this.updateList();
         });  
     }
 
     delete() {
-        this.api.remove(`server-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
+        this.api.remove(`custom-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
             console.log(resp);
             this.updateList();
         });  
@@ -70,7 +66,7 @@ export class ServerDepComponent implements OnInit {
     createNew() {
         console.log(this.settingsModel.dependency);
         if (this.settingsModel.dependency) {
-            this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
+            this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
                 console.log(resp);
                 this.updateList();
             });      
@@ -86,9 +82,7 @@ export class ServerDepComponent implements OnInit {
             this.settingsModel.dependency = {
                 name:"",
                 label:"",
-                package:"",
-                pre_install_script:"",
-                post_install_script:""
+                install_script:""
             };
             this.isNew = true;
         }

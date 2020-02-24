@@ -11,19 +11,19 @@
       </select>
 
       <h4>Name</h4>
-      <input [(ngModel)]="settingsModel.dependency.name"  class="form-control" id="variable" name="variable" placeholder="Enter name for dependancy with no whitespaces">
+      <input [(ngModel)]="settingsModel.dependency.name"  class="form-control" id="server-dep-name" name="server-dep-name" placeholder="Enter name for dependancy with no whitespaces">
 
       <h4>Label</h4>
-      <input [(ngModel)]="settingsModel.dependency.label"  class="form-control" id="variable" name="variable" placeholder="Enter label for dependancy">
+      <input [(ngModel)]="settingsModel.dependency.label"  class="form-control" id="server-dep-label" name="server-dep-label" placeholder="Enter label for dependancy">
 
       <h4>Package name</h4>
-      <input [(ngModel)]="settingsModel.dependency.package"  class="form-control" id="variable" name="variable" placeholder="Enter package name for dependancy">
+      <input [(ngModel)]="settingsModel.dependency.package"  class="form-control" id="server-dep-package-name" name="server-dep-package-name" placeholder="Enter package name for dependancy">
 
-      <h4>Preisntall script</h4>
-      <textarea  [(ngModel)]="settingsModel.dependency.pre_install_script" [(value)]="settingsModel.pre_install_script" class="form-control" id="script" name="script" rows="10" ></textarea>
+      <h4>Preinstall script</h4>
+      <textarea  [(ngModel)]="settingsModel.dependency.pre_install_script" [(value)]="settingsModel.pre_install_script" class="form-control" id="pre_install_script" name="pre_install_script" rows="10" ></textarea>
 
       <h4>Postinstall script</h4>
-      <textarea [(ngModel)]="settingsModel.dependency.post_install_script" [(value)]="settingsModel.post_install_script" class="form-control" id="script" name="script" rows="10" ></textarea>
+      <textarea [(ngModel)]="settingsModel.dependency.post_install_script" [(value)]="settingsModel.post_install_script" class="form-control" id="post_install_script" name="post_install_script" rows="10" ></textarea>
 
       <button (click)="update()" class="btn btn-primary" [disabled]="isNew">Update</button>
       <button (click)="delete()" class="btn btn-danger" [disabled]="isNew">Delete</button>

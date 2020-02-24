@@ -4,6 +4,7 @@
     <button class="tablinks" (click)="switchSetting('Maintenance')">    Maintenance pages</button>
     <button class="tablinks" (click)="switchSetting('Templates')">      Templates</button>
     <button class="tablinks" (click)="switchSetting('Server-Dep')">     Server Dependencies</button>
+    <button class="tablinks" (click)="switchSetting('Custom-Dep')">     Custom Dependencies</button>
     <button class="tablinks" (click)="switchSetting('Platforms')">      Platforms</button>
   </div>
 
@@ -17,6 +18,10 @@
 
   <div id="Server-Dep" class="tabcontent">
     <server-dep></server-dep>
+  </div>
+
+  <div id="Custom-Dep" class="tabcontent">
+    <custom-dep></custom-dep>
   </div>
 
   <div id="Platforms" class="tabcontent">

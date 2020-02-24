@@ -41,6 +41,7 @@ import { ServersComponent } from './pages/servers/servers.component';
 import { EditServerComponent } from './pages/servers/edit/edit_server.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { ServerDepComponent } from './pages/settings/server-dep/server-dep.component';
+import { CustomDepComponent } from './pages/settings/custom-dep/custom-dep.component';
 import { PlatformsComponent } from './pages/settings/platforms/platforms.component';
 import { CIScriptsComponent } from './pages/settings/ci-scripts/ci-scripts.component';
 import { MaintenanceComponent } from './pages/settings/maintenance/maintenance.component';
@@ -60,6 +61,7 @@ import { MaintenanceComponent } from './pages/settings/maintenance/maintenance.c
     EditServerComponent,
     SettingsComponent,
     ServerDepComponent,
+    CustomDepComponent,
     PlatformsComponent,
     CIScriptsComponent,
     MaintenanceComponent
