@@ -25,8 +25,9 @@
       <h4>Postinstall script</h4>
       <textarea [(ngModel)]="settingsModel.dependency.post_install_script" [(value)]="settingsModel.post_install_script" class="form-control" id="script" name="script" rows="10" ></textarea>
 
-      <button (click)="update()" class="btn btn-primary" [disabled]="settingsModel.dependency">Update</button>
-      <button (click)="createNew()" class="btn btn-primary" [disabled]="!settingsModel.dependency" class="btn btn-danger">Create new</button>  
+      <button (click)="update()" class="btn btn-primary" [disabled]="isNew">Update</button>
+      <button (click)="delete()" class="btn btn-danger" [disabled]="isNew">Delete</button>
+      <button (click)="createNew()" class="btn btn-primary" [disabled]="!isNew" class="btn btn-danger">Create new</button>  
 
     </div>
 </div>

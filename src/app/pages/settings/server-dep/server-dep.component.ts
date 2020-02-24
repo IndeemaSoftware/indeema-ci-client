@@ -16,7 +16,8 @@ export class ServerDepComponent implements OnInit {
         label:"",
         package:"",
         pre_install_script:"",
-        post_install_script:""
+        post_install_script:"",
+        is_new:true
     };
 
     settingsModel: any = {
@@ -28,6 +29,8 @@ export class ServerDepComponent implements OnInit {
             post_install_script:""
         }
     } as any;
+
+    isNew: boolean = true;
 
     constructor(
         private api: ApiService,
@@ -50,11 +53,46 @@ export class ServerDepComponent implements OnInit {
         this.settingsModel.dependency = this.newDependency;
     }
 
+    update() {
+        this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
+            console.log(resp);
+            this.updateList();
+        });  
+    }
+
+    delete() {
+        this.api.remove(`server-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
+            console.log(resp);
+            this.updateList();
+        });  
+    }
+
     createNew() {
-        console.log("Create new");
+        console.log(this.settingsModel.dependency);
+        if (this.settingsModel.dependency) {
+            this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
+                console.log(resp);
+                this.updateList();
+            });      
+        } else {
+            this.modal.alert("Something went wrong");
+        }
     }
 
     dependencySelected() {
+        if (this.settingsModel.dependency.name) {
+            this.isNew = false;
+        } else {
+            this.settingsModel.dependency = {
+                name:"",
+                label:"",
+                package:"",
+                pre_install_script:"",
+                post_install_script:"",
+                is_new:true
+            };
+            this.isNew = true;
+        }
         console.log("Dependency selected");
     }
 }
