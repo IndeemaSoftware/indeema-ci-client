@@ -4,7 +4,7 @@
     <div class="col-sm-12 col-md-12 col-lg-12">
       <h2 style="margin-top: 2rem">
         Projects list
-        <a class="btn btn-success right" routerLink="/runner">Setup project</a>
+        <a class="btn btn-success right" routerLink="/projects/new">Setup project</a>
       </h2>
       <h4 *ngIf="projects && projects.length" class="badge-splited">
         <span *ngIf="statuses.progress" class="badge badge-warning">{{ statuses.progress }} In progress...</span>

@@ -33,19 +33,6 @@ export class EditComponent implements OnInit {
     app_port: '', //optional
     avaliable_ports: '',//optional
 
-    //AWS S3 Config
-    s3_user: '',
-    s3_bucket_name: '',
-    aws_access_key_id: '',
-    aws_secret_access_key: '',
-    s3_https: false,
-    s3_region: null,
-
-    //Server credentials
-    ssh_host: '',
-    ssh_username: '',
-    ssh_pem: null,
-
     //Domain setup
     domain_name: null,
     lets_encrypt: false,
@@ -53,29 +40,20 @@ export class EditComponent implements OnInit {
     custom_ssl_crt: null,
     custom_ssl_pem: null,
 
-    //Server dependencies
-    server_dependency: [
-      {value: null}
-    ],
-
-    //Node.JS dependencies
-    node_dependency: [
-      {value: null}
-    ],
-
     //Validation error
     errorMsg: ''
   };
 
-  projectModel: any = {};
+  projectModel: any = {
+    project_name:"",
+    apps: []
+  };
+  isNew: boolean = false;
 
   modelApi: any = {};
 
   //Lists
-  serversDeps = [] as any;
-  nodejsDeps = [] as any;
   projectTypes = [] as any;
-  awsRegions = [] as any;
 
   //Error
   errorMsg = false as any;
@@ -99,40 +77,29 @@ export class EditComponent implements OnInit {
       private activatedRoute: ActivatedRoute,
       private modal: ModalService
   ) {
-    this.projectId = this.activatedRoute.snapshot.params['id'];
-    if(!this.projectId){
-      this.route.navigate([`projects`]);
-      return;
+    let value = this.activatedRoute.snapshot.params['id'];
+    if (value !== "new") {
+      this.projectId = value;
+      this.isNew = false;
+    } else {
+      this.isNew = true;
     }
   }
 
   ngOnInit() {
-
-    //Get server dependencies list
-    this.api.get('/server-dependencies')
-        .then(data => this.serversDeps = data, err => this.serversDeps = []);
-
-    //Get nodejs dependencies list
-    this.api.get('/nodejs-dependencies')
-        .then(data => this.nodejsDeps = data, err => this.nodejsDeps = []);
-
-    //Get nodejs dependencies list
-    this.api.get('/project-types')
-        .then(data => this.projectTypes = data, err => this.projectTypes = []);
-
-    //Get AWS regions
-    this.api.get('/aws/regions')
-        .then(data => this.awsRegions = data, err => this.awsRegions = []);
-
     //Get project
-    this.api.get(`/projects/${this.projectId}`)
-        .then(data => {
-          this.project = data;
-          this.setupProject();
-        }, err => {
-          this.modal.alert(err);
-          this.route.navigate([`projects`]);
-        });
+    if (!this.isNew) {
+      this.api.get(`/projects/${this.projectId}`)
+      .then(data => {
+        this.project = data;
+        this.setupProject();
+      }, err => {
+        this.modal.alert(err);
+        this.route.navigate([`projects`]);
+      });
+    } else {
+      this.setupProject();
+    }
   }
 
   prepareToEdit(){
@@ -151,44 +118,18 @@ export class EditComponent implements OnInit {
       this.projectModel.apps[i].project_type = this.projectModel.apps[i].project_type.id;
 
       //Remove exist cert
-      this.projectModel.apps[i].ssh_pem = null;
       this.projectModel.apps[i].custom_ssl_key = null;
       this.projectModel.apps[i].custom_ssl_crt = null;
       this.projectModel.apps[i].custom_ssl_pem = null;
 
-      //Prepare server dependencies
-      if(this.projectModel.apps[i].server_dependencies && this.projectModel.apps[i].server_dependencies.length){
-        this.projectModel.apps[i].server_dependency = [];
-        for(let dep of this.projectModel.apps[i].server_dependencies){
-          this.projectModel.apps[i].server_dependency.push({value: dep.id});
-        }
-        delete this.projectModel.apps[i].server_dependencies;
-      }else{
-        this.projectModel.apps[i].server_dependency = [
-          {value: null}
-        ];
-        delete this.projectModel.apps[i].server_dependencies;
-      }
-
-      //Prepare nodejs dependencies
-      if(this.projectModel.apps[i].nodejs_dependencies && this.projectModel.apps[i].nodejs_dependencies.length){
-        this.projectModel.apps[i].node_dependency = [];
-        for(let dep of this.projectModel.apps[i].nodejs_dependencies){
-          this.projectModel.apps[i].node_dependency.push({value: dep.id});
-        }
-        delete this.projectModel.apps[i].nodejs_dependencies;
-      }else{
-        this.projectModel.apps[i].node_dependency = [
-          {value: null}
-        ];
-        delete this.projectModel.apps[i].nodejs_dependencies;
-      }
     }
   }
 
   setupProject(){
     //Prepare form model
-    this.prepareToEdit();
+    if (!this.isNew) {
+      this.prepareToEdit();
+    }
 
     const jwt = this.auth.getJWT();
 
@@ -209,30 +150,27 @@ export class EditComponent implements OnInit {
 
     this.uploader.onSuccessItem = (item: any, response: any, status: any, headers: any) => {
       //Additional check for create project
-      if(isUpdateProject)
+      if (isUpdateProject)
         return
 
       isUpdateProject = true;
 
       response = JSON.parse(response);
-      if(!response.length){
+      if (!response.length) {
         this.errorMsg = 'File not uploaded properly!';
         return;
       }
 
       if(this.modelApi.apps[this.uploadModelIndex]){
         //Setup files id`s
-        for(let file of response){
-          if(this.modelApi.apps[this.uploadModelIndex].ssh_pem && this.modelApi.apps[this.uploadModelIndex].ssh_pem.name === file.name)
-            this.modelApi.apps[this.uploadModelIndex].ssh_pem = file.id;
-
-          if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key && this.modelApi.apps[this.uploadModelIndex].custom_ssl_key.name === file.name)
+        for (let file of response) {
+          if (this.modelApi.apps[this.uploadModelIndex].custom_ssl_key && this.modelApi.apps[this.uploadModelIndex].custom_ssl_key.name === file.name)
             this.modelApi.apps[this.uploadModelIndex].custom_ssl_key = file.id;
 
-          if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt && this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt.name === file.name)
+          if (this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt && this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt.name === file.name)
             this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt = file.id;
 
-          if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem && this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem.name === file.name)
+          if (this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem && this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem.name === file.name)
             this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem = file.id;
         }
       }
@@ -279,7 +217,7 @@ export class EditComponent implements OnInit {
     window.open(environment.API_URL + `/app/download/yml/${app.id}`,'_blank');
   }
 
-  addNewApp(){
+  addNewApp() {
     const newApp = _.cloneDeep(this.modelDefault);
     newApp.appId = 'project-app-' + (this.projectModel.apps.length + 1) + new Date().getTime();
 
@@ -299,10 +237,6 @@ export class EditComponent implements OnInit {
     }
 
     this.projectModel.apps.splice(i, 1);
-  }
-
-  addPemFile(ev, model){
-    model.ssh_pem = ev.target.files[0];
   }
 
   addKeySSLFile(ev, model){
@@ -361,23 +295,6 @@ export class EditComponent implements OnInit {
       return 'App name is invalid. Please use: alphabetic characters, numbers, "-" or "_"';
     }
 
-    if(model.os === 'aws_s3'){
-      if(!model.s3_user || !model.s3_bucket_name || !model.aws_access_key_id || !model.aws_secret_access_key || !model.s3_region)
-        return 'Please input all required fields.';
-
-      const bucketNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
-      if(!bucketNameRegex.test(model.s3_bucket_name)){
-        return 'AWS S3 Bucket name is invalid. Please use: alphabetic characters, numbers, "-" or "_"';
-      }
-    }else{
-      if(!model.ssh_host || !model.ssh_username)
-        return 'Please input all required fields.';
-    }
-
-    if(!model.id) {
-      if(model.os !== 'aws_s3' && !model.ssh_pem)
-        return 'Please input all required fields.';
-    }
 
     if(model.lets_encrypt && !model.domain_name)
       return 'If you want to use Let`s encrypt please enter domain name.';
@@ -391,11 +308,6 @@ export class EditComponent implements OnInit {
 
     //Check if certs is try to upload
     if(model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem){
-      //Check if ssh pem and custom ssl pem have different names
-      if(model.custom_ssl_pem && model.ssh_pem && model.custom_ssl_pem.name === model.ssh_pem.name){
-        return 'SSH pem key and Custom SSL Pem key have the same names, please use different names.';
-      }
-
       //Check if files has names
       if(
           (model.custom_ssl_key && !model.custom_ssl_key.name) ||
@@ -429,73 +341,7 @@ export class EditComponent implements OnInit {
         if (extentionCrt !== 'crt')
           return 'SSL Crt file is not valid, please upload file with .crt extention.';
       }
-
-      if(model.custom_ssl_pem) {
-        const extentionPem = model.custom_ssl_pem.name.split('.').pop();
-        if (extentionPem !== 'pem')
-          return 'SSL Pem file is not valid, please upload file with .pem extention.';
-      }
     }
-
-    //Check server dependencies unique
-    let isServerUnique = true;
-    for(let dep of model.server_dependency){
-      let breakCycle = false;
-      let firstCycle = true;
-      for(let depin of model.server_dependency){
-        if(dep.value && depin.value && dep.value === depin.value && firstCycle){
-          firstCycle = false;
-        }else if(dep.value && depin.value && dep.value === depin.value && !firstCycle){
-          breakCycle = true;
-          isServerUnique = false;
-          break;
-        }else if(dep.value && depin.value && !firstCycle){
-          let depObject = null;
-          let depinObject = null;
-
-          for(let obj of this.serversDeps){
-            if(dep.value === obj.id)
-              depObject = obj;
-
-            if(depin.value === obj.id)
-              depinObject = obj;
-
-            if(depObject && depinObject)
-              break;
-          }
-
-          if(depObject.package === depinObject.package){
-            breakCycle = true;
-            isServerUnique = false;
-            break;
-          }
-        }
-      }
-      if(breakCycle)
-        break;
-    }
-    if(!isServerUnique)
-      return 'Server dependencies must be unique.'
-
-    //Check nodejs dependencies unique
-    let isNodejsUnique = true;
-    for(let dep of model.node_dependency){
-      let breakCycle = false;
-      let firstCycle = true;
-      for(let depin of model.node_dependency){
-        if(dep.value && depin.value && dep.value === depin.value && firstCycle){
-          firstCycle = false;
-        }else if(dep.value && depin.value && dep.value === depin.value && !firstCycle){
-          breakCycle = true;
-          isNodejsUnique = false;
-          break;
-        }
-      }
-      if(breakCycle)
-        break;
-    }
-    if(!isNodejsUnique)
-      return 'Node.JS dependencies must be unique.'
 
     return false;
   }
@@ -503,21 +349,7 @@ export class EditComponent implements OnInit {
   prepareModel(model){
     const newModel = _.cloneDeep(model);
 
-    for(var i = 0; i < newModel.apps.length; i++){
-
-      //Create new model fields
-      newModel.apps[i].server_dependencies = [];
-      newModel.apps[i].nodejs_dependencies = [];
-
-      //Fill model fields
-      for(let obj of newModel.apps[i].server_dependency){
-        if(obj.value)
-          newModel.apps[i].server_dependencies.push(obj.value);
-      }
-      for(let obj of newModel.apps[i].node_dependency){
-        if(obj.value)
-          newModel.apps[i].nodejs_dependencies.push(obj.value);
-      }
+    for(var i = 0; i < newModel.apps.length; i++) {
 
       if(!newModel.apps[i].custom_ssl_key)
         delete newModel.apps[i].custom_ssl_key;
@@ -528,12 +360,7 @@ export class EditComponent implements OnInit {
       if(!newModel.apps[i].custom_ssl_pem)
         delete newModel.apps[i].custom_ssl_pem;
 
-      if(!newModel.apps[i].ssh_pem)
-        delete newModel.apps[i].ssh_pem;
-
       //Cleanup model fields
-      delete newModel.apps[i].server_dependency;
-      delete newModel.apps[i].node_dependency;
       delete newModel.apps[i].appId;
     }
     return newModel;
@@ -543,10 +370,6 @@ export class EditComponent implements OnInit {
     let hasFiles = false;
 
     for(let app of this.modelApi.apps){
-      if(app.ssh_pem){
-        hasFiles = true;
-        break;
-      }
 
       if(app.custom_ssl_key){
         hasFiles = true;
@@ -599,16 +422,15 @@ export class EditComponent implements OnInit {
     this.uploader.queue = [];
 
     //Check if user upload any files
-    if(this.isFileUploaded()){
+    if (this.isFileUploaded()) {
       this.uploadModelIndex = 0;
       this.uploadFiles();
-    }else{
+    } else {
       const proceed_setup = this.modelApi.proceed_setup;
       delete this.modelApi.proceed_setup;
 
       //Cleanup apps
       for(var i = 0; i < this.modelApi.apps.length; i++){
-        delete this.modelApi.apps[i].ssh_pem;
         delete this.modelApi.apps[i].custom_ssl_key;
         delete this.modelApi.apps[i].custom_ssl_crt;
         delete this.modelApi.apps[i].custom_ssl_pem;
@@ -640,8 +462,6 @@ export class EditComponent implements OnInit {
 
     //Prepare files list
     const files = [];
-    if(this.modelApi.apps[this.uploadModelIndex].ssh_pem)
-      files.push(this.modelApi.apps[this.uploadModelIndex].ssh_pem);
     if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key)
       files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key);
     if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt)

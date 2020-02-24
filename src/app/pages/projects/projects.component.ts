@@ -10,7 +10,7 @@ import {ModalService} from '../../services/modal.service';
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit {
-  projects = null as  any;
+  projects: any;
   statuses = {
     waiting: 0,
     progress: 0,
