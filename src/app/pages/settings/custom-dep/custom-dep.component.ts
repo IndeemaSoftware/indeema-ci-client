@@ -51,20 +51,17 @@ export class CustomDepComponent implements OnInit {
 
     update() {
         this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
-            console.log(resp);
             this.updateList();
         });  
     }
 
     delete() {
         this.api.remove(`custom-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
-            console.log(resp);
             this.updateList();
         });  
     }
 
     createNew() {
-        console.log(this.settingsModel.dependency);
         if (this.settingsModel.dependency) {
             this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
                 console.log(resp);
@@ -86,6 +83,5 @@ export class CustomDepComponent implements OnInit {
             };
             this.isNew = true;
         }
-        console.log("Dependency selected");
     }
 }

@@ -55,23 +55,19 @@ export class ServerDepComponent implements OnInit {
 
     update() {
         this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
-            console.log(resp);
             this.updateList();
         });  
     }
 
     delete() {
         this.api.remove(`server-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
-            console.log(resp);
             this.updateList();
         });  
     }
 
     createNew() {
-        console.log(this.settingsModel.dependency);
         if (this.settingsModel.dependency) {
             this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
-                console.log(resp);
                 this.updateList();
             });      
         } else {
@@ -92,6 +88,5 @@ export class ServerDepComponent implements OnInit {
             };
             this.isNew = true;
         }
-        console.log("Dependency selected");
     }
 }
