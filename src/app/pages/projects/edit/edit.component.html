@@ -77,7 +77,6 @@
                     <option [value]="null" disabled>Please choose server</option>
                     <ng-container *ngFor="let item of servers">
                       <option [value]="item.id">{{ item.server_name }} ({{item.server_status}})</option>
-                      <option [value]="item.id">{{ item.server_name }} ({{item.server_status}})</option>
                     </ng-container>
                   </select>
 
