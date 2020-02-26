@@ -76,7 +76,8 @@
                   <select (change)="serverChosen()" [(ngModel)]="projectModel.apps[pId].server" class="form-control" name="server{{ pId }}">
                     <option [value]="null" disabled>Please choose server</option>
                     <ng-container *ngFor="let item of servers">
-                      <option [value]="item.id">{{ item.server_name }} ({{item.server_status}})</option>
+                      <option *ngIf="item.server_status !== success" [value]="item.id" disabled>{{ item.server_name }} ({{item.server_status}})</option>
+                      <option *ngIf="item.server_status === success" [value]="item.id">{{ item.server_name }} ({{item.server_status}})</option>
                     </ng-container>
                   </select>
 
@@ -110,7 +111,7 @@
                   <div>
                     <form name="port-form" *ngFor="let port of server.ports; let i = index">
                       <label>
-                        <input ng-model="projectModel.app_port" type="radio" > {{port}}
+                        <input (change)="portSelected(port)" name="server-port" type="radio" [value]="port"> {{port}}
                     </label><br/>
                     </form>
                   </div>

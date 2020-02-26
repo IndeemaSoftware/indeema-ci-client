@@ -15,6 +15,8 @@ import { ModalService} from '../../../services/modal.service';
 export class EditComponent implements OnInit {
   api_url = environment.API_URL;
 
+  success = "success";
+
   //File uploader
   public uploader: MultipleFileUploaderService;
 
@@ -26,7 +28,7 @@ export class EditComponent implements OnInit {
     app_name: '',
     desc: '',
     environment: 'development',
-    avaliable_ports: [],//optional
+    app_port:'',
 
     //Domain setup
     domain_name: null,
@@ -50,8 +52,6 @@ export class EditComponent implements OnInit {
 
   servers = null as  any;
   server = null as any;
-
-  avaliable_ports: any = [];
 
   automatic_cert: boolean = false;
 
@@ -165,7 +165,11 @@ export class EditComponent implements OnInit {
   }
 
   portSelected(port) {
-    this.projectModel.app_port = port;
+    for (let a of this.projectModel.apps) {
+        if (a.appId === this.activeTab) {
+          a.app_port = port
+        }
+    }
   }
 
   prepareToEdit(){
@@ -350,7 +354,7 @@ export class EditComponent implements OnInit {
         || !model.app_name
         || !model.environment
         || !model.ci_template
-        || !model.avaliable_ports
+        || !model.app_port
     )
       return 'Please input all required fields.';
 
