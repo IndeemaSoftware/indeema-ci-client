@@ -20,6 +20,7 @@
         <thead class="thead-dark">
           <tr>
             <th scope="col">Server name</th>
+            <th scope="col">Modules</th>
             <th scope="col">Server SSH</th>
             <th scope="col"></th>
           </tr>
@@ -34,8 +35,23 @@
                 </th>
             </th>
             <td>
+              <div *ngIf="server && server.server_dependencies && server.server_dependencies.length > 0" class="form-group">
+                  <label *ngFor="let dep of server.server_dependencies; let i = index" class="badge badge-success">
+                    {{ dep.label}}
+                  </label>
+              </div>
+              
+              <div *ngIf="server && server.custom_dependencies && server.custom_dependencies.length > 0" class="form-group">
+                  <label *ngFor="let dep of server.custom_dependencies; let i = index" class="badge badge-success">
+                    {{ dep.label}} 
+                  </label>
+              </div>
+            </td>
+            <td>
+              <div >{{ server.ssh_username }}@{{ server.ssh_ip }}</div>
+            </td>
+            <td>
               <div class="btn-group btn-group-toggle">
-                <div >{{ server.ssh_username }}@{{ server.ssh_ip }}</div>
                 <button (click)="setupServer(server)" class="btn btn-success" type="button">Setup</button>
                 <button (click)="editServer(server)" class="btn btn-warning" type="button">Edit</button>
                 <button (click)="cleanupServer(server, true, true)" [ngClass]="{'disabled': server.server_status === 'cleanup' || server.server_status === 'cleanup_success'}" class="btn btn-light" type="button">Cleanup</button>
