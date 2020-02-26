@@ -2,7 +2,7 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12 col-md-6 col-lg-6 center-content-item">
-      <h2 *ngIf="!isNew">
+      <h2 *ngIf="project && !isNew">
         {{ project.project_name }}
       </h2>
       <form (submit)="proceedToUpdate(false)">
@@ -23,7 +23,7 @@
           <div class="app-tabs">
             <div class="app-control">
               <div *ngFor="let model of projectModel.apps; let i = index">
-                <a (click)="openTab(model.appId || model.id)" [ngClass]="{'active': activeTab === model.appId || activeTab === model.id}" href="javascript:void(0)">
+                <a (click)="openTab(model.id || model.id)" [ngClass]="{'active': activeTab === model.id || activeTab === model.id}" href="javascript:void(0)">
                   {{ model.app_name || 'App #' + (i + 1) }} <span *ngIf="model.errorMsg" class="text-danger">(validation error)</span>
                 </a>
                 <button *ngIf="projectModel.apps.length > 1 && !model.id" (click)="removeApp(i)" type="button" class="btn btn-outline-danger">Remove</button>
@@ -34,7 +34,7 @@
                 </a>
               </div>
             </div>
-            <div  *ngFor="let model of projectModel.apps; let pId = index; trackBy: trackByFn" class="app-tab-body {{ model.appId || model.id }}" [ngClass]="{'visible': activeTab === model.appId || activeTab === model.id}">
+            <div  *ngFor="let model of projectModel.apps; let pId = index; trackBy: trackByFn" class="app-tab-body {{ model.id || model.id }}" [ngClass]="{'visible': activeTab === model.id || activeTab === model.id}">
 
               <div *ngIf="model.errorMsg" class="alert alert-danger text-center">{{ model.errorMsg }}</div>
               <div class="form-container">
@@ -71,7 +71,7 @@
                     <option [value]="'production'">Production</option>
                   </select>
                 </div>
-                <div class="form-group required border-top">
+                <div *ngIf="servers" class="form-group required border-top">
                   <label for="server">Server</label>
                   <select (change)="serverChosen()" [(ngModel)]="projectModel.apps[pId].server" class="form-control" name="server{{ pId }}">
                     <option [value]="null" disabled>Please choose server</option>
@@ -81,17 +81,30 @@
                     </ng-container>
                   </select>
 
-                  <form *ngIf="server && (server.server_dependencies.length === 0 || server && server.custom_dependencies.length === 0 || server.ports.length === 0)" name="warning-form">
-                    <label *ngIf="server && server.server_dependencies.length === 0" class="badge badge-danger">No server dependencies installed </label> <br/>
-                    <label *ngIf="server && server.custom_dependencies.length === 0" class="badge badge-danger">No custom dependencies installed </label> <br/>
-                    <label *ngIf="server && server.ports.length == 0" class="badge badge-danger">No ports opened </label> <br/>
+                  <form *ngIf="server && (server.server_dependencies || server.custom_dependencies || server.ports)" name="warning-form">
+                    <div *ngIf="!server.server_dependencies || server.server_dependencies.length === 0">
+                      <label class="badge badge-danger">No server dependencies installed </label> 
+                      <br/>
+                    </div>
+                    <div *ngIf="!server.custom_dependencies || server.custom_dependencies.length === 0">
+                      <label class="badge badge-danger">No custom dependencies installed </label>
+                      <br/>
+                    </div>
+                    <div *ngIf="!server.ports || server.ports.length == 0"v>
+                      <label class="badge badge-danger">No ports opened </label>   
+                      <br/>                   
+                    </div>
+                    <div *ngIf="missing_port">
+                      <label class="badge badge-danger">Please update port for app</label>
+                      <br/>
+                    </div>
                   </form>    
 
                   <div *ngIf="server && server.server_dependencies && server.server_dependencies.length > 0" class="form-group">
                     <label>Installed server dependencies</label>
                     <div>
                       <label *ngFor="let dep of server.server_dependencies; let i = index" class="badge badge-success">
-                        {{ dep.label}}
+                        {{dep.label}} 
                       </label>
                     </div>
                   </div>
@@ -100,7 +113,7 @@
                     <label>Installed custom dependencies</label>
                     <div>
                       <label *ngFor="let dep of server.custom_dependencies; let i = index" class="badge badge-success">
-                        {{ dep.label}} 
+                        {{dep.label}} 
                       </label>
                     </div>
                   </div>
@@ -109,9 +122,9 @@
                 <div *ngIf="server && server.ports && server.ports.length > 0" class="form-group">
                   <label for="app_port">Avaliable ports</label>
                   <div>
-                    <form name="port-form" *ngFor="let port of server.ports; let i = index">
+                    <form  name="port-form" *ngFor="let port of server.ports; let i = index">
                       <label>
-                        <input (change)="portSelected(port)" name="server-port" type="radio" [value]="port"> {{port}}
+                        <input [(ngModel)]="app_port" (change)="portSelected(port)" name="server-port" type="radio" [value]="port"> {{port}}
                     </label><br/>
                     </form>
                   </div>

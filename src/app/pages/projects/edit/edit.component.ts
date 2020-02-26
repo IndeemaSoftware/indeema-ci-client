@@ -64,6 +64,8 @@ export class EditComponent implements OnInit {
   //Project data
   project = null as any;
   projectId = null as any;
+  app_port = 0;
+  missing_port = false;
 
   //Upload model index
   uploadModelIndex = 0;
@@ -87,8 +89,6 @@ export class EditComponent implements OnInit {
     } else {
       this.isNew = true;
     }
-
-    console.log(auth);
 }
 
   ngOnInit() {
@@ -97,6 +97,7 @@ export class EditComponent implements OnInit {
       this.api.get(`/projects/${this.projectId}`)
       .then(data => {
         this.project = data;
+
         this.setupProject();
       }, err => {
         this.modal.alert(err);
@@ -106,9 +107,24 @@ export class EditComponent implements OnInit {
       this.setupProject();
     }
 
-    this.projectModel.users.push(this.auth.user.id);
     this.updateCIList();
+    this.projectModel.users.push(this.auth.user.id);
     this.getServers();
+  }
+
+  getServerDetails(app) {
+    //getting list of templates for selected script
+    if (app && app.server) {
+      this.api.get(`/server/${app.server.id}`)
+      .then(data => {
+        console.log(data);
+        this.server = data;
+        app.server = this.server.id;
+      }, err => {
+        this.modal.alert(err);
+        this.route.navigate([`servers`]);
+      });
+    }
   }
 
   updateCIList() {
@@ -122,20 +138,23 @@ export class EditComponent implements OnInit {
     console.log(this.activeTab);
     for (let a of this.projectModel.apps) {
       console.log(a);
-        if (a.appId === this.activeTab) {
+        if (a.id === this.activeTab) {
           app = a;
         }
     }
     console.log(app);
     //getting list of templates for selected script
-    if (app.ci_script) {
-      this.api.get(`ci/template/listAll/${app.ci_script}`).then((resp) => {
-        console.log(resp.data);
-        this.ci_template_list = resp.data;
-      });  
+    if (app && app.ci_script) {
+      this.getTemplates(app.ci_script);
     } else {
       console.log("No template found");
     }
+  }
+  getTemplates(script) {
+    this.api.get(`ci/template/listAll/${script}`).then((resp) => {
+      console.log(resp.data);
+      this.ci_template_list = resp.data;
+    });  
   }
 
   getServers(){
@@ -147,41 +166,51 @@ export class EditComponent implements OnInit {
         } else if (s.custom_dependencies === "lets encrypt" || s.custom_dependencies === "let's encrypt" || s.custom_dependencies === "lets_encrypt") {
           this.automatic_cert = true;
         }
-
       }
+
     })
   }
 
   serverChosen() {
     var app;
     for (let a of this.projectModel.apps) {
-        if (a.appId === this.activeTab) {
-          app = a;
-        }
+      if (a.id === this.activeTab) {
+        app = a;
+      }
     }
 
-    for (let s of this.servers) {
-      if (app.server === s.id) {
-        this.server = {};
-        this.server = s;
-      }
+    if (app) {
+      for (let s of this.servers) {
+        if (app.server === s.id) {
+          this.server = {};
+          this.server = s;
+
+          if (this.server.ports && !this.server.ports.includes(this.app_port)) {
+            this.missing_port = true;
+          } else {
+            this.missing_port = false;
+          }
+        }
+      }  
     }
   }
 
   portSelected(port) {
     for (let a of this.projectModel.apps) {
-        if (a.appId === this.activeTab) {
-          a.app_port = port
-        }
+      if (a.id === this.activeTab) {
+        a.app_port = port
+        this.app_port = port;
+        this.missing_port = false;
+      }
     }
   }
 
-  prepareToEdit(){
+  prepareToEdit() {
     this.projectModel = _.cloneDeep(this.project.plain());
     this.modelApi = {};
 
     //Prepare model apps
-    for(var i = 0; i < this.projectModel.apps.length; i++){
+    for (var i = 0; i < this.projectModel.apps.length; i++) {
       this.activeTab = this.projectModel.apps[i].id;
 
       //Clean from dependencies
@@ -192,7 +221,14 @@ export class EditComponent implements OnInit {
       this.projectModel.apps[i].custom_ssl_key = null;
       this.projectModel.apps[i].custom_ssl_crt = null;
       this.projectModel.apps[i].custom_ssl_pem = null;
+    }
 
+    if (this.project.apps.length > 0) {
+      this.activeTab = this.project.apps[0].id;
+      this.getTemplates(this.project.apps[0].ci_script);
+      this.app_port = this.project.apps[0].app_port;
+
+      this.getServerDetails(this.project.apps[0]);
     }
   }
 
@@ -298,7 +334,7 @@ export class EditComponent implements OnInit {
   }
 
   trackByFn(index, app) {
-    return app.appId || app.id || index;
+    return app.id || app.id || index;
   }
 
   downloadTemplate(app){
@@ -307,18 +343,18 @@ export class EditComponent implements OnInit {
 
   addNewApp() {
     const newApp = _.cloneDeep(this.modelDefault);
-    newApp.appId = 'project-app-' + (this.projectModel.apps.length + 1) + new Date().getTime();
+    newApp.id = 'project-app-' + (this.projectModel.apps.length + 1) + new Date().getTime();
 
     this.projectModel.apps.push(newApp);
 
     //Open current tab
-    this.openTab(newApp.appId);
+    this.openTab(newApp.id);
   }
 
   removeApp(i){
-    if(this.projectModel.apps[i].appId === this.activeTab || this.projectModel.apps[i].id === this.activeTab){
-      if(this.projectModel.apps[0] && this.projectModel.apps[0].appId)
-        this.openTab(this.projectModel.apps[0].appId);
+    if(this.projectModel.apps[i].id === this.activeTab || this.projectModel.apps[i].id === this.activeTab){
+      if(this.projectModel.apps[0] && this.projectModel.apps[0].id)
+        this.openTab(this.projectModel.apps[0].id);
 
       if(this.projectModel.apps[0] && this.projectModel.apps[0].id)
         this.openTab(this.projectModel.apps[0].id);
@@ -352,7 +388,6 @@ export class EditComponent implements OnInit {
   }
 
   validateModel(model) {
-    console.log(model);
     if (
         !model.server
         || !model.app_name
@@ -440,7 +475,7 @@ export class EditComponent implements OnInit {
         delete newModel.apps[i].custom_ssl_pem;
 
       //Cleanup model fields
-      delete newModel.apps[i].appId;
+      delete newModel.apps[i].id;
     }
     return newModel;
   }
@@ -545,9 +580,9 @@ export class EditComponent implements OnInit {
     return false;
   }
 
-  uploadFiles(){
+  uploadFiles() {
     //If models finish
-    if(!this.modelApi.apps[this.uploadModelIndex])
+    if (!this.modelApi.apps[this.uploadModelIndex])
       return false;
 
     //Remove all files from queue
@@ -555,14 +590,14 @@ export class EditComponent implements OnInit {
 
     //Prepare files list
     const files = [];
-    if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key)
+    if (this.modelApi.apps[this.uploadModelIndex].custom_ssl_key)
       files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_key);
-    if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt)
+    if (this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt)
       files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_crt);
-    if(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem)
+    if (this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem)
       files.push(this.modelApi.apps[this.uploadModelIndex].custom_ssl_pem);
 
-    if(!files.length){
+    if (!files.length) {
       this.uploadModelIndex++;
       return this.uploadFiles();
     }

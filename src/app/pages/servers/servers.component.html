@@ -21,6 +21,7 @@
           <tr>
             <th scope="col">Server name</th>
             <th scope="col">Modules</th>
+            <th scope="col">Platform</th>
             <th scope="col">Server SSH</th>
             <th scope="col"></th>
           </tr>
@@ -46,6 +47,9 @@
                     {{ dep.label}} 
                   </label>
               </div>
+            </td>
+            <td>
+              <div >{{ server.platform.platform_name }}</div>
             </td>
             <td>
               <div >{{ server.ssh_username }}@{{ server.ssh_ip }}</div>
