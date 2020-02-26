@@ -22,20 +22,15 @@ export class EditComponent implements OnInit {
     //CI templates
     ci_template: 'gitlab_ci',
 
-    //OS
-    os: 'ubuntu',
-
     //Project configuration
     app_name: '',
     desc: '',
-    project_type: null,
     environment: 'development',
-    app_port: '', //optional
-    avaliable_ports: '',//optional
+    avaliable_ports: [],//optional
 
     //Domain setup
     domain_name: null,
-    lets_encrypt: false,
+    automatic_cert: false,
     custom_ssl_key: null,
     custom_ssl_crt: null,
     custom_ssl_pem: null,
@@ -49,11 +44,18 @@ export class EditComponent implements OnInit {
     apps: []
   };
   isNew: boolean = false;
+  ci_script_list: any;
+  ci_script: any;
+  ci_template_list: any;
+
+  servers = null as  any;
+  server = null as any;
+
+  avaliable_ports: any = [];
+
+  automatic_cert: boolean = false;
 
   modelApi: any = {};
-
-  //Lists
-  projectTypes = [] as any;
 
   //Error
   errorMsg = false as any;
@@ -100,6 +102,70 @@ export class EditComponent implements OnInit {
     } else {
       this.setupProject();
     }
+
+    this.updateCIList();
+    this.getServers();
+  }
+
+  updateCIList() {
+    this.api.get(`ci/script/listAll`).then((resp) => {
+      this.ci_script_list = resp.data;
+    });  
+  }
+
+  ciSelected() {
+    var app;
+    console.log(this.activeTab);
+    for (let a of this.projectModel.apps) {
+      console.log(a);
+        if (a.appId === this.activeTab) {
+          app = a;
+        }
+    }
+    console.log(app);
+    //getting list of templates for selected script
+    if (app.ci_script) {
+      this.api.get(`ci/template/listAll/${app.ci_script}`).then((resp) => {
+        console.log(resp.data);
+        this.ci_template_list = resp.data;
+      });  
+    } else {
+      console.log("No template found");
+    }
+  }
+
+  getServers(){
+    this.api.get('server').then((servers) => {
+      this.servers = servers;
+      for (let s of  this.servers) {
+        if (s.server_dependencies === "lets encrypt" || s.server_dependencies === "let's encrypt" || s.server_dependencies === "lets_encrypt") {
+          this.automatic_cert = true;
+        } else if (s.custom_dependencies === "lets encrypt" || s.custom_dependencies === "let's encrypt" || s.custom_dependencies === "lets_encrypt") {
+          this.automatic_cert = true;
+        }
+
+      }
+    })
+  }
+
+  serverChosen() {
+    var app;
+    for (let a of this.projectModel.apps) {
+        if (a.appId === this.activeTab) {
+          app = a;
+        }
+    }
+
+    for (let s of this.servers) {
+      if (app.server === s.id) {
+        this.server = {};
+        this.server = s;
+      }
+    }
+  }
+
+  portSelected(port) {
+    this.projectModel.app_port = port;
   }
 
   prepareToEdit(){
@@ -113,9 +179,6 @@ export class EditComponent implements OnInit {
       //Clean from dependencies
       delete this.projectModel.apps[i].console;
       delete this.projectModel.apps[i].project;
-
-      //Prepare project type
-      this.projectModel.apps[i].project_type = this.projectModel.apps[i].project_type.id;
 
       //Remove exist cert
       this.projectModel.apps[i].custom_ssl_key = null;
@@ -161,7 +224,7 @@ export class EditComponent implements OnInit {
         return;
       }
 
-      if(this.modelApi.apps[this.uploadModelIndex]){
+      if (this.modelApi.apps[this.uploadModelIndex]) {
         //Setup files id`s
         for (let file of response) {
           if (this.modelApi.apps[this.uploadModelIndex].custom_ssl_key && this.modelApi.apps[this.uploadModelIndex].custom_ssl_key.name === file.name)
@@ -187,20 +250,37 @@ export class EditComponent implements OnInit {
           delete this.modelApi.proceed_setup;
 
           //Update project
-          this.api.update(`projects/${this.projectId}`, this.modelApi).then((project) => {
-            isUpdateProject = false;
+          if (this.isNew) {
+            this.api.create(`projects/${this.projectId}`, this.modelApi).then((project) => {
+              isUpdateProject = false;
+  
+              //PROJECT CREATED
+              if(proceed_setup){
+                this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+              }else{
+                this.route.navigate([`projects`]);
+              }
+            }, (err) => {
+              isUpdateProject = false;
+              this.errorMsg = err;
+            });
+          } else {
+            this.api.update(`projects/${this.projectId}`, this.modelApi).then((project) => {
+              isUpdateProject = false;
+  
+              //PROJECT CREATED
+              if(proceed_setup){
+                this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+              }else{
+                this.route.navigate([`projects`]);
+              }
+            }, (err) => {
+              isUpdateProject = false;
+              this.errorMsg = err;
+            });
+          }
 
-            //PROJECT CREATED
-            if(proceed_setup){
-              this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
-            }else{
-              this.route.navigate([`projects`]);
-            }
-          }, (err) => {
-            isUpdateProject = false;
-            this.errorMsg = err;
-          });
-        }else{
+        } else {
           isUpdateProject = false;
         }
 
@@ -263,61 +343,52 @@ export class EditComponent implements OnInit {
     arr[0].value = null;
   }
 
-  validateModel(model){
-    if(
-        !model.os
+  validateModel(model) {
+    console.log(model);
+    if (
+        !model.server
         || !model.app_name
-        || !model.project_type
         || !model.environment
+        || !model.ci_template
+        || !model.avaliable_ports
     )
       return 'Please input all required fields.';
 
-    if(model.app_port){
+    if (model.app_port) {
       const portRegex = new RegExp('^[0-9]+$', 'gm');
-      if(!portRegex.test(model.app_port)){
+      if (!portRegex.test(model.app_port)) {
         return 'App port is invalid. Please use: numbers';
       }
     }
 
-    if(model.avaliable_ports){
-      const portRegex = new RegExp('^[0-9]+$', 'gm');
-      const availiablePortRegex = new RegExp('^[0-9 ]+$', 'gm');
-
-      if(!portRegex.test(model.avaliable_ports)){
-        if(!availiablePortRegex.test(model.avaliable_ports)){
-          return 'Avaliable ports is invalid. Please use: numbers. Separate ports by whitespace';
-        }
-      }
-    }
-
     const appNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
-    if(!appNameRegex.test(model.app_name)){
+    if (!appNameRegex.test(model.app_name)) {
       return 'App name is invalid. Please use: alphabetic characters, numbers, "-" or "_"';
     }
 
 
-    if(model.lets_encrypt && !model.domain_name)
-      return 'If you want to use Let`s encrypt please enter domain name.';
+    if (model.automatic_cert && !model.domain_name)
+      return 'If you want to use automatic certificates please enter domain name';
 
-    if(model.lets_encrypt && model.domain_name){
+    if (model.automatic_cert && model.domain_name) {
       const domainNameRegex = new RegExp('^[-\.a-z]+$', 'gm');
-      if(!domainNameRegex.test(model.domain_name)){
+      if (!domainNameRegex.test(model.domain_name)) {
         return 'Domain name is invalid. For using Let`s Encript please use: alphabetic characters(lower case), "." or "-"';
       }
     }
 
     //Check if certs is try to upload
-    if(model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem){
+    if (model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem) {
       //Check if files has names
-      if(
+      if (
           (model.custom_ssl_key && !model.custom_ssl_key.name) ||
           (model.custom_ssl_crt && !model.custom_ssl_crt.name) ||
           (model.custom_ssl_pem && !model.custom_ssl_pem.name)
-      ){
+      ) {
         return 'SSL files not upload properly, please upload files one more time.';
       }
 
-      if(!model.id) {
+      if (!model.id) {
         //Check if all certs is included
         if (!model.custom_ssl_key || !model.custom_ssl_crt || !model.custom_ssl_pem) {
           return 'If you want to use custom certificate then you need to upload .key, .crt and .pem files.';
@@ -390,26 +461,26 @@ export class EditComponent implements OnInit {
     return hasFiles;
   }
 
-  proceedToUpdate(start = false){
+  proceedToUpdate(start = false) {
     //Validate models
     let hasErrors = false;
-    for(var i = 0; i < this.projectModel.apps.length; i++){
+    for (var i = 0; i < this.projectModel.apps.length; i++) {
       this.projectModel.apps[i].errorMsg = this.validateModel(this.projectModel.apps[i]);
-      if(this.projectModel.apps[i].errorMsg)
+      if (this.projectModel.apps[i].errorMsg)
         hasErrors = true;
     }
 
-    if(hasErrors){
+    if (hasErrors) {
       window.scrollTo(0, 1);
       return false;
     }
     this.errorMsg = '';
-    if(!this.projectModel.project_name) {
+    if (!this.projectModel.project_name) {
       this.errorMsg = 'Project name is required';
       return false;
-    }else{
+    } else {
       const projectNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
-      if(!projectNameRegex.test(this.projectModel.project_name)){
+      if (!projectNameRegex.test(this.projectModel.project_name)) {
         this.errorMsg = 'Project name is invalid. Please use: alphabetic characters, numbers, "-" or "_"';
         return false;
       }
@@ -437,16 +508,29 @@ export class EditComponent implements OnInit {
       }
 
       //Update project
-      this.api.update(`projects/${this.projectId}`, this.modelApi).then((project) => {
-        //PROJECT CREATED
-        if(proceed_setup){
-          this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
-        }else{
-          this.route.navigate([`projects`]);
-        }
-      }, (err) => {
-        this.errorMsg = err;
-      });
+      if (this.isNew) {
+        this.api.create(`projects/new`, this.modelApi).then((project) => {
+          //PROJECT CREATED
+          if (proceed_setup) {
+            this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+          } else {
+            this.route.navigate([`projects`]);
+          }
+        }, (err) => {
+          this.errorMsg = err;
+        });
+      } else {
+        this.api.update(`projects/${this.projectId}`, this.modelApi).then((project) => {
+          //PROJECT CREATED
+          if (proceed_setup) {
+            this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
+          } else {
+            this.route.navigate([`projects`]);
+          }
+        }, (err) => {
+          this.errorMsg = err;
+        });
+      }
     }
 
     return false;

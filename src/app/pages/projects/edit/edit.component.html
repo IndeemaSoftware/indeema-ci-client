@@ -48,19 +48,19 @@
                   <textarea [(ngModel)]="model.desc" class="form-control" id="desc{{ pId }}" name="desc{{ pId }}" rows="3"></textarea>
                 </div>
                 <div class="form-group required">
-                  <label for="ci_template">CI Template</label>
-                  <select [(ngModel)]="projectModel.apps[pId].ci_template" disabled class="form-control" name="ci_template{{ pId }}">
-                    <option [value]="'gitlab_ci'"  disabled>GitLab CI</option>
-                  </select>
-                </div>
-                <div class="form-group required">
-                  <label for="project_type">App type</label>
-                  <select [(ngModel)]="model.project_type" class="form-control" name="project_type{{ pId }}">
-                    <option [value]="null"  disabled>Chose app type</option>
-                    <ng-container *ngFor="let item of projectTypes">
-                      <option *ngIf="projectModel.apps[pId].os !== 'aws_s3' || (projectModel.apps[pId].os === 'aws_s3' && item.s3_support)" [value]="item.id">{{ item.label }}</option>
+                  <label for="template">Template</label>
+                  <select (change)="ciSelected()" [(ngModel)]="projectModel.apps[pId].ci_script" enabled class="form-control" name="ci_script">
+                    <option [value]="null"  disabled>Chose CI</option>
+                    <ng-container *ngFor="let item of ci_script_list">
+                      <option [value]="item">{{ item }}</option>
                     </ng-container>
                   </select>
+                  <select [(ngModel)]="projectModel.apps[pId].ci_template" enabled class="form-control" name="ci_template{{ pId }}">
+                    <option [value]="null"  disabled>Chose CI template</option>
+                    <ng-container *ngFor="let item of ci_template_list">
+                      <option [value]="item">{{ item }}</option>
+                    </ng-container>
+                  </select>          
                 </div>
                 <div class="form-group required">
                   <label for="environment">App environment</label>
@@ -72,38 +72,67 @@
                   </select>
                 </div>
                 <div class="form-group required border-top">
-                  <label for="os">OS</label>
-                  <select [(ngModel)]="projectModel.apps[pId].os" class="form-control" name="os{{ pId }}">
-                    <option [value]="'ubuntu'">Ubuntu OS</option>
-                    <option [value]="'aws_s3'">AWS S3 Static website hosting</option>
+                  <label for="server">Server</label>
+                  <select (change)="serverChosen()" [(ngModel)]="projectModel.apps[pId].server" class="form-control" name="server{{ pId }}">
+                    <option [value]="null" disabled>Please choose server</option>
+                    <ng-container *ngFor="let item of servers">
+                      <option [value]="item.id">{{ item.server_name }} ({{item.server_status}})</option>
+                      <option [value]="item.id">{{ item.server_name }} ({{item.server_status}})</option>
+                    </ng-container>
                   </select>
+
+                  <form *ngIf="server && (server.server_dependencies.length === 0 || server && server.custom_dependencies.length === 0 || server.ports.length === 0)" name="warning-form">
+                    <label *ngIf="server && server.server_dependencies.length === 0" class="badge badge-danger">No server dependencies installed </label> <br/>
+                    <label *ngIf="server && server.custom_dependencies.length === 0" class="badge badge-danger">No custom dependencies installed </label> <br/>
+                    <label *ngIf="server && server.ports.length == 0" class="badge badge-danger">No ports opened </label> <br/>
+                  </form>    
+
+                  <div *ngIf="server && server.server_dependencies && server.server_dependencies.length > 0" class="form-group">
+                    <label>Installed server dependencies</label>
+                    <div>
+                      <label *ngFor="let dep of server.server_dependencies; let i = index" class="badge badge-success">
+                        {{ dep.label}}
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div *ngIf="server && server.custom_dependencies && server.custom_dependencies.length > 0" class="form-group">
+                    <label>Installed custom dependencies</label>
+                    <div>
+                      <label *ngFor="let dep of server.custom_dependencies; let i = index" class="badge badge-success">
+                        {{ dep.label}} 
+                      </label>
+                    </div>
+                  </div>
                 </div>
-                <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-group">
-                  <label for="app_port">App port</label>
-                  <input [(ngModel)]="model.app_port" type="text" class="form-control" name="app_port{{ pId }}" placeholder="Enter app port">
-                  <small class="form-text text-muted">Specify port to be used by application. By default port 8080 is used.</small>
-                </div>
-                <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-group">
-                  <label for="avaliable_ports">Avaliable ports</label>
-                  <input [(ngModel)]="model.avaliable_ports" type="text" class="form-control" name="avaliable_ports{{ pId }}" placeholder="Enter avaliable ports">
-                  <small class="form-text text-muted">This prots will be enabled in firewall</small>
+
+                <div *ngIf="server && server.ports && server.ports.length > 0" class="form-group">
+                  <label for="app_port">Avaliable ports</label>
+                  <div>
+                    <form name="port-form" *ngFor="let port of server.ports; let i = index">
+                      <label>
+                        <input ng-model="projectModel.app_port" type="radio" > {{port}}
+                    </label><br/>
+                    </form>
+                  </div>
                 </div>
               </div>
-              <div *ngIf="projectModel.apps[pId].os !== 'aws_s3'" class="form-container">
+
+              <div class="form-container">
                 <h3>Domain and HTTPS setttings:</h3>
-                <div class="form-group" [ngClass]="{'required': model.lets_encrypt}">
+                <div class="form-group" [ngClass]="{'required': model.automatic_cert}">
                   <label for="domain_name">Domain name</label>
                   <input [(ngModel)]="model.domain_name" type="text" class="form-control" name="domain_name{{ pId }}" placeholder="Enter domain name">
                 </div>
                 <div class="form-group">
-                  <div class="form-check">
-                    <input [(ngModel)]="model.lets_encrypt" class="form-check-input" type="checkbox" name="lets_encrypt{{ pId }}">
+                  <div *ngIf="automatic_cert" class="form-check">
+                    <input [(ngModel)]="model.automatic_cert" class="form-check-input" type="checkbox" name="automatic_cert{{ pId }}">
                     <label class="form-check-label" for="defaultCheck1">
-                      Use Let's Encrypt (self-signed certificates)
+                      Use automatic certificates (self-signed certificates)
                     </label>
                   </div>
                 </div>
-                <div *ngIf="!model.lets_encrypt">
+                <div *ngIf="!model.automatic_cert">
                   <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
                     <label for="custom_ssl_key">SSL Key file</label>
                     <input (change)="addKeySSLFile($event, model)" type="file" accept=".key" class="form-control" name="custom_ssl_key{{ pId }}" placeholder="Upload SSL Key file">
@@ -128,7 +157,8 @@
           </div>
         </div>
         <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>
-        <button (click)="proceedToUpdate(false)" type="button" class="btn btn-warning">Update</button>
+        <button *ngIf="!isNew" (click)="proceedToUpdate(false)" type="button" class="btn btn-warning">Update</button>
+        <button *ngIf="isNew" (click)="proceedToUpdate(false)" type="button" class="btn btn-warning">Create</button>
       </form>
     </div>
   </div>
