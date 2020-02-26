@@ -40,9 +40,9 @@
                 <thead class="thead-dark">
                 <tr>
                   <th scope="col">Name</th>
-                  <th scope="col">Type</th>
+                  <th scope="col">CI</th>
                   <th scope="col">Env</th>
-                  <th scope="col">SSH</th>
+                  <th scope="col">Server</th>
                   <th scope="col"></th>
                 </tr>
                 </thead>
@@ -57,11 +57,14 @@
                     <span *ngIf="app.app_status === 'cleanup_success'" class="badge badge-success">Cleanup success!</span>
                     <span *ngIf="app.app_status === 'cleanup_failed'" class="badge badge-danger">Cleanup failed!</span>
                   </th>
-                  <td>{{ app.project_type.label }}</td>
+                  <td>
+                    <div *ngIf="app.server">{{ app.ci_script}}</div>
+                    <div *ngIf="!app.server">No CI selected</div>
+                  </td>
                   <th scope="row">{{ app.environment }}</th>
                   <td>
-                    <div *ngIf="app.os !== 'aws_s3'">{{ app.ssh_username }}@{{ app.ssh_host }}</div>
-                    <div *ngIf="app.os === 'aws_s3'">Using AWS S3</div>
+                    <div *ngIf="app.server">{{ app.server.server_name}}</div>
+                    <div *ngIf="!app.server">Server not selected</div>
                   </td>
                   <td>
                     <div class="btn-group btn-group-toggle">

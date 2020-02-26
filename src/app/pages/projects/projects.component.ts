@@ -40,6 +40,8 @@ export class ProjectsComponent implements OnInit {
     this.api.get('projects').then((projects) => {
       this.projects = projects;
 
+      console.log(this.projects);
+
       this.statuses = {
         waiting: 0,
         progress: 0,

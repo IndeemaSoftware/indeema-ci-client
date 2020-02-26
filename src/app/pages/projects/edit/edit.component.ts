@@ -43,7 +43,8 @@ export class EditComponent implements OnInit {
 
   projectModel: any = {
     project_name:"",
-    apps: []
+    users: [],
+    apps: [],
   };
   isNew: boolean = false;
   ci_script_list: any;
@@ -86,7 +87,9 @@ export class EditComponent implements OnInit {
     } else {
       this.isNew = true;
     }
-  }
+
+    console.log(auth);
+}
 
   ngOnInit() {
     //Get project
@@ -103,6 +106,7 @@ export class EditComponent implements OnInit {
       this.setupProject();
     }
 
+    this.projectModel.users.push(this.auth.user.id);
     this.updateCIList();
     this.getServers();
   }
@@ -505,7 +509,7 @@ export class EditComponent implements OnInit {
       delete this.modelApi.proceed_setup;
 
       //Cleanup apps
-      for(var i = 0; i < this.modelApi.apps.length; i++){
+      for (var i = 0; i < this.modelApi.apps.length; i++) {
         delete this.modelApi.apps[i].custom_ssl_key;
         delete this.modelApi.apps[i].custom_ssl_crt;
         delete this.modelApi.apps[i].custom_ssl_pem;
@@ -513,6 +517,7 @@ export class EditComponent implements OnInit {
 
       //Update project
       if (this.isNew) {
+        console.log(this.modelApi);
         this.api.create(`projects/new`, this.modelApi).then((project) => {
           //PROJECT CREATED
           if (proceed_setup) {
