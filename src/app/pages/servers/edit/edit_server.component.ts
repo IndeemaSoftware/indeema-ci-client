@@ -37,7 +37,8 @@ export class EditServerComponent implements OnInit {
   serverModel: any = {server_dependency: [{value:""} ],
                       custom_dependency: [ {value:""}],
                       platform: "",
-                      ssh_key: {}
+                      ssh_key: {},
+                      users: []
                       };
   platform_list: any = [];
   modelApi: any = {};
@@ -99,6 +100,9 @@ export class EditServerComponent implements OnInit {
     this.api.get(`platform/listAll`).then((resp) => {
       this.platform_list = resp.data;
     });  
+
+    this.serverModel.users = [];
+    this.serverModel.users.push(this.auth.user.id);
   }
 
   prepareToEdit() {
