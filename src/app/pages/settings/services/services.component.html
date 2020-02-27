@@ -1,0 +1,59 @@
+<div class="container">
+    <h3>Services</h3>
+    <div class="form-group required">
+      <label for="service">Service setup script</label>
+      <select (change)="serviceSelected(settingsModel.service)" [(ngModel)]="settingsModel.service" enabled class="form-control" name="service" id="service">
+        <option [value]="newDependency">Create new</option>
+        <optgroup label="_________"></optgroup>
+        <ng-container *ngFor="let item of settingsModel.service_list let i = index">
+          <option [ngValue]="settingsModel.service_list[i]">{{ item.service_name}}</option>
+        </ng-container>
+      </select>
+      </div>
+      <div class="form-group">
+        <label for="service_name">Service name</label>
+        <input [(ngModel)]="settingsModel.service.service_name" [(value)]="settingsModel.service.service_name" class="form-control" id="new_service_name" name="nservice_name" placeholder="Please enter name for new service">
+      </div>     
+    <div class="form-container">
+      <h4>Service variables</h4>
+      <div *ngFor="let item of settingsModel.service.variables let i = index" class="form-group repeated">
+        <input [(ngModel)]="settingsModel.service.variables[i].name"  class="form-control" id="service-name" name="variable" placeholder="Enter variable key">
+        <input [(ngModel)]="settingsModel.service.variables[i].value" class="form-control" id="service-value" name="variable" placeholder="Enter variable value">
+        <span (click)="removeRepeatField(settingsModel.service.variables, i)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length > 1" class="text-danger remove-btn">Remove</span>
+        <span (click)="cleanFields(settingsModel.service.variables)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length === 1 && settingsModel.service.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+      </div>
+    <button (click)="addRepeatField(settingsModel.service.variables)" type="button" class="btn btn-warning">Add another variable</button>
+    </div>
+    <div class="form-group">
+      <div>
+        <div>Parameters to be provided when calling Setup script <br/>
+              -n  Server Name<br/>
+              -d  Server description<br/>
+              -o  Service name<br/>
+              -p  ports, separated with comma in brakets, like "100,200,300"<br/>
+              -i  ip address of server<br/>
+              -u  user name of user that has permissions to server with ip address provided faster<br/>
+              -k  private ssh key of user to access server<br/>
+              -r  list of dependencies to be installed<br/>
+              -z  path to all subscripts (pre, post and install). All subscripts have name `depandency name`_install or _pre or _post<br/>
+
+        </div>
+        <h4>Service setup script</h4>
+      </div>
+      <textarea [(ngModel)]="settingsModel.service.setup_script" [(value)]="settingsModel.service.setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+    </div>
+    <div class="form-group">
+      <h4>Service cleanup script</h4>
+      <textarea [(ngModel)]="settingsModel.service.cleanup_script" [(value)]="settingsModel.service.cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+    </div>
+    <div class="form-group">
+      <h4>Service documentation</h4>
+      <textarea (change)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.service"></textarea>
+      <!-- <div *ngIf="settingsModel.jsonValidationMessage"> -->
+      <div *ngIf="settingsModel.jsonValidationMessage">
+        <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
+      </div>
+    </div>
+    <button (click)="updateService()" class="btn btn-primary">Update</button>
+    <button (click)="deleteService()" class="btn btn-primary" class="btn btn-danger">Delete</button>
+    <button (click)="saveServiceScript()" class="btn btn-primary">Save changes</button></div>

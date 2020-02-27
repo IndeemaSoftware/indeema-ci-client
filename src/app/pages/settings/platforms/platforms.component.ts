@@ -24,8 +24,6 @@ export class PlatformsComponent implements OnInit {
 
   constructor(
     private api: ApiService,
-    private auth: AuthService,
-    private route: Router,
     private modal: ModalService
   ) { };
 
