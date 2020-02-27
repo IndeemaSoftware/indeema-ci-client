@@ -30,7 +30,6 @@ import { AppComponent } from './app.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './pages/home/home.component';
-import { RunnerComponent } from './pages/runner/runner.component';
 import { SigninComponent } from './pages/signin/signin.component';
 import { HeaderComponent } from './partials/header/header.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
@@ -51,7 +50,6 @@ import { MaintenancePreviewComponent } from './pages/settings/maintenance/mainte
   declarations: [
     AppComponent,
     HomeComponent,
-    RunnerComponent,
     SigninComponent,
     HeaderComponent,
     ProjectsComponent,
