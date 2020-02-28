@@ -3,14 +3,14 @@
     <div class="form-group required">
       <label for="service">Service setup script</label>
       <select (change)="serviceSelected(settingsModel.service)" [(ngModel)]="settingsModel.service" enabled class="form-control" name="service" id="service">
-        <option [value]="newDependency">Create new</option>
+        <option [ngValue]="newService" (value)="newService">Create new</option>
         <optgroup label="_________"></optgroup>
         <ng-container *ngFor="let item of settingsModel.service_list let i = index">
           <option [ngValue]="settingsModel.service_list[i]">{{ item.service_name}}</option>
         </ng-container>
       </select>
       </div>
-      <div class="form-group">
+      <div *ngIf="settingsModel.service" class="form-group">
         <label for="service_name">Service name</label>
         <input [(ngModel)]="settingsModel.service.service_name" [(value)]="settingsModel.service.service_name" class="form-control" id="new_service_name" name="nservice_name" placeholder="Please enter name for new service">
       </div>     
@@ -54,6 +54,7 @@
         <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
       </div>
     </div>
-    <button (click)="updateService()" class="btn btn-primary">Update</button>
-    <button (click)="deleteService()" class="btn btn-primary" class="btn btn-danger">Delete</button>
-    <button (click)="saveServiceScript()" class="btn btn-primary">Save changes</button></div>
+    <button (click)="updateService()" class="btn btn-primary" [disabled]="isNewService">Update</button>
+    <button (click)="createService()" class="btn btn-primary" [disabled]="!isNewService">Create</button>
+    <button (click)="deleteService()" class="btn btn-danger" [disabled]="isNewService">Delete</button>
+  </div>

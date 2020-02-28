@@ -12,6 +12,16 @@ import { ConsoleComponent } from '../../console/console.component';
 })
 export class ServicesComponent implements OnInit {
 
+  newService: {
+    service_name:"",
+    variables: [{
+      key: "",
+      value: ""
+    }],
+    doc_string: "", 
+    jsonValidationMessage: ""
+    };
+
   settingsModel: any = {
     service: {
       service_name:"",
@@ -21,11 +31,12 @@ export class ServicesComponent implements OnInit {
       }],
       doc_string: "", 
       jsonValidationMessage: ""
-    } as any,
-
+    } as any
   };
 
-  constructor(
+  isNewService: boolean = true;
+
+  constructor (
     private api: ApiService,
     private modal: ModalService
   ) { 
@@ -36,22 +47,42 @@ export class ServicesComponent implements OnInit {
   }
 
   serviceSelected(service) {
-    this.settingsModel.doc_string = JSON.stringify(service.doc);    
+    if (service) {
+      this.isNewService = false;
+      this.settingsModel.doc_string = JSON.stringify(service.doc, undefined, 2);    
+    } else {
+      this.isNewService = true;
+      this.settingsModel.service = {
+        service_name:"",
+        variables: [{
+          key: "",
+          value: ""
+        }],
+        doc_string: "", 
+        jsonValidationMessage: ""
+      };
+      this.cleanServiceFields();
+    }
   }
 
   updateServiceFields(data) {
-    this.settingsModel.new_service_name = "";
     this.settingsModel.service = data;
     this.updateServiceList();
   }
 
   cleanServiceFields() {
+    this.isNewService = true;
     this.settingsModel.new_service_name = "";
     this.settingsModel.doc_string = "";
     this.settingsModel.service = {
-      setup_script: "",
-      cleanup_script: ""  
-    };
+      service_name:"",
+      variables: [{
+        key: "",
+        value: ""
+      }],
+      doc_string: "", 
+      jsonValidationMessage: ""
+      };
     this.updateServiceList();
   }
 
@@ -62,13 +93,41 @@ export class ServicesComponent implements OnInit {
     });  
   }
 
-  updateService(){
+  saveDocJson() {
+    if (this.settingsModel.doc_string.length) {
+      this.settingsModel.service.doc = JSON.parse(this.settingsModel.doc_string);
+    }
+  }
+
+  updateService() {
+    if (!this.settingsModel.service.service_name) {
+      this.modal.alert("You can't update service with no name");
+      return;
+    }
+    this.modal.confirm(
+      `Confirm saving of updates of "${this.settingsModel.service.service_name}" script`,
+      "Do you really want to save changes of script?<br>If yes, please input template name.",
+      (value) => {
+        if(value !== this.settingsModel.service.service_name )
+          return 'Template name is incorrect!';
+      },
+      'Yes, please save!',
+      'Don`t save'
+  ).then((res) => {
+    this.saveDocJson();
     this.api.update(`services/${this.settingsModel.service.id}`, this.settingsModel.service).then((resp) => {
-      this.updateServiceFields(resp.data);
     });
+
+    }, (err) => {
+      this.modal.alert(err);
+    })
   }
 
   deleteService() {
+    if (!this.settingsModel.service.service_name) {
+      this.modal.alert("You can't delete service with no name");
+      return;
+    }
     this.modal.confirm(
       `Confirm deletion of "${this.settingsModel.service.service_name}" template`,
       "Do you really want to delete this template?<br>If yes, please input template name.",
@@ -80,34 +139,32 @@ export class ServicesComponent implements OnInit {
       'Don`t remove'
   ).then((res) => {
     this.api.remove(`services/${this.settingsModel.service.id}`).then((resp) => {
-      if (resp.status == "ok")  {
-        this.cleanServiceFields();
-      } else {
-        this.modal.alert(resp.data);
-      }
+      this.cleanServiceFields();
     });
     }, (err) => {
       this.modal.alert(err);
     })
   }
 
-  saveServiceScript() {
+  createService() {
+    if (!this.settingsModel.service.service_name) {
+      this.modal.alert("You can't create service with no name");
+      return;
+    }
     this.modal.confirm(
-      `Confirm saving of updates of "${name}" script`,
+      `Confirm creating of "${this.settingsModel.service.service_name}" script`,
       "Do you really want to save changes of script?<br>If yes, please input template name.",
       (value) => {
-        if(value !== name)
+        if(value !== this.settingsModel.service.service_name )
           return 'Template name is incorrect!';
       },
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
-    this.settingsModel.service.doc = JSON.parse(this.settingsModel.doc_string);
-    this.settingsModel.service.service_name = name;
-    console.log(this.settingsModel.service);
-
+    this.saveDocJson();
     this.api.create(`services`, this.settingsModel.service).then((resp) => {
-      this.updateServiceFields(resp.data);
+      this.updateServiceFields(resp);
+      this.cleanServiceFields();
     });  
 
     }, (err) => {
