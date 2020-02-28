@@ -48,6 +48,10 @@
     </div>
     <div class="form-group">
       <h4>Service documentation</h4>
+      <div>
+        Available keys: <br/>
+        project_name, app_name, app_port, custom_ssl_key, custom_ssl_crt, domain_name, environment, desc, server, automatic_cert, ci_template, ci_script
+      </div>
       <textarea (change)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.service"></textarea>
       <!-- <div *ngIf="settingsModel.jsonValidationMessage"> -->
       <div *ngIf="settingsModel.jsonValidationMessage">

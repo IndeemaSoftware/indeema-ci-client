@@ -8,10 +8,8 @@
         <span *ngIf="consoleLive == null" class="badge badge-danger">Starting</span>
         {{ consoleTitle }}
       </h2>
-      <h2 *ngIf="project && app" style="margin-top: 1rem">
-        <span *ngIf="consoleLive" width=100 class="badge badge-success">Online</span>
-        <span *ngIf="!consoleLive && consoleLive !== null" width=100 class="badge badge-danger">Offline</span>
-        {{ project.project_name }} {{ app.app_name }}
+      <h2 *ngIf="project && app" style="margin-top: 1rem; font-size: small;">
+        Setuping {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}
       </h2>
       <div class="console">
         <div id="consoleOutput">

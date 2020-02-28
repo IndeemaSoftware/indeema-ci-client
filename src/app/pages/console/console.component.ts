@@ -113,6 +113,13 @@ export class ConsoleComponent implements OnInit {
   prepareConsole(){
     if (this.projectId) {
       this.hideDownloadBtn = false;;
+      if (this.app.app_status === 'success'){
+        this.enableDownloadBtn = true;
+      } else {
+        this.enableDownloadBtn = false;
+      }
+    } else {
+      this.hideDownloadBtn = false;;
       if (this.server.server_status === 'success'){
         this.enableDownloadBtn = true;
       } else {
@@ -170,7 +177,7 @@ export class ConsoleComponent implements OnInit {
 
   startSetupScript() {
     if (this.projectId) {
-      this.api.create(`/console/setup/${this.projectId}/${this.appId}`, {}).then(() => {
+      this.api.create(`/apps/setup/${this.appId}`, {}).then(() => {
         this.cleanConsole();
       }, (err) => {
         this.modal.alert(err);

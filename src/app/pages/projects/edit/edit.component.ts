@@ -54,6 +54,9 @@ export class EditComponent implements OnInit {
   servers = null as  any;
   server = null as any;
 
+  services = null as any;
+  service = null as any;
+
   automatic_cert: boolean = false;
 
   modelApi: any = {};
@@ -110,6 +113,33 @@ export class EditComponent implements OnInit {
     this.updateCIList();
     this.projectModel.users.push(this.auth.user.id);
     this.getServers();
+    this.updateServiceList();
+  }
+
+  updateServiceList() {
+    this.api.get(`services`).then((resp) => {
+      console.log(resp);
+      this.services = resp;
+    });  
+  }
+
+  serviceChosen(service) {
+    var app;
+    for (let a of this.projectModel.apps) {
+      if (a.id === this.activeTab) {
+        app = a;
+      }
+    }
+
+    if (app) {
+      for (let s of this.services) {
+        if (app.service === s.id) {
+          this.service = {};
+          this.service = s;
+        }
+      }  
+    }
+    console.log(this.service);
   }
 
   getServerDetails(app) {
@@ -394,8 +424,13 @@ export class EditComponent implements OnInit {
         || !model.environment
         || !model.ci_template
         || !model.app_port
-    )
+        || !model.service
+        || this.missing_port
+    ) {
       return 'Please input all required fields.';
+    } else if (!this.server.ports || this.server.ports.length == 0) {
+      return 'You may not use this server as it doesn\'t have any open ports';
+    }
 
     if (model.app_port) {
       const portRegex = new RegExp('^[0-9]+$', 'gm');
@@ -463,7 +498,7 @@ export class EditComponent implements OnInit {
   prepareModel(model){
     const newModel = _.cloneDeep(model);
 
-    for(var i = 0; i < newModel.apps.length; i++) {
+    for (var i = 0; i < newModel.apps.length; i++) {
 
       if(!newModel.apps[i].custom_ssl_key)
         delete newModel.apps[i].custom_ssl_key;
@@ -531,6 +566,7 @@ export class EditComponent implements OnInit {
 
     //Prepare model for api
     this.modelApi = this.prepareModel(this.projectModel);
+    // this.modelApi.service = this.service;
 
     //Remove all files from queue
     this.uploader.queue = [];
@@ -564,6 +600,7 @@ export class EditComponent implements OnInit {
           this.errorMsg = err;
         });
       } else {
+        console.log(this.modelApi);
         this.api.update(`projects/${this.projectId}`, this.modelApi).then((project) => {
           //PROJECT CREATED
           if (proceed_setup) {
