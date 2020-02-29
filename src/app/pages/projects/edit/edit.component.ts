@@ -218,7 +218,6 @@ export class EditComponent implements OnInit {
           this.automatic_cert = true;
         }
       }
-
     })
   }
 
