@@ -49,7 +49,7 @@
               <div class="form-container">
                 <div class="form-group required">
                   <label for="app_name">App service</label>
-                  <select (change)="serviceChosen(projectModel.apps[pId].service)" [(ngModel)]="projectModel.apps[pId].service" class="form-control" name="service{{ pId }}">
+                  <select (change)="serviceChosen()" [(ngModel)]="projectModel.apps[pId].service" class="form-control" name="service{{ pId }}">
                     <option [value]="null" disabled>Please choose service</option>
                     <ng-container *ngFor="let item of services">
                       <option [value]="item.id">{{ item.service_name }}</option>

@@ -104,7 +104,6 @@ export class EditComponent implements OnInit {
       this.api.get(`/projects/${this.projectId}`)
       .then(data => {
         this.project = data;
-        this.environments = this.project.environments;
 
         this.setupProject();
       }, err => {
@@ -139,12 +138,12 @@ export class EditComponent implements OnInit {
 
   updateServiceList() {
     this.api.get(`services`).then((resp) => {
-      console.log(resp);
       this.services = resp;
+      this.serviceChosen();
     });  
   }
 
-  serviceChosen(service) {
+  serviceChosen() {
     var app;
     for (let a of this.projectModel.apps) {
       if (a.id === this.activeTab) {
@@ -160,7 +159,6 @@ export class EditComponent implements OnInit {
         }
       }  
     }
-    console.log(this.service);
   }
 
   getServerDetails(app) {
@@ -211,6 +209,8 @@ export class EditComponent implements OnInit {
   getServers(){
     this.api.get('server').then((servers) => {
       this.servers = servers;
+
+      this.serverChosen();
       for (let s of  this.servers) {
         if (s.server_dependencies === "lets encrypt" || s.server_dependencies === "let's encrypt" || s.server_dependencies === "lets_encrypt") {
           this.automatic_cert = true;
@@ -264,6 +264,7 @@ export class EditComponent implements OnInit {
     for (var i = 0; i < this.projectModel.apps.length; i++) {
       this.activeTab = this.projectModel.apps[i].id;
 
+
       //Clean from dependencies
       delete this.projectModel.apps[i].console;
       delete this.projectModel.apps[i].project;
@@ -272,6 +273,12 @@ export class EditComponent implements OnInit {
       this.projectModel.apps[i].custom_ssl_key = null;
       this.projectModel.apps[i].custom_ssl_crt = null;
       this.projectModel.apps[i].custom_ssl_pem = null;
+
+      //init servers
+      this.projectModel.apps[i].server = this.projectModel.apps[i].server.id;
+
+      //init services
+      this.projectModel.apps[i].service = this.projectModel.apps[i].service.id;
     }
 
     if (this.project.apps.length > 0) {
@@ -281,6 +288,8 @@ export class EditComponent implements OnInit {
 
       this.getServerDetails(this.project.apps[0]);
     }
+
+    this.environments = this.project.environments;
   }
 
   setupProject(){
