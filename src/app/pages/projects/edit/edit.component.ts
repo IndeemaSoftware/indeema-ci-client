@@ -44,8 +44,12 @@ export class EditComponent implements OnInit {
   projectModel: any = {
     project_name:"",
     users: [],
-    apps: [],
+    apps: []
   };
+
+  environments: any = "";
+  jsonValidationMessage: any = "";
+
   isNew: boolean = false;
   ci_script_list: any;
   ci_script: any;
@@ -100,6 +104,7 @@ export class EditComponent implements OnInit {
       this.api.get(`/projects/${this.projectId}`)
       .then(data => {
         this.project = data;
+        this.environments = this.project.environments;
 
         this.setupProject();
       }, err => {
@@ -114,6 +119,22 @@ export class EditComponent implements OnInit {
     this.projectModel.users.push(this.auth.user.id);
     this.getServers();
     this.updateServiceList();
+  }
+
+  environmentsUpdated() {
+    console.log("docUpdated");
+    this.jsonValidationMessage = "";
+
+    let value = this.environments.split(',');
+    console.log(value);
+    if (Array.isArray(value)) {
+      this.projectModel.environments = [];
+      for (let s of value) {
+        this.projectModel.environments.push(s.replace(/\s/g, ""));
+      }
+    } else {
+      this.jsonValidationMessage = "Please enter environment names devided with comma";
+    }
   }
 
   updateServiceList() {
@@ -588,7 +609,6 @@ export class EditComponent implements OnInit {
 
       //Update project
       if (this.isNew) {
-        console.log(this.modelApi);
         this.api.create(`projects/new`, this.modelApi).then((project) => {
           //PROJECT CREATED
           if (proceed_setup) {
@@ -600,7 +620,6 @@ export class EditComponent implements OnInit {
           this.errorMsg = err;
         });
       } else {
-        console.log(this.modelApi);
         this.api.update(`projects/${this.projectId}`, this.modelApi).then((project) => {
           //PROJECT CREATED
           if (proceed_setup) {

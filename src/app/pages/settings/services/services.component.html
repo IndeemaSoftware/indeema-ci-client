@@ -27,16 +27,17 @@
     <div class="form-group">
       <div>
         <div>Parameters to be provided when calling Setup script <br/>
-              -n  Server Name<br/>
-              -d  Server description<br/>
-              -o  Service name<br/>
-              -p  ports, separated with comma in brakets, like "100,200,300"<br/>
-              -i  ip address of server<br/>
-              -u  user name of user that has permissions to server with ip address provided faster<br/>
-              -k  private ssh key of user to access server<br/>
-              -r  list of dependencies to be installed<br/>
-              -z  path to all subscripts (pre, post and install). All subscripts have name `depandency name`_install or _pre or _post<br/>
-
+          $ENVIRONMENT <br/>
+          $APP_STATUS="success" <br/>
+          $APP_NAME="new" <br/>
+          $APP_PORT="200" <br/>
+          $DESC="new" <br/>
+          $DOMAIN_NAME="new.com" <br/>
+          $CI_TEMPLATE="html-default.yml" <br/>
+          $CI_SCRIPT="gitlab_ci" <br/>
+          $__V="0" <br/>
+          $ID="5e592655e23774981440dd5d" <br/>
+          $PROJECT_NAME="new" <br/>
         </div>
         <h4>Service setup script</h4>
       </div>
@@ -53,7 +54,6 @@
         project_name, app_name, app_port, custom_ssl_key, custom_ssl_crt, domain_name, environment, desc, server, automatic_cert, ci_template, ci_script
       </div>
       <textarea (change)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.service"></textarea>
-      <!-- <div *ngIf="settingsModel.jsonValidationMessage"> -->
       <div *ngIf="settingsModel.jsonValidationMessage">
         <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
       </div>

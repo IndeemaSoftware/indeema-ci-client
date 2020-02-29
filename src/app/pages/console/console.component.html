@@ -11,6 +11,9 @@
       <h2 *ngIf="project && app" style="margin-top: 1rem; font-size: small;">
         Setuping {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}
       </h2>
+      <h2 *ngIf="server" style="margin-top: 1rem; font-size: small;">
+        Setuping {{server.server_name}}
+      </h2>
       <div class="console">
         <div id="consoleOutput">
           <p *ngFor="let item of consoleOutput" class="{{ item.type || 'message' }}"><span>runner@server:~$</span> {{ item.value }}</p>
