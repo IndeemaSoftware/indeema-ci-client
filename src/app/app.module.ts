@@ -46,6 +46,7 @@ import { ServicesComponent } from './pages/settings/services/services.component'
 import { CIScriptsComponent } from './pages/settings/ci-scripts/ci-scripts.component';
 import { MaintenanceComponent } from './pages/settings/maintenance/maintenance.component';
 import { MaintenancePreviewComponent } from './pages/settings/maintenance/maintenance-preview.component';
+import { HelpComponent } from './pages/help/help.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { MaintenancePreviewComponent } from './pages/settings/maintenance/mainte
     ServicesComponent,
     CIScriptsComponent,
     MaintenanceComponent,
-    MaintenancePreviewComponent
+    MaintenancePreviewComponent,
+    HelpComponent
   ],
   imports: [
     BrowserModule,

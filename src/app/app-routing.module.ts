@@ -10,6 +10,7 @@ import { ServersComponent } from './pages/servers/servers.component';
 import { EditServerComponent } from './pages/servers/edit/edit_server.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { MaintenancePreviewComponent } from './pages/settings/maintenance/maintenance-preview.component';
+import { HelpComponent } from './pages/help/help.component';
 
 const routes: Routes = [
   {
@@ -56,6 +57,12 @@ const routes: Routes = [
     path: 'preview',
     component: MaintenancePreviewComponent,
     pathMatch: 'full'
+  },
+  {
+    path: 'help',
+    component: HelpComponent,
+    pathMatch: 'full'
+    ]
   }
 ];
 
