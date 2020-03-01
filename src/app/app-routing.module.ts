@@ -62,7 +62,6 @@ const routes: Routes = [
     path: 'help',
     component: HelpComponent,
     pathMatch: 'full'
-    ]
   }
 ];
 
