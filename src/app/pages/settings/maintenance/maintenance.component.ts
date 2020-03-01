@@ -11,100 +11,141 @@ import { ModalService } from '../../../services/modal.service';
 })
 export class MaintenanceComponent implements OnInit {
 
+  newMaintenance: {
+    name:"",
+    html_code: "", 
+    };
+
   settingsModel: any = {
+    maintenance: {
+      name:"",
+      html_code: "",
+      maintenance_list:[]
+    } as any
   };
 
-  maintenance: null
-  new_naimtenance_name: null
+  isNewMaintenance: boolean = true;
 
-  constructor(
+  constructor (
     private api: ApiService,
-    private auth: AuthService,
-    private route: Router,
     private modal: ModalService
-  ) { };
+  ) { 
+  };
 
   ngOnInit() {
     this.updateMaintenanceList();
   }
 
-  updateMaintenanceFields(data) {
-    this.settingsModel.new_maintenance_name = "";
-    this.settingsModel.maintenance_script = data;
-    this.maintenanceSelected();
+  maintenanceSelected(maintenance) {
+    if (maintenance) {
+      this.isNewMaintenance = false;
+      this.settingsModel.html_code = maintenance.html_code   
+    } else {
+      this.isNewMaintenance = true;
+      this.settingsModel.maintenance = {
+        name:"",
+        html_code:""
+      };
+      this.cleanMaintenanceFields();
+    }
+  }
+
+  updateServiceFields(data) {
+    this.settingsModel.maintenance = data;
+    this.updateMaintenanceList();
+  }
+
+  cleanMaintenanceFields() {
+    this.isNewMaintenance = true;
+    this.settingsModel.new_service_name = "";
+    this.settingsModel.html_code = "";
+    this.settingsModel.maintenance = {
+      name:"",
+      html_code:""
+      };
     this.updateMaintenanceList();
   }
 
   updateMaintenanceList() {
-    this.api.get(`maintenance/listAll`).then((resp) => {
-    this.settingsModel.maintenance_list = resp.data;
+    this.api.get(`maintenances`).then((resp) => {
+      console.log(resp);
+      this.settingsModel.maintenance_list = resp;
     });  
   }
 
-  maintenanceSelected() {
-    this.api.get(`maintenance/download/${this.settingsModel.maintenance}`).then((resp) => {
-      this.settingsModel.maintenance_script = resp.data;
-    });  
-
-    this.updateMaintenanceList();
+  saveDocJson() {
+    if (this.settingsModel.html_code.length) {
+      this.settingsModel.maintenance.html_code = this.settingsModel.html_code;
+    }
   }
 
-  duplicateMaintenance() {
-    this.settingsModel.maintenance_list.forEach(item => {
-      if (item == this.settingsModel.new_maintenance_name){
-        this.modal.alert(`Maintenance page with this name already exist, please change the name`);
-        return;
-      }
+  updateMaintenance() {
+    if (!this.settingsModel.maintenance.name) {
+      this.modal.alert("You can't update service with no name");
+      return;
+    }
+    this.modal.confirm(
+      `Confirm saving of updates of "${this.settingsModel.maintenance.name}" script`,
+      "Do you really want to save changes of script?<br>If yes, please input template name.",
+      (value) => {
+        if(value !== this.settingsModel.maintenance.name )
+          return 'Template name is incorrect!';
+      },
+      'Yes, please save!',
+      'Don`t save'
+  ).then((res) => {
+    this.saveDocJson();
+    this.api.update(`maintenances/${this.settingsModel.maintenance.id}`, this.settingsModel.maintenance).then((resp) => {
     });
 
-    this.api.create(`maintenance/${this.settingsModel.new_maintenance_name}`, {"data":this.settingsModel.maintenance_script}).then((resp) => {
-      if (resp.status == "ok")  {
-        this.updateMaintenanceFields(resp.data);
-      }
-    });
+    }, (err) => {
+      this.modal.alert(err);
+    })
   }
 
   deleteMaintenance() {
-    //Ask to delete CI template
+    if (!this.settingsModel.maintenance.name) {
+      this.modal.alert("You can't delete service with no name");
+      return;
+    }
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.maintenance}" maintenance`,
-      "Do you really want to delete this maintenance?<br>If yes, please input maintenance name.",
+      `Confirm deletion of "${this.settingsModel.maintenance.name}" template`,
+      "Do you really want to delete this template?<br>If yes, please input template name.",
       (value) => {
-        if(value !== this.settingsModel.maintenance)
+        if(value !== this.settingsModel.maintenance.name)
           return 'Template name is incorrect!';
       },
       'Yes, please remove!',
       'Don`t remove'
   ).then((res) => {
-    this.api.remove(`maintenance/${this.settingsModel.maintenance}`).then((resp) => {
-      if (resp.status == "ok")  {
-        this.settingsModel.new_maintenance_name = "";
-        this.settingsModel.maintenance_script = "";
-        this.settingsModel.maintenance = null;
-        this.updateMaintenanceList();
-      }
+    this.api.remove(`maintenances/${this.settingsModel.maintenance.id}`).then((resp) => {
+      this.cleanMaintenanceFields();
     });
     }, (err) => {
       this.modal.alert(err);
     })
   }
 
-  saveMaintenanceScript() {
+  createMaintenance() {
+    if (!this.settingsModel.maintenance.name) {
+      this.modal.alert("You can't create service with no name");
+      return;
+    }
     this.modal.confirm(
-      `Confirm saving of updates of "${this.settingsModel.maintenance}" template`,
-      "Do you really want to save changes of template?<br>If yes, please input template name.",
+      `Confirm creating of "${this.settingsModel.maintenance.name}" script`,
+      "Do you really want to save changes of script?<br>If yes, please input template name.",
       (value) => {
-        if(value !== this.settingsModel.maintenance)
+        if(value !== this.settingsModel.maintenance.name )
           return 'Template name is incorrect!';
       },
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
-    this.api.create(`ci/template/${this.settingsModel.ci}/${this.settingsModel.maintenance}`, this.settingsModel.maintenance_script).then((resp) => {
-      if (resp.status == "ok")  {
-        this.updateMaintenanceFields(resp.data);
-      }
-    });
+    this.saveDocJson();
+    this.api.create(`maintenances`, this.settingsModel.maintenance).then((resp) => {
+      this.updateServiceFields(resp);
+      this.cleanMaintenanceFields();
+    });  
 
     }, (err) => {
       this.modal.alert(err);
@@ -112,6 +153,6 @@ export class MaintenanceComponent implements OnInit {
   }
 
   preview() {
-    window.open(`preview?id=${this.settingsModel.maintenance}`, '_blank');
+    window.open(`preview?id=${this.settingsModel.maintenance.id}`, '_blank');
   }
 }

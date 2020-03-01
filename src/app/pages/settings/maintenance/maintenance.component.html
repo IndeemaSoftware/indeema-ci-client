@@ -1,24 +1,24 @@
 <div class="container">
     <h3>Maintenance pages</h3>
     <div class="form-group required">
-      <label for="maintenance">Maintenance html page</label>
-      <select (change)="maintenanceSelected()" [(ngModel)]="settingsModel.maintenance" enabled class="form-control" name="maintenance{{ pId }}">
-        <option [value]="null"  disabled>Chose maintenance page</option>
-        <ng-container *ngFor="let item of settingsModel.maintenance_list">
-          <option [value]="item">{{ item }}</option>
+      <label for="maintenance">maintenance page code</label>
+      <select (change)="maintenanceSelected(settingsModel.maintenance)" [(ngModel)]="settingsModel.maintenance" enabled class="form-control" name="maintenance" id="maintenance">
+        <option [ngValue]="newMaintenance" (value)="newMaintenance">Create new</option>
+        <optgroup label="_________"></optgroup>
+        <ng-container *ngFor="let item of settingsModel.maintenance_list let i = index">
+          <option [ngValue]="settingsModel.maintenance_list[i]">{{ item.name}}</option>
         </ng-container>
       </select>
       </div>
+      <div *ngIf="settingsModel.maintenance" class="form-group">
+        <label for="name">Maintenance page name</label>
+        <input [(ngModel)]="settingsModel.maintenance.name" [(value)]="settingsModel.maintenance.name" class="form-control" id="new_maintenance_name" name="new_maintenance_name" placeholder="Please enter name for new maintenance page">
+      </div>     
     <div class="form-group">
-      <label for="new_maintenance_name">New maintenance page name</label>
-      <input [(ngModel)]="settingsModel.new_maintenance_name" class="form-control" id="new_maintenance_name" name="new_maintenance_name" placeholder="Please enter name for new maintenance page">
-    </div>   
-    <button (click)="duplicateMaintenance()" class="btn btn-primary" [disabled]="!settingsModel.new_maintenance_name">Duplicate</button>
-    <button (click)="deleteMaintenance()" class="btn btn-primary" [disabled]="!settingsModel.maintenance" class="btn btn-danger">Delete</button>
-    <div class="form-group">
-      <label for="desc">Setup script</label>
-      <textarea [(ngModel)]="settingsModel.maintenance_script" [(value)]="settingsModel.maintenance_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <textarea [(ngModel)]="settingsModel.maintenance.html_code" [(value)]="settingsModel.maintenance.html_code" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="saveMaintenanceScript()" class="btn btn-primary" >Save maintenance script</button>
-    <button (click)="preview()" class="btn btn-primary" class="btn btn-primary">Preview</button>
-</div>
+    <button (click)="updateMaintenance()" class="btn btn-primary" [disabled]="isNewMaintenance">Update</button>
+    <button (click)="createMaintenance()" class="btn btn-primary" [disabled]="!isNewMaintenance">Create</button>
+    <button (click)="deleteMaintenance()" class="btn btn-danger" [disabled]="isNewMaintenance">Delete</button>
+    <button (click)="preview()" class="btn btn-primary" class="btn btn-primary"[disabled]="isNewMaintenance">Preview</button>
+  </div>
