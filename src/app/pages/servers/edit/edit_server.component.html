@@ -33,8 +33,11 @@
               </div>
             <div class="form-group">
               <label for="serverModel.ports">List ports to open by firewall</label>
-              <input [(ngModel)]="serverModel.ports" type="text" class="form-control" name="ports{{ pId }}" placeholder="Enter avaliable ports">
+              <input (change)="portsUpdated()" [(ngModel)]="ports" type="text" class="form-control" name="ports{{ pId }}" placeholder="Enter avaliable ports">
               <small class="form-text text-muted">Numbers sepatared with comma with no whitespace. These ports will be enabled in firewall</small>
+              <div *ngIf="jsonValidationMessage">
+                <label class="badge badge-danger" id="json-warning" name="json-warning"> {{jsonValidationMessage}}</label>
+              </div>   
             </div>
           </div>
           <div class="form-container">

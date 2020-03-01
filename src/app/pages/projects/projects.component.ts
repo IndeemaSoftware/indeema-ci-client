@@ -129,7 +129,7 @@ export class ProjectsComponent implements OnInit {
         'Yes, please cleanup!',
         'Don`t cleanup'
     ).then((res) => {
-      this.api.remove(`projects/cleanup/${project.id}/${app.id}`).then(() => {
+      this.api.remove(`apps/cleanup/${app.id}`).then(() => {
         this.toConsole(project, app, true);
       }, (err) => {
         this.modal.alert(err);

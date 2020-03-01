@@ -45,6 +45,9 @@ export class EditServerComponent implements OnInit {
 
   platform: any;
 
+  ports: any = "";
+  jsonValidationMessage: any = "";
+
   //Lists
   server_dependency_list = [] as any;
   custom_dependency_list = [] as any;
@@ -97,12 +100,26 @@ export class EditServerComponent implements OnInit {
     this.api.get('/custom-dependencies')
         .then(data => this.custom_dependency_list = data, err => this.custom_dependency_list = []);
 
-    this.api.get(`platform/listAll`).then((resp) => {
-      this.platform_list = resp.data;
+    this.api.get(`platforms`).then((resp) => {
+      this.platform_list = resp;
     });  
 
     this.serverModel.users = [];
     this.serverModel.users.push(this.auth.user.id);
+  }
+
+  portsUpdated() {
+    this.jsonValidationMessage = "";
+
+    let value = this.ports.split(',');
+    if (Array.isArray(value)) {
+      this.serverModel.ports = [];
+      for (let s of value) {
+        this.serverModel.ports.push(s.replace(/\s/g, ""));
+      }
+    } else {
+      this.jsonValidationMessage = "Please enter environment names devided with comma";
+    }
   }
 
   prepareToEdit() {
@@ -141,6 +158,8 @@ export class EditServerComponent implements OnInit {
     } else {
       this.platform = "";
     }
+
+    this.ports = this.serverModel.ports;
   }
 
 

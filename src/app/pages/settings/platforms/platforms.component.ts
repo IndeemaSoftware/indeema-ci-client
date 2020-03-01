@@ -3,6 +3,7 @@ import { AuthService } from '../../../services/auth.service';
 import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
 import { ModalService } from '../../../services/modal.service';
+import { ConsoleComponent } from '../../console/console.component';
 
 @Component({
   selector: 'platforms',
@@ -11,98 +12,122 @@ import { ModalService } from '../../../services/modal.service';
 })
 export class PlatformsComponent implements OnInit {
 
+  newPlatform: {
+    platform_name:"",
+    variables: [{
+      key: "",
+      value: ""
+    }],
+    doc_string: "", 
+    jsonValidationMessage: ""
+    };
+
   settingsModel: any = {
     platform: {
+      platform_name:"",
       variables: [{
         key: "",
         value: ""
       }],
-      setup_script: false,
-      cleanup_script: false     
+      doc_string: "", 
+      jsonValidationMessage: ""
     } as any
   };
 
-  constructor(
+  isNewPlatform: boolean = true;
+
+  constructor (
     private api: ApiService,
     private modal: ModalService
-  ) { };
+  ) { 
+  };
 
   ngOnInit() {
     this.updatePlatformList();
   }
 
-  updatePlatformFields(data) {
-    this.settingsModel.new_platform_name = "";
-    this.settingsModel.platform = data;
-    this.updatePlatformList();
-    this.platformSelected();
+  platformSelected(platform) {
+    if (platform) {
+      this.isNewPlatform = false;
+      this.settingsModel.doc_string = JSON.stringify(platform.doc, undefined, 2);    
+    } else {
+      this.isNewPlatform = true;
+      this.settingsModel.platform = {
+        platform_name:"",
+        variables: [{
+          key: "",
+          value: ""
+        }],
+        doc_string: "", 
+        jsonValidationMessage: ""
+      };
+      this.cleanPlatformFields();
+    }
   }
 
-  cleanPlatfomFields() {
+  updatePlatformFields(data) {
+    this.settingsModel.platform = data;
+    this.updatePlatformList();
+  }
+
+  cleanPlatformFields() {
+    this.isNewPlatform = true;
     this.settingsModel.new_platform_name = "";
-    this.settingsModel.platform_setup_script = "";
-    this.settingsModel.platform_cleanup_script = "";
-    this.settingsModel.doc = "";
+    this.settingsModel.doc_string = "";
     this.settingsModel.platform = {
-      setup_script: false,
-      cleanup_script: false  
-    };
+      platform_name:"",
+      variables: [{
+        key: "",
+        value: ""
+      }],
+      doc_string: "", 
+      jsonValidationMessage: ""
+      };
     this.updatePlatformList();
   }
 
   updatePlatformList() {
-    this.api.get(`platform/listAll`).then((resp) => {
-      if (resp.status === "bad") {
-        console.log(resp);
-        this.modal.alert(resp.data);
-      } else {
-        this.settingsModel.platform_list = resp.data;
-      }
+    this.api.get(`platforms`).then((resp) => {
+      console.log(resp);
+      this.settingsModel.platform_list = resp;
     });  
   }
 
-  platformSelected(){
-    this.api.get(`platform/download/${this.settingsModel.platform.platform_name}`).then((resp) => {
-      if (resp.status === "bad") {
-        this.modal.alert(resp.data);
-      } else {
-        this.settingsModel.platform_setup_script = resp.data;
-      }
-    });  
-
-    this.api.get(`platform/cleanup/download/${this.settingsModel.platform.platform_name}`).then((resp) => {
-      if (resp.status === "bad") {
-        this.modal.alert(resp.data);
-      } else {
-        this.settingsModel.platform_cleanup_script = resp.data;
-      }
-    });  
+  saveDocJson() {
+    if (this.settingsModel.doc_string.length) {
+      this.settingsModel.platform.doc = JSON.parse(this.settingsModel.doc_string);
+    }
   }
 
-  duplicatePlatform(){
-    this.settingsModel.platform_list.forEach(item => {
-      if (item == this.settingsModel.new_platform_name){
-        this.modal.alert(`Template with this name already exist, please change the name`);
-        return;
-      }
+  updatePlatform() {
+    if (!this.settingsModel.platform.platform_name) {
+      this.modal.alert("You can't update platform with no name");
+      return;
+    }
+    this.modal.confirm(
+      `Confirm saving of updates of "${this.settingsModel.platform.platform_name}" script`,
+      "Do you really want to save changes of script?<br>If yes, please input template name.",
+      (value) => {
+        if(value !== this.settingsModel.platform.platform_name )
+          return 'Template name is incorrect!';
+      },
+      'Yes, please save!',
+      'Don`t save'
+  ).then((res) => {
+    this.saveDocJson();
+    this.api.update(`platforms/${this.settingsModel.platform.id}`, this.settingsModel.platform).then((resp) => {
     });
 
-    this.api.create(`platform/${this.settingsModel.new_platform_name}`, {"data":this.settingsModel.platform_setup_script, "platform":this.settingsModel.platform}).then((resp) => {
-      if (resp.status == "ok")  {
-        this.api.create(`platform/cleanup/${this.settingsModel.new_platform_name}`, {"data":this.settingsModel.platform_cleanup_script, "platform":this.settingsModel.platform}).then((resp) => {
-          if (resp.status == "ok")  {
-            this.updatePlatformFields(resp.data);
-          } else {
-            this.modal.alert(resp.data);
-          }
-        });
-      } else {
-        this.modal.alert(resp.data);
-      }
-    });
+    }, (err) => {
+      this.modal.alert(err);
+    })
   }
 
   deletePlatform() {
+    if (!this.settingsModel.platform.platform_name) {
+      this.modal.alert("You can't delete platform with no name");
+      return;
+    }
     this.modal.confirm(
       `Confirm deletion of "${this.settingsModel.platform.platform_name}" template`,
       "Do you really want to delete this template?<br>If yes, please input template name.",
@@ -113,59 +138,49 @@ export class PlatformsComponent implements OnInit {
       'Yes, please remove!',
       'Don`t remove'
   ).then((res) => {
-    this.api.remove(`platform/${this.settingsModel.platform.platform_name}`).then((resp) => {
-      if (resp.status == "ok")  {
-        this.api.remove(`platform/cleanup/${this.settingsModel.platform.platform_name}`).then((resp) => {
-          if (resp.status == "ok")  {
-            this.cleanPlatfomFields();
-          } else {
-            this.modal.alert(resp.data);
-          }
-        });
-      } else {
-        this.modal.alert(resp.data);
-      }
+    this.api.remove(`platforms/${this.settingsModel.platform.id}`).then((resp) => {
+      this.cleanPlatformFields();
     });
     }, (err) => {
       this.modal.alert(err);
     })
   }
 
-  savePlatformScript() {
-    var name = this.settingsModel.platform.platform_name
-    var newPlatform = false;
-    if (!name) {
-      name = this.settingsModel.new_platform_name;
-      newPlatform = true;
+  createPlatform() {
+    if (!this.settingsModel.platform.platform_name) {
+      this.modal.alert("You can't create platform with no name");
+      return;
     }
-
     this.modal.confirm(
-      `Confirm saving of updates of "${name}" script`,
+      `Confirm creating of "${this.settingsModel.platform.platform_name}" script`,
       "Do you really want to save changes of script?<br>If yes, please input template name.",
       (value) => {
-        if(value !== name)
+        if(value !== this.settingsModel.platform.platform_name )
           return 'Template name is incorrect!';
       },
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
-    this.api.create(`platform/${name}`, {"data":this.settingsModel.platform_setup_script, "platform":this.settingsModel.platform}).then((resp) => {
-      if (resp.status == "ok")  {
-        this.api.create(`platform/cleanup/${name}`, {"data":this.settingsModel.platform_cleanup_script, "platform":this.settingsModel.platform}).then((resp) => {
-          if (resp.status == "ok")  {
-            this.updatePlatformFields(resp.data);
-          } else {
-            this.modal.alert(resp.data);
-          }
-        });
-      } else {
-        this.modal.alert(resp.data);
-      }
-    });
+    this.saveDocJson();
+    this.api.create(`platforms`, this.settingsModel.platform).then((resp) => {
+      this.updatePlatformFields(resp);
+      this.cleanPlatformFields();
+    });  
 
     }, (err) => {
       this.modal.alert(err);
     })
+  }
+
+  docUpdated() {
+    console.log("docUpdated");
+    this.settingsModel.jsonValidationMessage = "";
+
+    try {
+      JSON.parse(this.settingsModel.doc_string)
+    } catch (e) {
+      this.settingsModel.jsonValidationMessage = "Json is invalid";
+    }
   }
 
   addRepeatField(arr){

@@ -2,13 +2,18 @@
     <h3>Platforms</h3>
     <div class="form-group required">
       <label for="platform">Platform setup script</label>
-      <select (change)="platformSelected()" [(ngModel)]="settingsModel.platform" enabled class="form-control" name="platform" id="platform">
-        <option [value]="null"  disabled>Chose platform setup script</option>
+      <select (change)="platformSelected(settingsModel.platform)" [(ngModel)]="settingsModel.platform" enabled class="form-control" name="platform" id="platform">
+        <option [ngValue]="newPlatform" (value)="newPlatform">Create new</option>
+        <optgroup label="_________"></optgroup>
         <ng-container *ngFor="let item of settingsModel.platform_list let i = index">
           <option [ngValue]="settingsModel.platform_list[i]">{{ item.platform_name}}</option>
         </ng-container>
       </select>
       </div>
+      <div *ngIf="settingsModel.platform" class="form-group">
+        <label for="platform_name">Platform name</label>
+        <input [(ngModel)]="settingsModel.platform.platform_name" [(value)]="settingsModel.platform.platform_name" class="form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform">
+      </div>     
     <div class="form-container">
       <h4>Platform variables</h4>
       <div *ngFor="let item of settingsModel.platform.variables let i = index" class="form-group repeated">
@@ -22,33 +27,35 @@
     <div class="form-group">
       <div>
         <div>Parameters to be provided when calling Setup script <br/>
-              -n  Server Name<br/>
-              -d  Server description<br/>
-              -o  Platform name<br/>
-              -p  ports, separated with comma in brakets, like "100,200,300"<br/>
-              -i  ip address of server<br/>
-              -u  user name of user that has permissions to server with ip address provided faster<br/>
-              -k  private ssh key of user to access server<br/>
-              -r  list of dependencies to be installed<br/>
-              -z  path to all subscripts (pre, post and install). All subscripts have name `depandency name`_install or _pre or _post<br/>
-
+          $SERVER_NAME   - server name <br/>
+          $DESCRIPTION   - application description <br/>
+          $SSH_IP        - server ip address <br/>
+          $SSH_KEY       - server user ssh key <br/>
+          $SSH_USERNAME  - username to access server<br/>
+          $PORTS         - list of ports to be defined when seputing server <br/>
+          $SERVER_DEPENDENCIES - list of server dependencies. All the scripts are available with given name (pre_name and post_name) in the same folder with this specific script<br/>
+          $CUSTOM_DEPENDENCIES - list of custom dependencies. Scripts is available with given name in the same folder with this specific script<br/>
         </div>
-        <input type="checkbox" name="setup_script" [(ngModel)]="settingsModel.platform.setup_script"/> Setup script
+        <h4>Platform setup script</h4>
       </div>
-      <textarea [(ngModel)]="settingsModel.platform_setup_script" [(value)]="settingsModel.platform_setup_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.setup_script"></textarea>
+      <textarea [(ngModel)]="settingsModel.platform.setup_script" [(value)]="settingsModel.platform.setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
     <div class="form-group">
-      <input type="checkbox" [(ngModel)]="settingsModel.platform.cleanup_script"/> Cleanup script
-      <textarea [(ngModel)]="settingsModel.platform_cleanup_script" [(value)]="settingsModel.platform_cleanup_script" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform || !settingsModel.platform.cleanup_script"></textarea>
+      <h4>Platform cleanup script</h4>
+      <textarea [(ngModel)]="settingsModel.platform.cleanup_script" [(value)]="settingsModel.platform.cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
     <div class="form-group">
       <h4>Platform documentation</h4>
-      <textarea [(ngModel)]="settingsModel.platform.doc" [(value)]="settingsModel.platform.doc" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform"></textarea>
+      <div>
+        Available keys: <br/>
+        server_name, description, ssh_ip, ssh_key, ssh_username, ports, server_dependencies, custom_dependencies, platform
+      </div>
+      <textarea (change)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform"></textarea>
+      <div *ngIf="settingsModel.jsonValidationMessage">
+        <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="new_platform_name">New platform setup script name</label>
-      <input [(ngModel)]="settingsModel.new_platform_name" class="form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform setup script">
-    </div>   
-    <button (click)="duplicatePlatform()" class="btn btn-primary" [disabled]="!settingsModel.new_platform_name || !settingsModel.platform.platform_name">Duplicate</button>
-    <button (click)="deletePlatform()" class="btn btn-primary" [disabled]="!settingsModel.platform.platform_name" class="btn btn-danger">Delete</button>
-    <button (click)="savePlatformScript()" class="btn btn-primary" [disabled]="(settingsModel.new_platform_name && settingsModel.platform.platform_name) || (!settingsModel.new_platform_name && !settingsModel.platform.platform_name)">Save changes</button></div>
+    <button (click)="updatePlatform()" class="btn btn-primary" [disabled]="isNewPlatform">Update</button>
+    <button (click)="createPlatform()" class="btn btn-primary" [disabled]="!isNewPlatform">Create</button>
+    <button (click)="deletePlatform()" class="btn btn-danger" [disabled]="isNewPlatform">Delete</button>
+  </div>
