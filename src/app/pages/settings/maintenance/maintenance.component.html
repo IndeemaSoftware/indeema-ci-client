@@ -1,7 +1,7 @@
 <div class="container">
     <h3>Maintenance pages</h3>
     <div class="form-group required">
-      <label for="maintenance">maintenance page code</label>
+      <label for="maintenance">Maintenance page template</label>
       <select (change)="maintenanceSelected(settingsModel.maintenance)" [(ngModel)]="settingsModel.maintenance" enabled class="form-control" name="maintenance" id="maintenance">
         <option [ngValue]="newMaintenance" (value)="newMaintenance">Create new</option>
         <optgroup label="_________"></optgroup>

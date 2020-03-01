@@ -58,6 +58,9 @@ export class EditComponent implements OnInit {
   servers = null as  any;
   server = null as any;
 
+  maintenances = null as any;
+  maintenance = null as any;
+
   services = null as any;
   service = null as any;
 
@@ -118,14 +121,39 @@ export class EditComponent implements OnInit {
     this.projectModel.users.push(this.auth.user.id);
     this.getServers();
     this.updateServiceList();
+    this.updateMaintenanceList();
+  }
+
+
+  updateMaintenanceList() {
+    this.api.get(`maintenances`).then((resp) => {
+      this.maintenances = resp;
+      this.maintenanceSelected();
+    });  
+  }
+
+  maintenanceSelected() {
+    var app;
+    for (let a of this.projectModel.apps) {
+      if (a.id === this.activeTab) {
+        app = a;
+      }
+    }
+
+    if (app) {
+      for (let s of this.maintenances) {
+        if (app.maintenance === s.id) {
+          this.maintenance = {};
+          this.maintenance = s;
+        }
+      }  
+    }
   }
 
   environmentsUpdated() {
-    console.log("docUpdated");
     this.jsonValidationMessage = "";
 
     let value = this.environments.split(',');
-    console.log(value);
     if (Array.isArray(value)) {
       this.projectModel.environments = [];
       for (let s of value) {
@@ -166,7 +194,6 @@ export class EditComponent implements OnInit {
     if (app && app.server) {
       this.api.get(`/server/${app.server.id}`)
       .then(data => {
-        console.log(data);
         this.server = data;
         app.server = this.server.id;
       }, err => {
@@ -201,7 +228,6 @@ export class EditComponent implements OnInit {
   }
   getTemplates(script) {
     this.api.get(`ci/template/listAll/${script}`).then((resp) => {
-      console.log(resp.data);
       this.ci_template_list = resp.data;
     });  
   }
@@ -275,6 +301,12 @@ export class EditComponent implements OnInit {
 
       //init servers
       this.projectModel.apps[i].server = this.projectModel.apps[i].server.id;
+
+      //init maintenances
+      console.log(this.projectModel.apps[i]);
+      if (this.projectModel.apps[i].maintenance) {
+        this.projectModel.apps[i].maintenance = this.projectModel.apps[i].maintenance.id;
+      }
 
       //init services
       this.projectModel.apps[i].service = this.projectModel.apps[i].service.id;
@@ -595,7 +627,7 @@ export class EditComponent implements OnInit {
 
     //Prepare model for api
     this.modelApi = this.prepareModel(this.projectModel);
-    // this.modelApi.service = this.service;
+    console.log(this.modelApi);
 
     //Remove all files from queue
     this.uploader.queue = [];
