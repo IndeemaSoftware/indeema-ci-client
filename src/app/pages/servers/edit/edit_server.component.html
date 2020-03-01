@@ -11,11 +11,16 @@
           <div class="form-group required">
             <label for="server_name">Server name</label>
             <input [(ngModel)]="serverModel.server_name"  type="text" class="form-control" name="server_name" placeholder="Enter server name">
-            <small class="form-text text-muted">This name should be unique.</small>
+            <div *ngIf="platform && platform.doc && platform.doc.server_name">
+              <small class="form-text text-muted">{{platform.doc.server_name}}</small>                    
+            </div>  
           </div>
           <div class="form-group">
             <label for="description">Server description</label>
             <textarea [(ngModel)]="serverModel.description" class="form-control" id="description" name="description" rows="3"></textarea>
+            <div *ngIf="platform && platform.doc && platform.doc.description">
+              <small class="form-text text-muted">{{platform.doc.description}}</small>                    
+            </div>  
           </div>
         </div>
         <div class="form-container">
@@ -24,17 +29,22 @@
 
             <div *ngIf="platform_list" class="form-group required">
               <label for="platform">Platform</label>
-              <select [(ngModel)]="platform" enabled class="form-control" name="platform{{ pId }}">
+              <select (change)="platformSelected()" [(ngModel)]="platform" enabled class="form-control" name="platform{{ pId }}">
                 <option [value]="null"  disabled>Chose platform setup script</option>
                 <ng-container *ngFor="let item of platform_list">
                   <option [ngValue]="item.id">{{ item.platform_name }}</option>
                 </ng-container>
               </select>
+              <div *ngIf="platform && platform.doc && platform.doc.platform">
+                <small class="form-text text-muted">{{platform.doc.platform}}</small>                    
+              </div> 
               </div>
             <div class="form-group">
               <label for="serverModel.ports">List ports to open by firewall</label>
               <input (change)="portsUpdated()" [(ngModel)]="ports" type="text" class="form-control" name="ports{{ pId }}" placeholder="Enter avaliable ports">
-              <small class="form-text text-muted">Numbers sepatared with comma with no whitespace. These ports will be enabled in firewall</small>
+              <div *ngIf="platform && platform.doc && platform.doc.ports">
+                <small class="form-text text-muted">{{platform.doc.ports}}</small>                    
+              </div> 
               <div *ngIf="jsonValidationMessage">
                 <label class="badge badge-danger" id="json-warning" name="json-warning"> {{jsonValidationMessage}}</label>
               </div>   
@@ -45,17 +55,24 @@
             <div class="form-group required">
               <label for="ssh_host">SSH host or IP address</label>
               <input [(ngModel)]="serverModel.ssh_ip" type="text" class="form-control" name="ssh_ip{{ pId }}" placeholder="Enter SSH host or IP address">
+              <div *ngIf="platform && platform.doc && platform.doc.ssh_ip">
+                <small class="form-text text-muted">{{platform.doc.ssh_ip}}</small>                    
+              </div> 
             </div>
             <div class="form-group required">
               <label for="ssh_username">SSH username</label>
               <input [(ngModel)]="serverModel.ssh_username" type="text" class="form-control" name="ssh_username{{ pId }}" placeholder="SSH username">
-              <small class="form-text text-muted">User name to access server with provided key under -s.</small>
+              <div *ngIf="platform && platform.doc && platform.doc.ssh_username">
+                <small class="form-text text-muted">{{platform.doc.ssh_username}}</small>                    
+              </div> 
             </div>
             <div class="form-group required">
               <label for="ssh_pem">SSH pem key</label>
               <input (change)="addPemFile($event, serverModel)" type="file" class="form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH pem key">
               <small *ngIf="serverModel.ssh_key && serverModel.ssh_key.name" class="form-text text-muted">SSH Pem: {{ serverModel.ssh_key.name }} <a target="_blank" href="{{api_url}}{{ serverModel.ssh_key.url }}">Download</a></small>
-              <small class="form-text text-muted">Server ssh key to be used to login to server remotely.</small>
+              <div *ngIf="platform && platform.doc && platform.doc.ssh_key">
+                <small class="form-text text-muted">{{platform.doc.ssh_key}}</small>                    
+              </div> 
             </div>
           </div>
           <div class="form-container">
@@ -69,6 +86,9 @@
               <span (click)="cleanFields(serverModel.server_dependency)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length === 1 && serverModel.server_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
             </div>
             <button (click)="addRepeatField(serverModel.server_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
+            <div *ngIf="platform && platform.doc && platform.doc.server_dependencies">
+              <small class="form-text text-muted">{{platform.doc.server_dependencies}}</small>                    
+            </div> 
           </div>
           <div class="form-container">
             <h3>Custom dependencies:</h3>
@@ -81,6 +101,9 @@
               <span (click)="cleanFields(serverModel.custom_dependency)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length === 1 && serverModel.custom_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
             </div>
             <button (click)="addRepeatField(serverModel.custom_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
+            <div *ngIf="platform && platform.doc && platform.doc.custom_dependencies">
+              <small class="form-text text-muted">{{platform.doc.custom_dependencies}}</small>                    
+            </div> 
           </div>
         </div>
         <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>

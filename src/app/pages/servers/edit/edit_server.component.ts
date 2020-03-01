@@ -122,6 +122,10 @@ export class EditServerComponent implements OnInit {
     }
   }
 
+  platformSelected() {
+    this.platform = this.serverModel.platform;
+  }
+
   prepareToEdit() {
     this.serverModel = _.cloneDeep(this.server);
     this.modelApi = {};
@@ -160,6 +164,7 @@ export class EditServerComponent implements OnInit {
     }
 
     this.ports = this.serverModel.ports;
+    this.platform = this.serverModel.platform;
   }
 
 
