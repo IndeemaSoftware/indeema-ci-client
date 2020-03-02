@@ -1,0 +1,42 @@
+.navbar a:link {
+    font-family: "Poppins-Regular";
+    font-style: normal;
+    font-size: 13pt;
+    color: #FFFFFF;
+}
+
+.navbar a:active{
+    font-family: "Poppins-Regular";
+    font-style: bold;
+    font-size: 13pt;
+    color: #4DB05B;
+}
+
+.navbar li.active a{
+    font-family: "Poppins-Regular";
+    font-style: bold;
+    font-size: 13pt;
+    color: #4DB05B;
+}
+
+#header-logo {
+    margin-left: 40pt;
+    background-image: url(/images/indeema_logo.svg);
+    background-size: 230pt 25pt;
+    background-repeat: no-repeat;
+    background-position: left;
+    background-clip: border-box;
+
+    display: block;
+    width: 230px;
+    height: 25px;
+    text-decoration: none;
+    cursor: pointer;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space:nowrap;
+}
+
+.collapse {
+    margin-left: 30pt;
+}

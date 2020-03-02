@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
+import { ApiService } from '../../services/api.service';
+
 
 @Component({
   selector: 'app-signin',
@@ -14,6 +16,10 @@ export class SigninComponent implements OnInit {
     password: null
   }
 
+  isForgot = false;
+  isRegister = false;
+  isLogin = true;
+
   //Errors
   errors = {
     required: false,
@@ -22,7 +28,8 @@ export class SigninComponent implements OnInit {
 
   constructor(
       private auth: AuthService,
-      private route: Router
+      private route: Router,
+      private api: ApiService,
   ) { }
 
   ngOnInit() {
@@ -34,6 +41,29 @@ export class SigninComponent implements OnInit {
   cleanErrors(){
     this.errors.required = false;
     this.errors.incorrect = false;
+  }
+
+  reset() {
+    console.log("reset");
+    this.api.create(`/auth/forgot-password`,
+    {
+      email: `${this.credentials.identifier}`,
+      url: 'http:/localhost:1337/admin/plugins/users-permissions/auth/reset-password'
+  })
+  .then(response => {
+    // Handle success.
+    console.log('Your user received an email');
+  })
+  .catch(error => {
+    // Handle error.
+    console.log('An error occurred:', error);
+  });
+  }
+
+  forgotPressed() {
+    this.isForgot = true;
+    this.isRegister = false;
+    this.isLogin = false;
   }
 
   signin(){

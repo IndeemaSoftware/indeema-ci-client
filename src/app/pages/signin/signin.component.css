@@ -1,3 +1,111 @@
-.center-content-item{
-  margin: 25vh auto;
+html, body {
+  height: 100%;
+}
+
+.container {
+  margin: 0em;
+  display: block;
+  overflow: auto; 
+  position:absolute;
+  top:0px;
+  left:0px;
+  width:100%;
+  height:100%;
+  overflow:auto;
+}
+
+.row {
+  top:0px;
+  left:0px;
+  width:100%;
+  height:100%;
+  overflow:auto;
+}
+
+.row:after {
+  height: 100%;
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.login {
+  float: left;
+  width: 50%;
+}
+
+.login_widget {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20em;
+  -ms-transform: translateY(60%);
+  transform: translateY(60%);
+}
+
+.reset_widget {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20em;
+  -ms-transform: translateY(180%);
+  transform: translateY(180%);
+}
+
+.logo {
+  float: left;
+  width: 50%;
+  height: 100%;
+  background-image: url(/images/logo_background.svg);
+  opacity: 1;
+}
+
+#logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 250px;
+  -ms-transform: translateY(75%);
+  transform: translateY(75%);
+}
+
+.login-button {
+  background-color: #4DB05B;
+  border-radius: 59px;  
+  opacity: 1;
+  border: none;
+  margin-top:20px;
+  margin-left: 0;
+  width: 100px;
+  height: 40px; 
+}
+
+.forgot-button {     
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  margin-left: 0pt;
+  padding: 0pt 0pt 0pt 0pt;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;     
+  color: #4DB05B;   
+}
+
+.input-field {
+  display: block;
+  background: transparent url('/images/input_field.svg') 0% 0% no-repeat padding-box;
+  border: 2pt solid #EFF4F9;
+  border-radius: 5pt;
+  padding: 4pt 4pt 4pt 4pt;
+  opacity: 1;
+  width: 200pt;
+}
+
+.checkbox {
+  background: transparent url('/images/checkbox.svg') 0% 0% no-repeat padding-box;
+  border: 1px solid #DFE2EA;
+  border-radius: 4px;
+  margin-right: 10px;
+  margin-left: 0;
+  opacity: 1;
 }
