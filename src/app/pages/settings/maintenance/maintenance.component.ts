@@ -73,12 +73,6 @@ export class MaintenanceComponent implements OnInit {
     });  
   }
 
-  saveDocJson() {
-    if (this.settingsModel.html_code.length) {
-      this.settingsModel.maintenance.html_code = this.settingsModel.html_code;
-    }
-  }
-
   updateMaintenance() {
     if (!this.settingsModel.maintenance.name) {
       this.modal.alert("You can't update service with no name");
@@ -94,7 +88,6 @@ export class MaintenanceComponent implements OnInit {
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
-    this.saveDocJson();
     this.api.update(`maintenances/${this.settingsModel.maintenance.id}`, this.settingsModel.maintenance).then((resp) => {
     });
 
@@ -141,7 +134,6 @@ export class MaintenanceComponent implements OnInit {
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
-    this.saveDocJson();
     this.api.create(`maintenances`, this.settingsModel.maintenance).then((resp) => {
       this.updateServiceFields(resp);
       this.cleanMaintenanceFields();
