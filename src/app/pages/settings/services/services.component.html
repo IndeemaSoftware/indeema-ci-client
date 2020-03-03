@@ -22,11 +22,14 @@
         <span (click)="removeRepeatField(settingsModel.service.variables, i)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length > 1" class="text-danger remove-btn">Remove</span>
         <span (click)="cleanFields(settingsModel.service.variables)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length === 1 && settingsModel.service.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
       </div>
-    <button (click)="addRepeatField(settingsModel.service.variables)" type="button" class="btn btn-warning">Add another variable</button>
+    <button (click)="addRepeatField(settingsModel.service.variables)" type="button" id="yellow-button">Add another variable</button>
     </div>
     <div class="form-group">
       <div>
-        <div>Parameters to be provided when calling Setup script <br/>
+        <div>
+          <br/>
+          <br/>
+          Parameters to be provided when calling Setup script <br/>
           $ENVIRONMENTS  - a list of environments defined in project <br/>
           $ENVIRONMENT   - environments set for application and selected from avalible list from project <br/>
           $MAINTENANCE   - path to maintenance html file <br/>
@@ -59,7 +62,7 @@
         <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
       </div>
     </div>
-    <button (click)="updateService()" class="btn btn-primary" [disabled]="isNewService">Update</button>
-    <button (click)="createService()" class="btn btn-primary" [disabled]="!isNewService">Create</button>
-    <button (click)="deleteService()" class="btn btn-danger" [disabled]="isNewService">Delete</button>
+    <button (click)="updateService()" id="green-button" *ngIf="!isNewService">Update</button>
+    <button (click)="createService()" id="green-button" *ngIf="isNewService">Create</button>
+    <button (click)="deleteService()" id="red-button" [disabled]="isNewService">Delete</button>
   </div>

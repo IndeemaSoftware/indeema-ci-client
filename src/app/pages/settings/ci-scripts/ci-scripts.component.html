@@ -13,13 +13,20 @@
       <label for="new_ci_name">New template name</label>
       <input [(ngModel)]="settingsModel.new_ci_name" class="form-control" id="new_ci_name" name="new_ci_name" placeholder="Please enter name for new template">
     </div>   
-    <button (click)="duplicateCI()" class="btn btn-primary" [disabled]="!settingsModel.new_ci_name || !settingsModel.ci">Duplicate</button>
-    <button (click)="deleteCI()" class="btn btn-primary" [disabled]="!settingsModel.ci" class="btn btn-danger">Delete</button>
+    <button (click)="duplicateCI()" id="green-button" [disabled]="!settingsModel.new_ci_name || !settingsModel.ci">Duplicate</button>
+    <button (click)="deleteCI()" id="red-button" [disabled]="!settingsModel.ci">Delete</button>
     <div class="form-group">
+      <br/>
+      <br/>
+      <br/>
       <label for="desc">Setup script</label>
       <textarea [(ngModel)]="settingsModel.ci_script" [(value)]="settingsModel.ci_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="saveCiScript()" class="btn btn-primary" >Save scripts</button>
+    <button (click)="saveCiScript()" id="green-button" >Save scripts</button>
+    <br/>
+    <br/>
+    <br/>
+
     <h3>CI templates</h3>
     <div class="form-group required">
       <label for="ci">CI template</label>
@@ -34,11 +41,15 @@
       <label for="new_template_name">New template name</label>
       <input [(ngModel)]="settingsModel.new_template_name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Please enter name for new template">
     </div>   
-    <button (click)="duplicateTemplate()" class="btn btn-primary" [disabled]="!settingsModel.new_template_name || !settingsModel.ci_template">Duplicate</button>
-    <button (click)="deleteTemplate()" class="btn btn-primary" [disabled]="!settingsModel.ci_template" class="btn btn-danger">Delete</button>
+    <button (click)="duplicateTemplate()" id="green-button" [disabled]="!settingsModel.new_template_name || !settingsModel.ci_template">Duplicate</button>
+    <button (click)="deleteTemplate()" id="red-button" [disabled]="!settingsModel.ci_template">Delete</button>
     <div class="form-group">
+      <br/>
+      <br/>
+      <br/>
+      
       <label for="desc">Setup script</label>
       <textarea [(ngModel)]="settingsModel.template_script" [(value)]="settingsModel.template_script" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="saveTemplateScript()" class="btn btn-primary" >Save scripts</button>
+    <button (click)="saveTemplateScript()" id="green-button" >Save scripts</button>
 </div>

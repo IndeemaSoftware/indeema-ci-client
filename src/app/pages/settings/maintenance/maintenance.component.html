@@ -17,8 +17,8 @@
     <div class="form-group">
       <textarea [(ngModel)]="settingsModel.maintenance.html_code" [(value)]="settingsModel.maintenance.html_code" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="updateMaintenance()" class="btn btn-primary" [disabled]="isNewMaintenance">Update</button>
-    <button (click)="createMaintenance()" class="btn btn-primary" [disabled]="!isNewMaintenance">Create</button>
-    <button (click)="deleteMaintenance()" class="btn btn-danger" [disabled]="isNewMaintenance">Delete</button>
-    <button (click)="preview()" class="btn btn-primary" class="btn btn-primary"[disabled]="isNewMaintenance">Preview</button>
+    <button (click)="updateMaintenance()" id="green-button" *ngIf="!isNewMaintenance">Update</button>
+    <button (click)="createMaintenance()" id="green-button" *ngIf="isNewMaintenance">Create</button>
+    <button (click)="deleteMaintenance()" id="green-button" [disabled]="isNewMaintenance">Delete</button>
+    <button (click)="preview()" id="yellow-button" [disabled]="isNewMaintenance">Preview</button>
   </div>

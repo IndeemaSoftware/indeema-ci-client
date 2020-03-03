@@ -1,0 +1,42 @@
+#green-button {
+    display: block;
+    background-color: #4DB05B;
+    border-radius: 59px;  
+    color: white;
+    opacity: 1;
+    border: none;
+    margin-top:10px;
+    margin-left:20px;
+    font-size: 10pt;
+    font-weight: 50;
+    float:left;
+    padding: 5pt 10pt 5pt 10pt;
+}
+
+#red-button {
+    display: block;
+    background-color: #DA3148;
+    border-radius: 59px;  
+    color: white;
+    opacity: 1;
+    border: none;
+    margin:10pt 10pt 10pt 10pt;
+    font-size: 10pt;
+    font-weight: 50;
+    float:left;
+    padding: 5pt 10pt 5pt 10pt;
+}
+
+#yellow-button {
+    display: block;
+    background-color: #FEC02E;
+    border-radius: 59px;  
+    color: white;
+    opacity: 1;
+    border: none;
+    margin:10pt 10pt 10pt 10pt;
+    font-size: 10pt;
+    font-weight: 50;
+    float:left;
+    padding: 5pt 10pt 5pt 10pt;
+}

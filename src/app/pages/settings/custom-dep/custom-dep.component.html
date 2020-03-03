@@ -19,9 +19,8 @@
       <h4>Install script</h4>
       <textarea  [(ngModel)]="settingsModel.dependency.install_script" [(value)]="settingsModel.install_script" class="form-control" id="script" name="script" rows="10" ></textarea>
 
-      <button (click)="update()" class="btn btn-primary" [disabled]="isNew">Update</button>
-      <button (click)="delete()" class="btn btn-danger" [disabled]="isNew">Delete</button>
-      <button (click)="createNew()" class="btn btn-primary" [disabled]="!isNew" class="btn btn-danger">Create new</button>  
-
+      <button (click)="update()" id="green-button" *ngIf="!isNew">Update</button>
+      <button (click)="createNew()" id="green-button"  *ngIf="isNew" class="btn btn-danger">Create</button>  
+      <button (click)="delete()" id="red-button" [disabled]="isNew">Delete</button>
     </div>
 </div>

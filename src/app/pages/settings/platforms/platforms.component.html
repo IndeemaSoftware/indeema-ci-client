@@ -22,11 +22,14 @@
         <span (click)="removeRepeatField(settingsModel.platform.variables, i)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length > 1" class="text-danger remove-btn">Remove</span>
         <span (click)="cleanFields(settingsModel.platform.variables)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length === 1 && settingsModel.platform.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
       </div>
-    <button (click)="addRepeatField(settingsModel.platform.variables)" type="button" class="btn btn-warning">Add another variable</button>
+    <button (click)="addRepeatField(settingsModel.platform.variables)" type="button" id="yellow-button">Add another variable</button>
     </div>
     <div class="form-group">
       <div>
-        <div>Parameters to be provided when calling Setup script <br/>
+        <div>
+          <br/>
+          <br/>
+          Parameters to be provided when calling Setup script <br/>
           $SERVER_NAME   - server name <br/>
           $DESCRIPTION   - application description <br/>
           $SSH_IP        - server ip address <br/>
@@ -55,7 +58,7 @@
         <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
       </div>
     </div>
-    <button (click)="updatePlatform()" class="btn btn-primary" [disabled]="isNewPlatform">Update</button>
-    <button (click)="createPlatform()" class="btn btn-primary" [disabled]="!isNewPlatform">Create</button>
-    <button (click)="deletePlatform()" class="btn btn-danger" [disabled]="isNewPlatform">Delete</button>
+    <button (click)="updatePlatform()" id="green-button" *ngIf="!isNewPlatform">Update</button>
+    <button (click)="createPlatform()" id="green-button" *ngIf="isNewPlatform">Create</button>
+    <button (click)="deletePlatform()" id="red-button" [disabled]="isNewPlatform">Delete</button>
   </div>
