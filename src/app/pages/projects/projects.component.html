@@ -11,7 +11,7 @@
         <span *ngIf="statuses.cleanup_success" id="status-label-success">{{ statuses.cleanup_success }} Cleanup success!</span>
         <span *ngIf="statuses.cleanup_failed" id="status-label-fail">{{ statuses.cleanup_failed }} Cleanup failed</span>
       </h2>
-      <a class="btn btn-success right" id="setup-button" routerLink="/projects/new">Setup project</a>
+      <a id="setup-button" routerLink="/projects/new">Setup project</a>
       <p *ngIf="!projects" class="text-muted text-center">Loading...</p>
       <p *ngIf="projects && !projects.length" class="text-muted text-center">Projects not found</p>
       <table *ngIf="projects && projects.length" class="table editable-table" id="table" cellspacing="0" cellpadding="0">

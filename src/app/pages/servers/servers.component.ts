@@ -131,7 +131,10 @@ export class ServersComponent implements OnInit {
   }
 
   deleteServer(server) {
-    if(server.server_status !== 'cleanup_success' && server.server_status !== 'cleanup_failed'){
+    if(server.server_status !== 'cleanup_success' 
+    || server.server_status !== 'cleanup_failed' 
+    || server.server_status !== 'failed'
+    || server.server_status !== 'wating'){
       this.modal.alert('Before delete app, please cleanup this app!', 'Important!', 'I understand!');
     } else {
       this.modal.confirm(

@@ -263,6 +263,10 @@ export class EditServerComponent implements OnInit {
   validateModel(model){
     if(
         !model.server_name
+        || !model.platform_list
+        || !model.ssh_ip
+        || !model.ssh_key
+        || !model.ssh_username
     )
     return 'Please input all required fields.';
 

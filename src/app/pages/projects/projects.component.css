@@ -1,3 +1,17 @@
+
+#setup-button {
+    background-color: #4DB05B;
+    border-radius: 59px;  
+    color: white;
+    opacity: 1;
+    border: none;
+    margin-top:20px;
+    font-size: 10pt;
+    font-weight: 50;
+    float:right;
+    padding: 5pt 10pt 5pt 10pt;
+}
+
 #status-label-success {
     background-color: rgba(77, 176, 91, 0.3);
     color: rgba(77, 176, 91, 1);
@@ -29,19 +43,6 @@
     border-radius: 59px;
     margin-left: 20pt;
     padding: 5pt 10pt 5pt 10pt;
-}
-
-#setup-button {
-    background-color: #4DB05B;
-    border-radius: 59px;  
-    opacity: 1;
-    border: none;
-    margin-top:20px;
-    margin-left: 0;
-    width: 120px;
-    height: 30px; 
-    font-size: 10pt;
-    font-weight: 50;
 }
 
 #status {
