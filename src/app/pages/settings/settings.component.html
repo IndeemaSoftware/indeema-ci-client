@@ -4,7 +4,7 @@
     <div class="col-sm-12 col-md-12 col-lg-12"  style="margin: 10pt 10pt 10pt 10pt">
       <div class="tab">
         <button class="tablinks" (click)="switchSetting('Maintenance')">    Maintenance pages</button>
-        <button class="tablinks" (click)="switchSetting('Templates')">      Templates</button>
+        <button class="tablinks" (click)="switchSetting('CI')">             CI Templates</button>
         <button class="tablinks" (click)="switchSetting('Server-Dep')">     Server Dependencies</button>
         <button class="tablinks" (click)="switchSetting('Custom-Dep')">     Custom Dependencies</button>
         <button class="tablinks" (click)="switchSetting('Platforms')">      Platforms</button>
@@ -15,9 +15,9 @@
       <div id="Maintenance" class="tabcontent">
         <maintenance></maintenance>
       </div>
-  
-      <div id="Templates" class="tabcontent">
-        <ci-scripts></ci-scripts>
+
+      <div id="CI" class="tabcontent">
+        <ci-templates></ci-templates>
       </div>
   
       <div id="Server-Dep" class="tabcontent">

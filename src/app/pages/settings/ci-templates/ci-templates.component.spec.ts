@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CIScriptsComponent } from './ci-scripts.component';
+import { CITemplatesComponent } from './ci-templates.component';
 
-describe('ProjectsComponent', () => {
-  let component: CIScriptsComponent;
-  let fixture: ComponentFixture<CIScriptsComponent>;
+describe('CITemplatesComponent', () => {
+  let component: CITemplatesComponent;
+  let fixture: ComponentFixture<CITemplatesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CIScriptsComponent ]
+      declarations: [ CITemplatesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CIScriptsComponent);
+    fixture = TestBed.createComponent(CITemplatesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

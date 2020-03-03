@@ -80,19 +80,13 @@
                 </div>
                 <div class="form-group required">
                   <label for="template">Template</label>
-                  <select (change)="ciSelected()" [(ngModel)]="projectModel.apps[pId].ci_script" enabled class="form-control" name="ci_script">
-                    <option [value]="null"  disabled>Chose CI</option>
-                    <ng-container *ngFor="let item of ci_script_list">
-                      <option [value]="item">{{ item }}</option>
-                    </ng-container>
-                  </select>
                   <div  *ngIf="service && service.doc && service.doc.ci_script">
                     <small class="form-text text-muted">{{service.doc.ci_script}}</small>                    
                   </div>
                   <select [(ngModel)]="projectModel.apps[pId].ci_template" enabled class="form-control" name="ci_template{{ pId }}">
                     <option [value]="null"  disabled>Chose CI template</option>
                     <ng-container *ngFor="let item of ci_template_list">
-                      <option [value]="item">{{ item }}</option>
+                      <option [value]="item.id">{{ item.name }}</option>
                     </ng-container>
                   </select>    
                   <div  *ngIf="service && service.doc && service.doc.ci_template">

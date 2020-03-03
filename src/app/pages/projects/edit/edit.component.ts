@@ -51,7 +51,6 @@ export class EditComponent implements OnInit {
   jsonValidationMessage: any = "";
 
   isNew: boolean = false;
-  ci_script_list: any;
   ci_script: any;
   ci_template_list: any;
 
@@ -117,7 +116,7 @@ export class EditComponent implements OnInit {
       this.setupProject();
     }
 
-    this.updateCIList();
+    this.getTemplates();
     this.projectModel.users.push(this.auth.user.id);
     this.getServers();
     this.updateServiceList();
@@ -203,32 +202,9 @@ export class EditComponent implements OnInit {
     }
   }
 
-  updateCIList() {
-    this.api.get(`ci/script/listAll`).then((resp) => {
-      this.ci_script_list = resp.data;
-    });  
-  }
-
-  ciSelected() {
-    var app;
-    console.log(this.activeTab);
-    for (let a of this.projectModel.apps) {
-      console.log(a);
-        if (a.id === this.activeTab) {
-          app = a;
-        }
-    }
-    console.log(app);
-    //getting list of templates for selected script
-    if (app && app.ci_script) {
-      this.getTemplates(app.ci_script);
-    } else {
-      console.log("No template found");
-    }
-  }
-  getTemplates(script) {
-    this.api.get(`ci/template/listAll/${script}`).then((resp) => {
-      this.ci_template_list = resp.data;
+  getTemplates() {
+    this.api.get(`ci-templates`).then((resp) => {
+      this.ci_template_list = resp;
     });  
   }
 
@@ -314,7 +290,6 @@ export class EditComponent implements OnInit {
 
     if (this.project.apps.length > 0) {
       this.activeTab = this.project.apps[0].id;
-      this.getTemplates(this.project.apps[0].ci_script);
       this.app_port = this.project.apps[0].app_port;
 
       this.getServerDetails(this.project.apps[0]);

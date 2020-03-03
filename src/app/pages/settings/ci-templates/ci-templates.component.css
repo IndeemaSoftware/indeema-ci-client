@@ -18,7 +18,20 @@
     opacity: 1;
     border: none;
     margin:10pt 10pt 10pt 10pt;
-    margin-left:20px;
+    font-size: 10pt;
+    font-weight: 50;
+    float:left;
+    padding: 5pt 10pt 5pt 10pt;
+}
+
+#yellow-button {
+    display: block;
+    background-color: #FEC02E;
+    border-radius: 59px;  
+    color: white;
+    opacity: 1;
+    border: none;
+    margin:10pt 10pt 10pt 10pt;
     font-size: 10pt;
     font-weight: 50;
     float:left;

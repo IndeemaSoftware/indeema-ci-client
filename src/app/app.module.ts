@@ -39,11 +39,11 @@ import { ConsoleComponent } from './pages/console/console.component';
 import { ServersComponent } from './pages/servers/servers.component';
 import { EditServerComponent } from './pages/servers/edit/edit_server.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { CITemplatesComponent } from './pages/settings/ci-templates/ci-templates.component';
 import { ServerDepComponent } from './pages/settings/server-dep/server-dep.component';
 import { CustomDepComponent } from './pages/settings/custom-dep/custom-dep.component';
 import { PlatformsComponent } from './pages/settings/platforms/platforms.component';
 import { ServicesComponent } from './pages/settings/services/services.component';
-import { CIScriptsComponent } from './pages/settings/ci-scripts/ci-scripts.component';
 import { MaintenanceComponent } from './pages/settings/maintenance/maintenance.component';
 import { MaintenancePreviewComponent } from './pages/settings/maintenance/maintenance-preview.component';
 import { HelpComponent } from './pages/help/help.component';
@@ -64,8 +64,8 @@ import { HelpComponent } from './pages/help/help.component';
     ServerDepComponent,
     CustomDepComponent,
     PlatformsComponent,
+    CITemplatesComponent,
     ServicesComponent,
-    CIScriptsComponent,
     MaintenanceComponent,
     MaintenancePreviewComponent,
     HelpComponent
