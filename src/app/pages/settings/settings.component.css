@@ -3,8 +3,8 @@
 /* Style the tab */
 .tab {
   float: left;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  border: none;
+  background-color: transparent;
   width: auto;
   height: auto;
 }

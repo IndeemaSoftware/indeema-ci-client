@@ -1,35 +1,39 @@
 <app-header></app-header>
 <div class="container">
-  <div class="tab">
-    <button class="tablinks" (click)="switchSetting('Maintenance')">    Maintenance pages</button>
-    <button class="tablinks" (click)="switchSetting('Templates')">      Templates</button>
-    <button class="tablinks" (click)="switchSetting('Server-Dep')">     Server Dependencies</button>
-    <button class="tablinks" (click)="switchSetting('Custom-Dep')">     Custom Dependencies</button>
-    <button class="tablinks" (click)="switchSetting('Platforms')">      Platforms</button>
-    <button class="tablinks" (click)="switchSetting('Services')">       Services</button>
-  </div>
-
-  <div id="Maintenance" class="tabcontent">
-    <maintenance></maintenance>
-  </div>
-
-  <div id="Templates" class="tabcontent">
-    <ci-scripts></ci-scripts>
-  </div>
-
-  <div id="Server-Dep" class="tabcontent">
-    <server-dep></server-dep>
-  </div>
-
-  <div id="Custom-Dep" class="tabcontent">
-    <custom-dep></custom-dep>
-  </div>
-
-  <div id="Platforms" class="tabcontent">
-    <platforms></platforms>
-  </div>
-
-  <div id="Services" class="tabcontent">
-    <services></services>
+  <div class="row" style="background-color:white;margin-top:20pt; box-shadow: 0pt 1pt 15pt #45414E14;">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <div class="tab">
+        <button class="tablinks" (click)="switchSetting('Maintenance')">    Maintenance pages</button>
+        <button class="tablinks" (click)="switchSetting('Templates')">      Templates</button>
+        <button class="tablinks" (click)="switchSetting('Server-Dep')">     Server Dependencies</button>
+        <button class="tablinks" (click)="switchSetting('Custom-Dep')">     Custom Dependencies</button>
+        <button class="tablinks" (click)="switchSetting('Platforms')">      Platforms</button>
+        <button class="tablinks" (click)="switchSetting('Services')">       Services</button>
+      </div>
+  
+      <div id="Maintenance" class="tabcontent">
+        <maintenance></maintenance>
+      </div>
+  
+      <div id="Templates" class="tabcontent">
+        <ci-scripts></ci-scripts>
+      </div>
+  
+      <div id="Server-Dep" class="tabcontent">
+        <server-dep></server-dep>
+      </div>
+  
+      <div id="Custom-Dep" class="tabcontent">
+        <custom-dep></custom-dep>
+      </div>
+  
+      <div id="Platforms" class="tabcontent">
+        <platforms></platforms>
+      </div>
+  
+      <div id="Services" class="tabcontent">
+        <services></services>
+      </div>
+    </div>
   </div>
 </div>

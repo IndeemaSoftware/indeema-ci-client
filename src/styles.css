@@ -1,6 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+  height: 100%;
+  background-color: #EFF4F9;
+}
 
-/* Helpers */
 .right{
   float: right;
 }

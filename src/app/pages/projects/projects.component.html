@@ -1,19 +1,17 @@
 <app-header></app-header>
 <div class="container">
-  <div class="row">
+  <div class="row" style="margin-top:20pt; box-shadow: 0pt 1pt 15pt #45414E14;">
     <div class="col-sm-12 col-md-12 col-lg-12">
-      <h2 style="margin-top: 2rem">
+      <h2 style="margin-top: 10pt">
         Projects list
-        <h4 *ngIf="projects && projects.length" class="badge-splited">
-          <span *ngIf="statuses.progress" class="badge badge-warning">{{ statuses.progress }} In progress...</span>
-          <span *ngIf="statuses.success" class="badge badge-success">{{ statuses.success }} Setup success!</span>
-          <span *ngIf="statuses.failed" class="badge badge-danger">{{ statuses.failed }} Setup failed</span>
-          <span *ngIf="statuses.cleanup" class="badge badge-warning">{{ statuses.cleanup }} Cleanup in progress...</span>
-          <span *ngIf="statuses.cleanup_success" class="badge badge-success">{{ statuses.cleanup_success }} Cleanup success!</span>
-          <span *ngIf="statuses.cleanup_failed" class="badge badge-danger">{{ statuses.cleanup_failed }} Cleanup failed</span>
-        </h4>
+        <span *ngIf="statuses.progress" class="badge badge-warning" id="status">{{ statuses.progress }} In progress...</span>
+        <span *ngIf="statuses.success" class="badge badge-success" id="status">{{ statuses.success }} Setup success!</span>
+        <span *ngIf="statuses.failed" class="badge badge-danger" id="status">{{ statuses.failed }} Setup failed</span>
+        <span *ngIf="statuses.cleanup" class="badge badge-warning" id="status">{{ statuses.cleanup }} Cleanup in progress...</span>
+        <span *ngIf="statuses.cleanup_success" class="badge badge-success" id="status">{{ statuses.cleanup_success }} Cleanup success!</span>
+        <span *ngIf="statuses.cleanup_failed" class="badge badge-danger" id="status">{{ statuses.cleanup_failed }} Cleanup failed</span>
       </h2>
-      <a class="btn btn-success right" routerLink="/projects/new">Setup project</a>
+      <a class="btn btn-success right" id="setup-button" routerLink="/projects/new">Setup project</a>
       <p *ngIf="!projects" class="text-muted text-center">Loading...</p>
       <p *ngIf="projects && !projects.length" class="text-muted text-center">Projects not found</p>
       <table *ngIf="projects && projects.length" class="table editable-table" id="table" cellspacing="0" cellpadding="0">
@@ -26,12 +24,12 @@
         </thead>
         <tbody>
           <tr *ngFor="let project of projects">
-            <th class="thread-light" scope="row">
+            <th scope="row" id="project">
               <div id="cell-project">
-                {{ project.project_name }}<br/>
+                <i style="font-weight: 300; opacity:1; margin:40pt 5pt 5pt 5pt; color: #4DB05B;">{{ project.project_name }}</i>
                 <tr *ngFor="let user of project.users">
-                  <th scope="row">
-                    <i style="font-weight: 400; opacity:1">{{ user.username || 'User not found' }}</i>
+                  <th scope="row" id="project">
+                    <i style="font-weight: 100; opacity:1; margin:35pt 5pt 5pt 5pt;">{{ user.username || 'User not found' }}</i>
                   </th>
                   <td>  
               </div>  
@@ -39,7 +37,7 @@
             <td>
 
               <table *ngIf="project.apps && project.apps.length" class="table editable-table" id="table-apps" cellspacing="0" cellpadding="0">
-                <thead class="thead-light">
+                <thead class="thead-custom">
                 <tr>
                   <th scope="col">Name</th>
                   <th scope="col">CI</th>
@@ -49,32 +47,25 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let app of project.apps">
-                  <th scope="row">
-                    {{ app.app_name }}
-                    <span *ngIf="app.app_status === 'progress'" class="badge badge-warning">In progress...</span>
-                    <span *ngIf="app.app_status === 'success'" class="badge badge-success">Setup success!</span>
-                    <span *ngIf="app.app_status === 'failed'" class="badge badge-danger">Setup failed!</span>
-                    <span *ngIf="app.app_status === 'cleanup'" class="badge badge-warning">Cleanup in progress...</span>
-                    <span *ngIf="app.app_status === 'cleanup_success'" class="badge badge-success">Cleanup success!</span>
-                    <span *ngIf="app.app_status === 'cleanup_failed'" class="badge badge-danger">Cleanup failed!</span>
+                <tr *ngFor="let app of project.apps" id="tr-apps">
+                  <th scope="row" id="tr-apps">
+                    {{ app.app_name }} <br>
+                    <span *ngIf="app.app_status === 'progress'" id="status-progress">&#9864; In progress...</span>
+                    <span *ngIf="app.app_status === 'success'" id="status-success">&#9864; Setup success!</span>
+                    <span *ngIf="app.app_status === 'failed'" id="status-fail">&#9864; Setup failed!</span>
+                    <span *ngIf="app.app_status === 'cleanup'" id="status-progress">&#9864; Cleanup in progress...</span>
+                    <span *ngIf="app.app_status === 'cleanup_success'" id="status-success">&#9864; Cleanup success!</span>
+                    <span *ngIf="app.app_status === 'cleanup_failed'" id="status-fail">&#9864; Cleanup failed!</span>
                   </th>
-                  <td>
-                    <div *ngIf="app.server">{{ app.ci_script}}</div>
-                    <div *ngIf="!app.server">No CI selected</div>
-                  </td>
+                  <th scope="row">{{ app.server?app.ci_script:"No CI selected"}}</th>
                   <th scope="row">{{ app.environment }}</th>
-                  <td>
-                    <div *ngIf="app.server">{{ app.server.server_name}}</div>
-                    <div *ngIf="!app.server">Server not selected</div>
-                  </td>
+                  <th scope="row">{{ app.server?app.server.server_name:"Server not selected"}}</th>
                   <td>
                     <div class="btn-group btn-group-toggle">
-                      <button *ngIf="app.app_status !== 'failed'" (click)="startProject(project, app)" class="btn btn-success" [ngClass]="{'disabled': app.app_status === 'progress' || app.app_status === 'cleanup'}" type="button">Start</button>
-                      <button *ngIf="app.app_status === 'failed'" (click)="startProject(project, app)" class="btn btn-success" type="button">Restart</button>
-                      <button (click)="toConsole(project, app)" class="btn btn-primary" type="button">Console</button>
-                      <button (click)="cleanupProject(project, app)" [ngClass]="{'disabled': app.app_status === 'cleanup' || app.app_status === 'cleanup_success'}" class="btn btn-light" type="button">Cleanup</button>
-                      <button (click)="deleteProject(project, app)" [ngClass]="{'disabled': app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'}" class="btn btn-danger" type="button">Delete</button>
+                      <button (click)="startProject(project, app)" [ngClass]="{'disabled': app.app_status === 'progress' || app.app_status === 'cleanup'}" type="button" id="start"></button>
+                      <button (click)="toConsole(project, app)" type="button" id="console"></button>
+                      <button (click)="cleanupProject(project, app)" [ngClass]="{'disabled': app.app_status === 'cleanup' || app.app_status === 'cleanup_success'}" type="button" id="cleanup"></button>
+                      <button (click)="deleteProject(project, app)" [ngClass]="{'disabled': app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'}" type="button" id="delete-app"></button>
                     </div>
                   </td>
                 </tr>

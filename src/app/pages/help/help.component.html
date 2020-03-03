@@ -1,27 +1,31 @@
 <app-header></app-header>
 <div class="container">
-  <div class="tab">
-    <button class="tablinks" (click)="switchSetting('Doc')">       Documentation</button>
-    <button class="tablinks" (click)="switchSetting('HelpDesk')">  Help Desk</button>
-  </div>
+  <div class="row" style="background-color:white;margin-top:20pt; box-shadow: 0pt 1pt 15pt #45414E14;">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <div class="tab">
+        <button class="tablinks" (click)="switchSetting('Doc')">       Documentation</button>
+        <button class="tablinks" (click)="switchSetting('HelpDesk')">  Help Desk</button>
+      </div>
 
-  <div id="Doc" class="tabcontent">
-    <div width="100%" height="100%" class="container">
-        <iframe width="100%" height="768" src="https://docs.google.com/document/d/e/2PACX-1vSnHj9k86YI-8AknIjUxS16NGjCuHkFi2O1LqiCBYC6VZxdu1io-26ypQe6uRBKyF9vb6EkakI-In_0/pub?embedded=true"></iframe>
+      <div id="Doc" class="tabcontent">
+        <div width="100%" height="100%" class="container">
+            <iframe width="100%" height="768" src="https://docs.google.com/document/d/e/2PACX-1vSnHj9k86YI-8AknIjUxS16NGjCuHkFi2O1LqiCBYC6VZxdu1io-26ypQe6uRBKyF9vb6EkakI-In_0/pub?embedded=true"></iframe>
+        </div>
+      </div>
+
+      <div id="HelpDesk" class="tabcontent">
+        <h3>Lead your feedback or request here</h3>
+
+        <input [(ngModel)]="subject"  class="form-control" id="service-name" name="variable" placeholder="Subject">
+        <textarea [(ngModel)]="desc"  class="form-control" id="service-name" name="variable" placeholder="Describe your ticket"></textarea>
+        <input [(ngModel)]="email"  class="form-control" id="service-name" name="variable" placeholder="Please enter your email">
+        <input [(ngModel)]="first_name"  class="form-control" id="service-name" name="variable" placeholder="First name">
+        <input [(ngModel)]="last_name"  class="form-control" id="service-name" name="variable" placeholder="Last name">
+      
+        <button (click)="createTicket()" class="btn btn-danger" [disabled]="isNewService">Submit</button>
+
+      </div>
     </div>
-  </div>
-
-  <div id="HelpDesk" class="tabcontent">
-    <h3>Lead your feedback or request here</h3>
-
-    <input [(ngModel)]="subject"  class="form-control" id="service-name" name="variable" placeholder="Subject">
-    <textarea [(ngModel)]="desc"  class="form-control" id="service-name" name="variable" placeholder="Describe your ticket"></textarea>
-    <input [(ngModel)]="email"  class="form-control" id="service-name" name="variable" placeholder="Please enter your email">
-    <input [(ngModel)]="first_name"  class="form-control" id="service-name" name="variable" placeholder="First name">
-    <input [(ngModel)]="last_name"  class="form-control" id="service-name" name="variable" placeholder="Last name">
-   
-    <button (click)="createTicket()" class="btn btn-danger" [disabled]="isNewService">Submit</button>
-
   </div>
 </div>
 
