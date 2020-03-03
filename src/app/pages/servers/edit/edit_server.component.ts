@@ -165,12 +165,14 @@ export class EditServerComponent implements OnInit {
 
     this.ports = this.serverModel.ports;
     this.platform = this.serverModel.platform;
+    this.serverModel.platform = this.serverModel.platform.id;
   }
 
 
-   async createServer() {
+  async createServer() {
     return new Promise((rs, rj) => {
       this.api.create(`server`, {}).then((server) => {
+        console.log(server);
         this.server = server;
         this.serverId = server.id;
         rs();
@@ -353,6 +355,7 @@ export class EditServerComponent implements OnInit {
       }
     }
 
+    console.log(this.isNew);
     if (this.isNew) {
       await this.createServer();
     }

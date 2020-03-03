@@ -52,18 +52,21 @@
   font-weight: 10;
   color:#FEC02E;
   font-size: 20pt;
+  margin-right: 10pt;
 }
 
 #status-success {
   font-weight: 10;
   color:#4DB05B;
   font-size: 20pt;
+  margin-right: 10pt;
 }
 
 #status-fail {
   font-weight: 10;
   color:#DA3148;
   font-size: 20pt;
+  margin-right: 10pt;
 }
 
 #menu-button {
