@@ -1,0 +1,89 @@
+/* .container {
+    background-color: #EFF4F9;
+} */
+
+table {
+    border:0px;
+    border-collapse:collapse;
+    border-spacing:0px;
+    margin:0px; 
+}
+    
+td { 
+    padding:0px; 
+    border-width:0px; 
+    margin:0px; 
+}
+td#clean{
+    opacity: 1;
+}
+
+#filled-td {
+    background-color: #EFF4F9;
+}
+
+.row {
+    background-color: #FFFF;
+}
+
+.thead-transparent {
+    opacity: 1;
+}
+
+#head-block {
+    height: 100pt;
+    width: 100%;
+    background-color: #EFF4F9;
+}
+
+.thead-light {
+    margin:0px; 
+    height: 100pt;
+    width: 100pt;
+    background-color: #EFF4F9;
+    opacity: 1;
+}
+
+#cell-project {
+    background-color: #EFF4F9;
+    width: 100%;
+    height: 50%;
+    margin-top: 0pt;
+    margin-left:0pt;
+}
+
+#cell-apps {
+    margin-top: 0pt;
+    margin-left: 0pt;
+    margin-right: 0pt;
+}
+
+button#btn-edit {
+    background-image: url('/images/edit.svg');
+    background-color: transparent;
+    background-size: 18pt 18pt;
+    width: 18pt;
+    height:18pt;
+    border: none;
+    opacity: 1;
+    margin: 10pt 10pt 10pt 10pt;
+}
+
+button#btn-edit:hover {
+    opacity: 0.5;
+}
+
+button#btn-delete {
+    background-image:url('/images/delete.svg');
+    background-color: transparent;
+    background-size: 18pt 18pt;
+    width: 18pt;
+    height:18pt;
+    border: none;
+    opacity: 1;
+    margin: 10pt 10pt 10pt 10pt;
+}
+
+button#btn-delete:hover {
+    opacity: 0.5;
+}

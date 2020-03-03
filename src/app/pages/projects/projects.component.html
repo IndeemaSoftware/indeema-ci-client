@@ -4,20 +4,20 @@
     <div class="col-sm-12 col-md-12 col-lg-12">
       <h2 style="margin-top: 2rem">
         Projects list
-        <a class="btn btn-success right" routerLink="/projects/new">Setup project</a>
+        <h4 *ngIf="projects && projects.length" class="badge-splited">
+          <span *ngIf="statuses.progress" class="badge badge-warning">{{ statuses.progress }} In progress...</span>
+          <span *ngIf="statuses.success" class="badge badge-success">{{ statuses.success }} Setup success!</span>
+          <span *ngIf="statuses.failed" class="badge badge-danger">{{ statuses.failed }} Setup failed</span>
+          <span *ngIf="statuses.cleanup" class="badge badge-warning">{{ statuses.cleanup }} Cleanup in progress...</span>
+          <span *ngIf="statuses.cleanup_success" class="badge badge-success">{{ statuses.cleanup_success }} Cleanup success!</span>
+          <span *ngIf="statuses.cleanup_failed" class="badge badge-danger">{{ statuses.cleanup_failed }} Cleanup failed</span>
+        </h4>
       </h2>
-      <h4 *ngIf="projects && projects.length" class="badge-splited">
-        <span *ngIf="statuses.progress" class="badge badge-warning">{{ statuses.progress }} In progress...</span>
-        <span *ngIf="statuses.success" class="badge badge-success">{{ statuses.success }} Setup success!</span>
-        <span *ngIf="statuses.failed" class="badge badge-danger">{{ statuses.failed }} Setup failed</span>
-        <span *ngIf="statuses.cleanup" class="badge badge-warning">{{ statuses.cleanup }} Cleanup in progress...</span>
-        <span *ngIf="statuses.cleanup_success" class="badge badge-success">{{ statuses.cleanup_success }} Cleanup success!</span>
-        <span *ngIf="statuses.cleanup_failed" class="badge badge-danger">{{ statuses.cleanup_failed }} Cleanup failed</span>
-      </h4>
+      <a class="btn btn-success right" routerLink="/projects/new">Setup project</a>
       <p *ngIf="!projects" class="text-muted text-center">Loading...</p>
       <p *ngIf="projects && !projects.length" class="text-muted text-center">Projects not found</p>
-      <table *ngIf="projects && projects.length" class="table editable-table">
-        <thead class="thead-dark">
+      <table *ngIf="projects && projects.length" class="table editable-table" id="table" cellspacing="0" cellpadding="0">
+        <thead class="thead-transparent">
           <tr>
             <th scope="col">Project name</th>
             <th scope="col">Project apps</th>
@@ -26,18 +26,20 @@
         </thead>
         <tbody>
           <tr *ngFor="let project of projects">
-            <th scope="row">
-              {{ project.project_name }}<br/>
-              <tr *ngFor="let user of project.users">
-                <th scope="row">
-                  <i style="font-weight: 400">{{ user.username || 'User not found' }}</i>
-                </th>
-                <td>    
+            <th class="thread-light" scope="row">
+              <div id="cell-project">
+                {{ project.project_name }}<br/>
+                <tr *ngFor="let user of project.users">
+                  <th scope="row">
+                    <i style="font-weight: 400; opacity:1">{{ user.username || 'User not found' }}</i>
+                  </th>
+                  <td>  
+              </div>  
             </th>
             <td>
 
-              <table *ngIf="project.apps && project.apps.length" class="table editable-table">
-                <thead class="thead-dark">
+              <table *ngIf="project.apps && project.apps.length" class="table editable-table" id="table-apps" cellspacing="0" cellpadding="0">
+                <thead class="thead-light">
                 <tr>
                   <th scope="col">Name</th>
                   <th scope="col">CI</th>
@@ -79,10 +81,10 @@
                 </tbody>
               </table>
             </td>
-            <td>
-              <div class="btn-group btn-group-toggle">
-                <button (click)="editProject(project)" class="btn btn-warning" type="button">Edit</button>
-                <button (click)="deleteProject(project)" [ngClass]="{'disabled': isAppsNeedToCleanup(project)}" class="btn btn-danger" type="button">Delete</button>
+            <td id="clean">
+              <div id="cell-project">
+                <button (click)="editProject(project)" type="button" id="btn-edit"></button>
+                <button (click)="deleteProject(project)" [ngClass]="{'disabled': isAppsNeedToCleanup(project)}" type="button" id="btn-delete"></button>
               </div>
             </td>
           </tr>
