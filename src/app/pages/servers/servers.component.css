@@ -114,7 +114,7 @@ button#start:hover {
 }
 
 button#edit  {
-    background-image:url('/images/edit.svg');
+    background-image:url('/images/edit_server.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
