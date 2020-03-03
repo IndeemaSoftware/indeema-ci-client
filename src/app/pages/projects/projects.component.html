@@ -4,12 +4,12 @@
     <div class="col-sm-12 col-md-12 col-lg-12">
       <h2 style="margin-top: 10pt">
         Projects list
-        <span *ngIf="statuses.progress" class="badge badge-warning" id="status">{{ statuses.progress }} In progress...</span>
-        <span *ngIf="statuses.success" class="badge badge-success" id="status">{{ statuses.success }} Setup success!</span>
-        <span *ngIf="statuses.failed" class="badge badge-danger" id="status">{{ statuses.failed }} Setup failed</span>
-        <span *ngIf="statuses.cleanup" class="badge badge-warning" id="status">{{ statuses.cleanup }} Cleanup in progress...</span>
-        <span *ngIf="statuses.cleanup_success" class="badge badge-success" id="status">{{ statuses.cleanup_success }} Cleanup success!</span>
-        <span *ngIf="statuses.cleanup_failed" class="badge badge-danger" id="status">{{ statuses.cleanup_failed }} Cleanup failed</span>
+        <span *ngIf="statuses.progress" id="status-label-progress">{{ statuses.progress }} In progress...</span>
+        <span *ngIf="statuses.success" id="status-label-success">{{ statuses.success }} Setup success!</span>
+        <span *ngIf="statuses.failed" id="status-label-fail">{{ statuses.failed }} Setup failed</span>
+        <span *ngIf="statuses.cleanup" id="status-label-progress">{{ statuses.cleanup }} Cleanup in progress...</span>
+        <span *ngIf="statuses.cleanup_success" id="status-label-success">{{ statuses.cleanup_success }} Cleanup success!</span>
+        <span *ngIf="statuses.cleanup_failed" id="status-label-fail">{{ statuses.cleanup_failed }} Cleanup failed</span>
       </h2>
       <a class="btn btn-success right" id="setup-button" routerLink="/projects/new">Setup project</a>
       <p *ngIf="!projects" class="text-muted text-center">Loading...</p>

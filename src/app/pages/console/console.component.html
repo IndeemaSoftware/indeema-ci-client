@@ -3,13 +3,18 @@
   <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 center-content-item">
       <h2  style="margin-top: 1rem">
-        <span *ngIf="consoleLive" class="badge badge-success">Online</span>
-        <span *ngIf="!consoleLive && consoleLive !== null" class="badge badge-danger">Offline</span>
-        <span *ngIf="consoleLive == null" class="badge badge-danger">Starting</span>
-        {{ consoleTitle }}
-      </h2>
-      <h2 *ngIf="project && app" style="margin-top: 1rem; font-size: small;">
-        Setuping {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}
+        <div class="action">
+          <span *ngIf="consoleLive" id="status-success">&#9864; Online</span>
+          <span *ngIf="!consoleLive && consoleLive !== null" id="status-fail">&#9864; Offline</span>
+          <span *ngIf="consoleLive == null" id="status-progress">&#9864; Starting</span>
+
+          Setuping {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}
+
+          <button *ngIf="enableDownloadBtn && !hideDownloadBtn" (click)="downloadTemplate()" type="button" class="btn btn-success" id="menu-button">Download CI template</button>
+          <button (click)="reloadScript(isCleanup)" type="button" class="btn btn-danger" id="menu-button">Reload script</button>
+          <button (click)="disableConsole()" type="button" class="btn btn-warning" id="menu-button">Back to setup</button>
+          <button (click)="cleanConsole()" type="button" class="btn" id="menu-button-back">Clear</button>
+        </div>
       </h2>
       <h2 *ngIf="server" style="margin-top: 1rem; font-size: small;">
         Setuping {{server.server_name}}
@@ -18,12 +23,6 @@
         <div id="consoleOutput">
           <p *ngFor="let item of consoleOutput" class="{{ item.type || 'message' }}"><span>runner@server:~$</span> {{ item.value }}</p>
         </div>
-      </div>
-      <div class="action">
-        <button (click)="cleanConsole()" type="button" class="btn">Clear</button>
-        <button (click)="disableConsole()" type="button" class="btn btn-warning">Back to setup</button>
-        <button (click)="reloadScript(isCleanup)" type="button" class="btn btn-danger">Reload script</button>
-        <button *ngIf="enableDownloadBtn && !hideDownloadBtn" (click)="downloadTemplate()" type="button" class="btn btn-success">Download CI template</button>
       </div>
     </div>
   </div>

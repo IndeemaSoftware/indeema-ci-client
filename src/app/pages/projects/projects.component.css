@@ -1,3 +1,36 @@
+#status-label-success {
+    background-color: rgba(77, 176, 91, 0.3);
+    color: rgba(77, 176, 91, 1);
+    float:right;
+    font-size: 10pt; 
+    font-weight: 20;
+    border-radius: 59px;
+    margin-left: 20pt;
+    padding: 5pt 10pt 5pt 10pt;
+}
+
+#status-label-progress {
+    background-color: rgba(254, 192, 46, 0.3);
+    color: rgba(254, 192, 46, 1);
+    float:right;
+    font-size: 10pt; 
+    font-weight: 20;
+    border-radius: 59px;
+    margin-left: 20pt;
+    padding: 5pt 10pt 5pt 10pt;
+}
+
+#status-label-fail {
+    background-color: rgba(218, 49, 72, 0.3);
+    color: rgba(218, 49, 72, 1);
+    float:right;
+    font-size: 10pt; 
+    font-weight: 20;
+    border-radius: 59px;
+    margin-left: 20pt;
+    padding: 5pt 10pt 5pt 10pt;
+}
+
 #setup-button {
     background-color: #4DB05B;
     border-radius: 59px;  

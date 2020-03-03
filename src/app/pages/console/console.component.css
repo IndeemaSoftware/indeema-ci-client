@@ -47,3 +47,46 @@
   float: left;
   margin: 0 5px;
 }
+
+#status-progress {
+  font-weight: 10;
+  color:#FEC02E;
+  font-size: 20pt;
+}
+
+#status-success {
+  font-weight: 10;
+  color:#4DB05B;
+  font-size: 20pt;
+}
+
+#status-fail {
+  font-weight: 10;
+  color:#DA3148;
+  font-size: 20pt;
+}
+
+#menu-button {
+  opacity: 1;
+  border: none;
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  color: #2C2E3E;
+  float:right;
+}
+
+#menu-button:hover {
+  opacity: 0.5;
+}
+
+#menu-button-back {
+  background-color:rgba(152, 164, 196, 0.3);
+  border-radius: 59px;  
+  border: none;
+  color: #2C2E3E;
+  float:right;
+}
+
+#menu-button-back:hover {
+  opacity: 0.5;
+}

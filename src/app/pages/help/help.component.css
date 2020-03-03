@@ -3,8 +3,8 @@
 /* Style the tab */
 .tab {
   float: left;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  border: none;
+  background-color: transparent;
   width: auto;
   height: auto;
 }
@@ -33,11 +33,15 @@
   background-color: #ccc;
 }
 
+.tab button.active {
+  background-color: #ccc;
+}
+
 /* Style the tab content */
 .tabcontent {
   float: left;
   padding: 0px 12px;
-  border: 1px solid #ccc;
+  border: none;
   width: 80%;
   border-left: none;
   height: auto;
