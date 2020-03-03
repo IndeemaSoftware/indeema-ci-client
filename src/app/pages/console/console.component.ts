@@ -258,7 +258,9 @@ export class ConsoleComponent implements OnInit {
 
     //Scroll to bottom
     var objDiv = document.getElementById("consoleOutput");
-    objDiv.scrollTop = objDiv.scrollHeight;
+    if (objDiv) {
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
   }
 
   connectToChannel(channel){

@@ -18,9 +18,10 @@
         <thead class="thead-transparent">
           <tr>
             <th scope="col">Server name</th>
-            <th scope="col">Modules</th>
+            <th scope="col">Installed Modules</th>
             <th scope="col">Platform</th>
             <th scope="col">Server SSH</th>
+            <th scope="col">Open Ports</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -52,18 +53,16 @@
                   </label>
               </div>
             </td>
-            <td>
-              <div >{{ server.platform.platform_name }}</div>
-            </td>
-            <td>
-              <div >{{ server.ssh_username }}@{{ server.ssh_ip }}</div>
-            </td>
+            <th scope="row">{{ server.platform?server.platform.platform_name:"No platform selected" }}</th>
+            <th scope="row">{{ server.ssh_username?server.ssh_username:"No user defined for host" }}@{{server.ssh_ip?server.ssh_ip:"No host defined"}}</th>
+            <th scope="row">{{ server.ports?server.ports:"No ports selected" }}</th>
             <td>
               <div class="btn-group btn-group-toggle">
-                <button (click)="setupServer(server)" class="btn btn-success" type="button">Setup</button>
-                <button (click)="editServer(server)" class="btn btn-warning" type="button">Edit</button>
-                <button (click)="cleanupServer(server, true, true)" [ngClass]="{'disabled': server.server_status === 'cleanup' || server.server_status === 'cleanup_success'}" class="btn btn-light" type="button">Cleanup</button>
-                <button (click)="deleteServer(server)" class="btn btn-danger" type="button">Delete</button>
+                <button (click)="setupServer(server)" id="start" type="button" title="Start setup script"></button>
+                <button (click)="toConsole(server, false, false)" id="console"></button>
+                <button (click)="editServer(server)" id="edit" type="button"></button>
+                <button (click)="cleanupServer(server, true, true)" [ngClass]="{'disabled': server.server_status === 'cleanup' || server.server_status === 'cleanup_success'}" id="cleanup" type="button"></button>
+                <button (click)="deleteServer(server)" id="delete-server" type="button"></button>
               </div>
             </td>
           </tr>

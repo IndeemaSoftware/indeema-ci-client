@@ -58,7 +58,7 @@
                     <span *ngIf="app.app_status === 'cleanup_failed'" id="status-fail">&#9864; Cleanup failed!</span>
                   </th>
                   <th scope="row">{{ app.server?app.ci_script:"No CI selected"}}</th>
-                  <th scope="row">{{ app.environment }}</th>
+                  <th scope="row">{{ app.environment?app.environment:"No environment selected" }}</th>
                   <th scope="row">{{ app.server?app.server.server_name:"Server not selected"}}</th>
                   <td>
                     <div class="btn-group btn-group-toggle">
