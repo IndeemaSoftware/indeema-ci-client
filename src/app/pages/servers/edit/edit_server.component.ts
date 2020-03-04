@@ -165,7 +165,9 @@ export class EditServerComponent implements OnInit {
 
     this.ports = this.serverModel.ports;
     this.platform = this.serverModel.platform;
-    this.serverModel.platform = this.serverModel.platform.id;
+    if (this.serverModel.platform) {
+      this.serverModel.platform = this.serverModel.platform.id;
+    }
   }
 
 
@@ -269,6 +271,9 @@ export class EditServerComponent implements OnInit {
         || !model.ssh_ip
         || !model.ssh_key
         || !model.ssh_username
+        || !model.serverModel.platform
+        || !model.serverModel.server_dependencies
+        || !model.serverModel.custom_dependencies
     )
     return 'Please input all required fields.';
 

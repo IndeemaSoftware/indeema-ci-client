@@ -1,5 +1,4 @@
-<app-header></app-header>
-<div class="container">
+<div class="container" tyle="min-height: calc(100vh - 40pt)">
   <div class="row" style="background-color:white;margin-top:20pt; box-shadow: 0pt 1pt 15pt #45414E14;">
     <div class="col-sm-12 col-md-12 col-lg-12" style="margin: 10pt 10pt 10pt 10pt">
       <div class="tab">
@@ -22,10 +21,9 @@
         <input [(ngModel)]="first_name"  class="form-control" id="service-name" name="variable" placeholder="First name">
         <input [(ngModel)]="last_name"  class="form-control" id="service-name" name="variable" placeholder="Last name">
       
-        <button (click)="createTicket()" class="btn btn-danger" [disabled]="isNewService">Submit</button>
+        <button (click)="createTicket()" id="green-button" [disabled]="isNewService">Submit</button>
 
       </div>
     </div>
   </div>
 </div>
-

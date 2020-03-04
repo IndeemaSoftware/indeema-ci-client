@@ -1,6 +1,6 @@
-<app-header></app-header>
-<div class="container">
-  <div class="row" style="background-color:white;margin-top:20pt; box-shadow: 0pt 1pt 15pt #45414E14;">
+
+<div class="container" style="min-height: calc(100vh - 40pt)">
+  <div class="row" style="background-color:white;margin-top:20pt; margin-bottom:20pt; box-shadow: 0pt 1pt 15pt #45414E14;padding-bottom: 10pt;padding-top: 10pt;">
     <div class="col-sm-12 col-md-12 col-lg-12">
       <h2 style="margin-top: 2rem">
         Servers list
@@ -35,9 +35,9 @@
               <span *ngIf="server.server_status === 'cleanup_success'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
               <span *ngIf="server.server_status === 'cleanup_failed'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
               {{ server.server_name }}<br/>
-              <tr *ngFor="let user of server.users">
-                <th scope="row">
-                  <i style="font-weight: 400">{{ user.username || 'User not found' }}</i>
+              <tr *ngFor="let user of server.users" style="background-color: transparent;">
+                <th scope="row" style="background-color: transparent;">
+                  <i style="font-weight: 400; background-color: transparent;">{{ user.username || 'User not found' }}</i>
                 </th>
             </th>
             <td>

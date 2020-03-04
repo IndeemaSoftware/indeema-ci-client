@@ -32,6 +32,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './pages/home/home.component';
 import { SigninComponent } from './pages/signin/signin.component';
 import { HeaderComponent } from './partials/header/header.component';
+import { FooterComponent } from './partials/footer/footer.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
 import { UsersComponent } from './pages/users/users.component';
 import { EditComponent } from './pages/projects/edit/edit.component';
@@ -54,6 +55,7 @@ import { HelpComponent } from './pages/help/help.component';
     HomeComponent,
     SigninComponent,
     HeaderComponent,
+    FooterComponent,
     ProjectsComponent,
     UsersComponent,
     EditComponent,
