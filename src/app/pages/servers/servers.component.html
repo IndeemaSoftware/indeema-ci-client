@@ -30,10 +30,10 @@
             <th scope="row" class="thread-light">
               <span *ngIf="server.server_status === 'progress'" style="color:rgba(254, 192, 46, 1)">&#9864;</span>
               <span *ngIf="server.server_status === 'success'" style="color:rgba(77, 176, 91, 1)">&#9864;</span>
-              <span *ngIf="server.server_status === 'failed'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
+              <span *ngIf="server.server_status === 'failed'" style="color:rgba(218, 49, 72, 1)">&#9864;</span>
               <span *ngIf="server.server_status === 'waiting'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
               <span *ngIf="server.server_status === 'cleanup_success'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
-              <span *ngIf="server.server_status === 'cleanup_failed'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
+              <span *ngIf="server.server_status === 'cleanup_failed'" style="color:rgba(218, 49, 72, 1)">&#9864;</span>
               {{ server.server_name }}<br/>
               <tr *ngFor="let user of server.users" style="background-color: transparent;">
                 <th scope="row" style="background-color: transparent;">
