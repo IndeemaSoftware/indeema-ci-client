@@ -103,9 +103,9 @@ export class ProjectsComponent implements OnInit {
     this.route.navigate([`console/${project.id}/${app.id}`], { queryParams: { start: 'true' } });
   }
 
-  toConsole(project, app, cleanup = false){
+  toConsole(project, app, cleanup = false, autostart = false){
     if(cleanup)
-      this.route.navigate([`console/${project.id}/${app.id}`], { queryParams: { cleanup: 'true' } });
+      this.route.navigate([`console/${project.id}/${app.id}`], { queryParams: { start: autostart, cleanup: 'true' } });
     else
       this.route.navigate([`console/${project.id}/${app.id}`]);
   }
@@ -129,7 +129,7 @@ export class ProjectsComponent implements OnInit {
         'Yes, please cleanup!',
         'Don`t cleanup'
     ).then((res) => {
-      this.toConsole(project, app, true);
+      this.toConsole(project, app, true, true);
     });
   }
 

@@ -54,7 +54,7 @@ export class ConsoleComponent implements OnInit {
     this.key = this.activatedRoute.snapshot.params['id'];
     if (this.key === "server") {
       this.serverId = this.activatedRoute.snapshot.params['app_id'];
-      if(!this.serverId) {
+      if (!this.serverId) {
         this.route.navigate([`servers`]);
         return;
       }  
@@ -66,7 +66,7 @@ export class ConsoleComponent implements OnInit {
       }
   
       this.appId = this.activatedRoute.snapshot.params['app_id'];
-      if(!this.appId){
+      if (!this.appId) {
         this.route.navigate([`projects`]);
         return;
       }
@@ -80,20 +80,19 @@ export class ConsoleComponent implements OnInit {
     }, 1000);
 
     if (this.projectId) {
-    //Get project
-    this.api.get(`/projects/${this.projectId}`)
-      .then(data => {
-        this.project = data;
-
-        //Get app
-        this.api.get(`/app/${this.appId}`)
-          .then(data => {
-            this.app = data;
-            this.prepareConsole();
-          }, err => {
-            this.modal.alert(err);
-            this.route.navigate([`projects`]);
-          });
+      //Get project
+      this.api.get(`/projects/${this.projectId}`)
+        .then(data => {
+          this.project = data;
+          //Get app
+          this.api.get(`/app/${this.appId}`)
+            .then(data => {
+              this.app = data;
+              this.prepareConsole();
+            }, err => {
+              this.modal.alert(err);
+              this.route.navigate([`projects`]);
+            });
       }, err => {
         this.modal.alert(err);
         this.route.navigate([`projects`]);
@@ -110,7 +109,7 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
-  prepareConsole(){
+  prepareConsole() {
     if (this.projectId) {
       this.hideDownloadBtn = false;;
       if (this.app.app_status === 'success'){
@@ -220,7 +219,7 @@ export class ConsoleComponent implements OnInit {
 
   startCleanupScript() {
     if (this.projectId) {
-      this.api.remove(`projects/cleanup/${this.projectId}/${this.appId}`).then((resp) => {
+      this.api.remove(`apps/cleanup/${this.appId}`).then((resp) => {
         this.cleanConsole();
       }, (err) => {
         this.modal.alert(err);
