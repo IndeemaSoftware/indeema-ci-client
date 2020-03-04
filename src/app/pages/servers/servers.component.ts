@@ -111,18 +111,11 @@ export class ServersComponent implements OnInit {
         'Yes, please cleanup!',
         'Don`t cleanup'
     ).then((res) => {
-      this.api.remove(`server/cleanup/${server.id}`).then(() => {
-        this.toConsole(server, true, true);
-      }, (err) => {
-        this.modal.alert(err);
-      })
-      setTimeout(() => {
-        this.toConsole(server, true, true);
-      }, 500);
+      this.toConsole(server, true, true);
     });
   }
 
-  toConsole(server, cleanup = false, autostart = false){
+  toConsole(server, cleanup = false, autostart = false) {
     this.route.navigate([`console/server/${server.id}`], { queryParams: { start: autostart, cleanup: cleanup } });
   }
 

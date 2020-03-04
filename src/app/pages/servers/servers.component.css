@@ -124,12 +124,34 @@ button#edit  {
     margin: 5pt 10pt 25pt 10pt;
 }
 
+button#edit:disabled  {
+    background-image:url('/images/edit.svg');
+    background-color: transparent;
+    background-size: 18pt 18pt;
+    width: 18pt;
+    height:18pt;
+    border: none;
+    opacity: 1;
+    margin: 5pt 10pt 25pt 10pt;
+}
+
 button#edit:hover {
     opacity: 0.5;
 }
 
 button#console  {
     background-image:url('/images/console_enabled.svg');
+    background-color: transparent;
+    background-size: 18pt 18pt;
+    width: 18pt;
+    height:18pt;
+    border: none;
+    opacity: 1;
+    margin: 5pt 10pt 25pt 10pt;
+}
+
+button#console:disabled  {
+    background-image:url('/images/console_disabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -154,12 +176,34 @@ button#cleanup  {
     margin: 5pt 10pt 25pt 10pt;
 }
 
+button#cleanup:disabled  {
+    background-image:url('/images/cleanup_disabled.svg');
+    background-color: transparent;
+    background-size: 18pt 18pt;
+    width: 18pt;
+    height:18pt;
+    border: none;
+    opacity: 1;
+    margin: 5pt 10pt 25pt 10pt;
+}
+
 button#cleanup:hover {
     opacity: 0.5;
 }
 
 button#delete-server  {
     background-image:url('/images/delete_enabled.svg');
+    background-color: transparent;
+    background-size: 18pt 18pt;
+    width: 18pt;
+    height:18pt;
+    border: none;
+    opacity: 1;
+    margin: 5pt 10pt 25pt 10pt;
+}
+
+button#delete-server:disabled  {
+    background-image:url('/images/delete_disabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;

@@ -237,8 +237,9 @@ export class ConsoleComponent implements OnInit {
   }
 
   addMessage(type, msg){
-    msg = msg.toString().replace('\\n', '');
+    msg = msg.replace('\"', '');
     msg = msg.replace('\\t', '');
+    msg = msg.replace('\\', '');
     msg = msg.replace('"', '');
     msg = msg.replace('"', '');
     this.consoleOutput.push({
@@ -263,7 +264,7 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
-  connectToChannel(channel){
+  connectToChannel(channel) {
     //Remove all listeners
     this.socket.removeAllListeners();
 
