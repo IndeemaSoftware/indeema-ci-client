@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  API_URL: 'http://localhost:1337',
+  API_URL: 'http://37.139.17.146:1337',
   AUTH_KEY: 'connect-runner::app-auth-key',
-  SOCKET: 'http://localhost:2337'
+  SOCKET: 'http://37.139.17.146:2337'
 };
 
 /*
