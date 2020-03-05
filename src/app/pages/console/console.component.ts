@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {Socket} from 'ngx-socket-io';
-import {ApiService} from '../../services/api.service';
-import {AuthService} from '../../services/auth.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {environment} from '../../../environments/environment';
-import {ModalService} from '../../services/modal.service';
+import { Socket } from 'ngx-socket-io';
+import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
+import { ModalService } from '../../services/modal.service';
+
 
 @Component({
   selector: 'app-console',
@@ -241,6 +242,9 @@ export class ConsoleComponent implements OnInit {
     msg = msg.replace('\\', '');
     msg = msg.replace('"', '');
     msg = msg.replace('"', '');
+
+    
+
     this.consoleOutput.push({
       type: type,
       value: msg
