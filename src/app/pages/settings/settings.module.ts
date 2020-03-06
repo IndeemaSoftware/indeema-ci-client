@@ -11,4 +11,4 @@ import { SettingsComponent } from './settings.component';
     routing
   ]
 })
-export class SettingsModule {}
+export class SettingsModuleTMP {}
