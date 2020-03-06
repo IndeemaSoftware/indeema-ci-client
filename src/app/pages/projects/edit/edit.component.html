@@ -21,7 +21,7 @@
           </div>
           <div class="form-group">
             <label for="env">Project environments</label>
-            <input (change)="environmentsUpdated()" [(ngModel)]="environments" type="text" class="form-control" name="environments{{ pId }}" placeholder="Enter project environment names">
+            <input (change)="environmentsUpdated()" [(ngModel)]="environments" type="text" class="form-control" name="environments" placeholder="Enter project environment names">
             <div *ngIf="jsonValidationMessage">
               <label class="badge badge-danger" id="json-warning" name="json-warning"> {{jsonValidationMessage}}</label>
             </div>      

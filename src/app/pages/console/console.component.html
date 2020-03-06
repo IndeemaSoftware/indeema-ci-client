@@ -11,7 +11,7 @@
           <span *ngIf="project && app">Setuping {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}</span>
 
           <button *ngIf="enableDownloadBtn && !hideDownloadBtn" (click)="downloadTemplate()" type="button" class="btn btn-success" id="menu-button">Download CI template</button>
-          <button (click)="reloadScript(isCleanup)" type="button" class="btn btn-danger" id="menu-button">Reload script</button>
+          <button (click)="reloadScript()" type="button" class="btn btn-danger" id="menu-button">Reload script</button>
           <button (click)="disableConsole()" type="button" class="btn btn-warning" id="menu-button">Back to setup</button>
           <button (click)="cleanConsole()" type="button" class="btn" id="menu-button-back">Clear</button>
         </div>
