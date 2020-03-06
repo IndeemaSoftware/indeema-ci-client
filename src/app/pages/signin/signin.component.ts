@@ -51,7 +51,7 @@ export class SigninComponent implements OnInit {
     this.api.create(`/auth/forgot-password`,
     {
       email: `${this.credentials.identifier}`,
-      url: 'http:/localhost:1337/admin/plugins/users-permissions/auth/reset-password'
+      url: 'http:/localhost:1338/admin/plugins/users-permissions/auth/reset-password'
   })
   .then(response => {
     // Handle success.
