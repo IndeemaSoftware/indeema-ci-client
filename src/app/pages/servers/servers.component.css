@@ -99,7 +99,7 @@ tr:nth-child(odd) {
 }
 
 button#start  {
-    background-image:url('/images/start_enabled.svg');
+    background-image:url('/assets/start_enabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -114,7 +114,7 @@ button#start:hover {
 }
 
 button#edit  {
-    background-image:url('/images/edit_server.svg');
+    background-image:url('/assets/edit_server.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -125,7 +125,7 @@ button#edit  {
 }
 
 button#edit:disabled  {
-    background-image:url('/images/edit.svg');
+    background-image:url('/assets/edit.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -140,7 +140,7 @@ button#edit:hover {
 }
 
 button#console  {
-    background-image:url('/images/console_enabled.svg');
+    background-image:url('/assets/console_enabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -151,7 +151,7 @@ button#console  {
 }
 
 button#console:disabled  {
-    background-image:url('/images/console_disabled.svg');
+    background-image:url('/assets/console_disabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -166,7 +166,7 @@ button#console:hover {
 }
 
 button#cleanup  {
-    background-image:url('/images/cleanup_enabled.svg');
+    background-image:url('/assets/cleanup_enabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -177,7 +177,7 @@ button#cleanup  {
 }
 
 button#cleanup:disabled  {
-    background-image:url('/images/cleanup_disabled.svg');
+    background-image:url('/assets/cleanup_disabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -192,7 +192,7 @@ button#cleanup:hover {
 }
 
 button#delete-server  {
-    background-image:url('/images/delete_enabled.svg');
+    background-image:url('/assets/delete_enabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -203,7 +203,7 @@ button#delete-server  {
 }
 
 button#delete-server:disabled  {
-    background-image:url('/images/delete_disabled.svg');
+    background-image:url('/assets/delete_disabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;

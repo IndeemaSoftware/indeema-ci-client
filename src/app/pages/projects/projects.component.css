@@ -183,7 +183,7 @@ td#clean{
 }
 
 button#btn-edit {
-    background-image: url('/images/edit.svg');
+    background-image: url('/assets/edit.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -198,7 +198,7 @@ button#btn-edit:hover {
 }
 
 button#btn-delete {
-    background-image:url('/images/delete.svg');
+    background-image:url('/assets/delete.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -213,7 +213,7 @@ button#btn-delete:hover {
 }
 
 button#start  {
-    background-image:url('/images/start_enabled.svg');
+    background-image:url(/assets/start_enabled.svg);
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -228,7 +228,7 @@ button#start:hover {
 }
 
 button#console  {
-    background-image:url('/images/console_enabled.svg');
+    background-image:url(/assets/console_enabled.svg);
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -243,7 +243,7 @@ button#console:hover {
 }
 
 button#cleanup  {
-    background-image:url('/images/cleanup_enabled.svg');
+    background-image:url('/assets/cleanup_enabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -258,7 +258,7 @@ button#cleanup:hover {
 }
 
 button#delete-app  {
-    background-image:url('/images/delete_enabled.svg');
+    background-image:url('/assets/delete_enabled.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;

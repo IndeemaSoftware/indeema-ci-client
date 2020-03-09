@@ -20,8 +20,7 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "images"
+              "/src/assets"
             ],
             "styles": [
               "node_modules/ngx-angular8-sweetalert2/dist/sweetalert2.css",
@@ -79,7 +78,7 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "images"
+              "/src/assets"
             ]
           }
         },

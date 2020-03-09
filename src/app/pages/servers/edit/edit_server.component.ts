@@ -123,7 +123,12 @@ export class EditServerComponent implements OnInit {
   }
 
   platformSelected() {
-    this.platform = this.serverModel.platform;
+    for (let p of this.platform_list) {
+      if (this.serverModel.platform === p.id) {
+        this.platform = {};
+        this.platform = p;
+      }
+    }  
   }
 
   prepareToEdit() {
