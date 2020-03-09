@@ -1,24 +1,24 @@
 <div class="container">
     <h3>Ci Templates</h3>
     <div class="form-group required">
-      <label for="maintenance">CI Template</label>
-      <select (change)="maintenanceSelected(settingsModel.maintenance)" [(ngModel)]="settingsModel.maintenance" enabled class="form-control" name="maintenance" id="maintenance">
-        <option [ngValue]="newMaintenance" (value)="newMaintenance">Create new</option>
+      <label for="template">CI Template</label>
+      <select (change)="templateSelected(settingsModel.template)" [(ngModel)]="settingsModel.template" enabled class="form-control" name="template" id="template">
+        <option [ngValue]="newTemplate" (value)="newTemplate">Create new</option>
         <optgroup label="_________"></optgroup>
-        <ng-container *ngFor="let item of settingsModel.maintenance_list let i = index">
-          <option [ngValue]="settingsModel.maintenance_list[i]">{{ item.name}}</option>
+        <ng-container *ngFor="let item of settingsModel.template_list let i = index">
+          <option [ngValue]="settingsModel.template_list[i]">{{ item.name}}</option>
         </ng-container>
       </select>
       </div>
-      <div *ngIf="settingsModel.maintenance" class="form-group">
+      <div *ngIf="settingsModel.template" class="form-group">
         <label for="name">Template page name</label>
-        <input [(ngModel)]="settingsModel.maintenance.name" [(value)]="settingsModel.maintenance.name" class="form-control" id="new_maintenance_name" name="new_maintenance_name" placeholder="Please enter name for new maintenance page">
+        <input [(ngModel)]="settingsModel.template.name" [(value)]="settingsModel.template.name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Please enter name for new template script">
       </div>     
     <div class="form-group">
-      <textarea [(ngModel)]="settingsModel.maintenance.yml_code" [(value)]="settingsModel.maintenance.yml_code" class="form-control" id="script" name="script" rows="10"></textarea>
+      <textarea [(ngModel)]="settingsModel.template.yml_code" [(value)]="settingsModel.template.yml_code" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="updateMaintenance()" id="green-button" *ngIf="!isNewMaintenance">Update</button>
-    <button (click)="createMaintenance()" id="green-button" *ngIf="isNewMaintenance">Create</button>
-    <button (click)="deleteMaintenance()" id="red-button" [disabled]="isNewMaintenance">Delete</button>
-    <button (click)="preview()" id="yellow-button" [disabled]="isNewMaintenance">Preview</button>
+    <button (click)="updateTemplate()" id="green-button" *ngIf="!isNewemplate">Update</button>
+    <button (click)="createTemplate()" id="green-button" *ngIf="isNewemplate">Create</button>
+    <button (click)="deleteTemplate()" id="red-button" [disabled]="isNewemplate">Delete</button>
+    <button (click)="preview()" id="yellow-button" [disabled]="isNewemplate">Preview</button>
   </div>

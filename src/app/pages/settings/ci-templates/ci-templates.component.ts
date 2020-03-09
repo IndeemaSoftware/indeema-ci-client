@@ -11,20 +11,20 @@ import { ModalService } from '../../../services/modal.service';
 })
 export class CITemplatesComponent implements OnInit {
 
-  newMaintenance: {
+  newTemplate: {
     name:"",
     yml_code: "", 
     };
 
   settingsModel: any = {
-    maintenance: {
+    template: {
       name:"",
       yml_code: "",
-      maintenance_list:[]
+      template_list:[]
     } as any
   };
 
-  isNewMaintenance: boolean = true;
+  isNewTemplate: boolean = true;
 
   constructor (
     private api: ApiService,
@@ -44,32 +44,32 @@ export class CITemplatesComponent implements OnInit {
   }
 
   initUser() {
-    this.settingsModel.maintenance = {
+    this.settingsModel.template = {
       name:"",
       users: [this.auth.user.id],
       yml_code: "",
-      maintenance_list:[]
+      template_list:[]
     };
 }
 
-  maintenanceSelected(maintenance) {
-    if (maintenance) {
-      this.isNewMaintenance = false;
-      this.settingsModel.yml_code = maintenance.yml_code   
+  templateSelected(template) {
+    if (template) {
+      this.isNewTemplate = false;
+      this.settingsModel.yml_code = template.yml_code   
     } else {
-      this.isNewMaintenance = true;
+      this.isNewTemplate = true;
       this.initUser();
-      this.cleanMaintenanceFields();
+      this.cleanTemplateFields();
     }
   }
 
   updateServiceFields(data) {
-    this.settingsModel.maintenance = data;
+    this.settingsModel.template = data;
     this.updateTemplatesList();
   }
 
-  cleanMaintenanceFields() {
-    this.isNewMaintenance = true;
+  cleanTemplateFields() {
+    this.isNewTemplate = true;
     this.settingsModel.new_service_name = "";
     this.settingsModel.yml_code = "";
     this.initUser();
@@ -78,26 +78,26 @@ export class CITemplatesComponent implements OnInit {
 
   updateTemplatesList() {
     this.api.get(`ci-templates`).then((resp) => {
-      this.settingsModel.maintenance_list = resp;
+      this.settingsModel.template_list = resp;
     });  
   }
 
-  updateMaintenance() {
-    if (!this.settingsModel.maintenance.name) {
+  updateTemplate() {
+    if (!this.settingsModel.template.name) {
       this.modal.alert("You can't update service with no name");
       return;
     }
     this.modal.confirm(
-      `Confirm saving of updates of "${this.settingsModel.maintenance.name}" script`,
+      `Confirm saving of updates of "${this.settingsModel.template.name}" script`,
       "Do you really want to save changes of script?<br>If yes, please input template name.",
       (value) => {
-        if(value !== this.settingsModel.maintenance.name )
+        if(value !== this.settingsModel.template.name )
           return 'Template name is incorrect!';
       },
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
-    this.api.update(`ci-templates/${this.settingsModel.maintenance.id}`, this.settingsModel.maintenance).then((resp) => {
+    this.api.update(`ci-templates/${this.settingsModel.template.id}`, this.settingsModel.template).then((resp) => {
     });
 
     }, (err) => {
@@ -105,47 +105,47 @@ export class CITemplatesComponent implements OnInit {
     })
   }
 
-  deleteMaintenance() {
-    if (!this.settingsModel.maintenance.name) {
+  deleteTemplate() {
+    if (!this.settingsModel.template.name) {
       this.modal.alert("You can't delete service with no name");
       return;
     }
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.maintenance.name}" template`,
+      `Confirm deletion of "${this.settingsModel.template.name}" template`,
       "Do you really want to delete this template?<br>If yes, please input template name.",
       (value) => {
-        if(value !== this.settingsModel.maintenance.name)
+        if(value !== this.settingsModel.template.name)
           return 'Template name is incorrect!';
       },
       'Yes, please remove!',
       'Don`t remove'
   ).then((res) => {
-    this.api.remove(`ci-templates/${this.settingsModel.maintenance.id}`).then((resp) => {
-      this.cleanMaintenanceFields();
+    this.api.remove(`ci-templates/${this.settingsModel.template.id}`).then((resp) => {
+      this.cleanTemplateFields();
     });
     }, (err) => {
       this.modal.alert(err);
     })
   }
 
-  createMaintenance() {
-    if (!this.settingsModel.maintenance.name) {
+  createTemaplte() {
+    if (!this.settingsModel.template.name) {
       this.modal.alert("You can't create service with no name");
       return;
     }
     this.modal.confirm(
-      `Confirm creating of "${this.settingsModel.maintenance.name}" script`,
+      `Confirm creating of "${this.settingsModel.template.name}" script`,
       "Do you really want to save changes of script?<br>If yes, please input template name.",
       (value) => {
-        if(value !== this.settingsModel.maintenance.name )
+        if(value !== this.settingsModel.template.name )
           return 'Template name is incorrect!';
       },
       'Yes, please save!',
       'Don`t save'
   ).then((res) => {
-    this.api.create(`ci-templates`, this.settingsModel.maintenance).then((resp) => {
+    this.api.create(`ci-templates`, this.settingsModel.template).then((resp) => {
       this.updateServiceFields(resp);
-      this.cleanMaintenanceFields();
+      this.cleanTemplateFields();
     });  
 
     }, (err) => {
@@ -154,6 +154,6 @@ export class CITemplatesComponent implements OnInit {
   }
 
   preview() {
-    window.open(`preview?id=${this.settingsModel.maintenance.id}`, '_blank');
+    window.open(`preview?id=${this.settingsModel.template.id}`, '_blank');
   }
 }
