@@ -272,9 +272,9 @@ export class EditServerComponent implements OnInit {
         || !model.ssh_ip
         || !model.ssh_key
         || !model.ssh_username
-        || !model.serverModel.platform
-        || !model.serverModel.server_dependencies
-        || !model.serverModel.custom_dependencies
+        || !model.platform
+        || !model.server_dependencies
+        || !model.custom_dependencies
     )
     return 'Please input all required fields.';
 
@@ -358,6 +358,8 @@ export class EditServerComponent implements OnInit {
         return false;
       }
     }
+
+    this.validateModel(this.serverModel);
 
     if (this.isNew) {
       await this.createServer();
