@@ -16,11 +16,11 @@
       <div id="HelpDesk" class="tabcontent">
         <h3>Lead your feedback or request here</h3>
 
-        <input [(ngModel)]="subject"  class="form-control" id="service-name" name="variable" placeholder="Subject">
-        <textarea [(ngModel)]="desc"  class="form-control" id="service-name" name="variable" placeholder="Describe your ticket"></textarea>
-        <input [(ngModel)]="email"  class="form-control" id="service-name" name="variable" placeholder="Please enter your email">
-        <input [(ngModel)]="first_name"  class="form-control" id="service-name" name="variable" placeholder="First name">
-        <input [(ngModel)]="last_name"  class="form-control" id="service-name" name="variable" placeholder="Last name">
+        <input [(ngModel)]="subject"  class="form-control" id="service-name" name="service-name" placeholder="Subject">
+        <textarea [(ngModel)]="desc"  class="form-control" id="service-desc" name="service-desc" placeholder="Describe your ticket"></textarea>
+        <input [(ngModel)]="email"  class="form-control" id="service-email" name="service-email" placeholder="Please enter your email">
+        <input [(ngModel)]="first_name"  class="form-control" id="service-first-name" name="service-first-name" placeholder="First name">
+        <input [(ngModel)]="last_name"  class="form-control" id="service-last-name" name="service-last-name" placeholder="Last name">
       
         <button (click)="createTicket()" id="green-button">Submit</button>
 

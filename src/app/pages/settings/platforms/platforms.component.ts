@@ -98,28 +98,49 @@ export class PlatformsComponent implements OnInit {
     }
   }
 
-  updatePlatform() {
-    if (!this.settingsModel.platform.platform_name) {
-      this.modal.alert("You can't update platform with no name");
-      return;
-    }
-    this.modal.confirm(
-      `Confirm saving of updates of "${this.settingsModel.platform.platform_name}" script`,
-      "Do you really want to save changes of script?<br>If yes, please input template name.",
-      (value) => {
-        if(value !== this.settingsModel.platform.platform_name )
-          return 'Template name is incorrect!';
-      },
-      'Yes, please save!',
-      'Don`t save'
-  ).then((res) => {
-    this.saveDocJson();
-    this.api.update(`platforms/${this.settingsModel.platform.id}`, this.settingsModel.platform).then((resp) => {
-    });
+  validateName(name) {
+    var res = {status:true, msg:""};
 
-    }, (err) => {
-      this.modal.alert(err);
-    })
+    if (name) {
+        const regex = new RegExp('^[0-9a-zA-Z_-]+$', 'gm');
+  
+        if (!regex.test(name)) {
+            res.status = false;
+            res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+        } else {
+            res.status = true;
+            res.msg = `Let's go`;  
+        }
+    } else {
+        res.status = false;
+        res.msg = `Dependancy name can't be empty`;
+}
+
+    return res;
+}
+
+  updatePlatform() {
+    if (this.validateName(this.settingsModel.platform.platform_name ).status) {
+      this.modal.confirm(
+        `Confirm saving of updates of "${this.settingsModel.platform.platform_name}" script`,
+        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        (value) => {
+          if(value !== this.settingsModel.platform.platform_name )
+            return 'Template name is incorrect!';
+        },
+        'Yes, please save!',
+        'Don`t save'
+    ).then((res) => {
+      this.saveDocJson();
+      this.api.update(`platforms/${this.settingsModel.platform.id}`, this.settingsModel.platform).then((resp) => {
+      });
+  
+      }, (err) => {
+        this.modal.alert(err);
+      })
+    } else {
+      this.modal.alert(this.validateName(this.settingsModel.platform.platform_name).msg);
+    }
   }
 
   deletePlatform() {
@@ -146,29 +167,29 @@ export class PlatformsComponent implements OnInit {
   }
 
   createPlatform() {
-    if (!this.settingsModel.platform.platform_name) {
-      this.modal.alert("You can't create platform with no name");
-      return;
+    if (this.validateName(this.settingsModel.platform.platform_name).status) {
+      this.modal.confirm(
+        `Confirm creating of "${this.settingsModel.platform.platform_name}" script`,
+        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        (value) => {
+          if(value !== this.settingsModel.platform.platform_name )
+            return 'Template name is incorrect!';
+        },
+        'Yes, please save!',
+        'Don`t save'
+    ).then((res) => {
+      this.saveDocJson();
+      this.api.create(`platforms`, this.settingsModel.platform).then((resp) => {
+        this.updatePlatformFields(resp);
+        this.cleanPlatformFields();
+      });  
+  
+      }, (err) => {
+        this.modal.alert(err);
+      }) 
+    } else {
+      this.modal.alert(this.validateName(this.settingsModel.platform.platform_name).msg);
     }
-    this.modal.confirm(
-      `Confirm creating of "${this.settingsModel.platform.platform_name}" script`,
-      "Do you really want to save changes of script?<br>If yes, please input template name.",
-      (value) => {
-        if(value !== this.settingsModel.platform.platform_name )
-          return 'Template name is incorrect!';
-      },
-      'Yes, please save!',
-      'Don`t save'
-  ).then((res) => {
-    this.saveDocJson();
-    this.api.create(`platforms`, this.settingsModel.platform).then((resp) => {
-      this.updatePlatformFields(resp);
-      this.cleanPlatformFields();
-    });  
-
-    }, (err) => {
-      this.modal.alert(err);
-    })
   }
 
   docUpdated() {

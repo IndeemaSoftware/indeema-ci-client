@@ -98,28 +98,51 @@ export class ServicesComponent implements OnInit {
     }
   }
 
-  updateService() {
-    if (!this.settingsModel.service.service_name) {
-      this.modal.alert("You can't update service with no name");
-      return;
-    }
-    this.modal.confirm(
-      `Confirm saving of updates of "${this.settingsModel.service.service_name}" script`,
-      "Do you really want to save changes of script?<br>If yes, please input template name.",
-      (value) => {
-        if(value !== this.settingsModel.service.service_name )
-          return 'Template name is incorrect!';
-      },
-      'Yes, please save!',
-      'Don`t save'
-  ).then((res) => {
-    this.saveDocJson();
-    this.api.update(`services/${this.settingsModel.service.id}`, this.settingsModel.service).then((resp) => {
-    });
+  validateName(name) {
+    var res = {status:true, msg:""};
 
-    }, (err) => {
-      this.modal.alert(err);
-    })
+    if (name) {
+        const regex = new RegExp('^[0-9a-zA-Z_-]+$', 'gm');
+  
+        if (!regex.test(name)) {
+            res.status = false;
+            res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+        } else {
+            res.status = true;
+            res.msg = `Let's go`;  
+        }
+    } else {
+      res.status = false;
+      res.msg = `Dependancy name can't be empty`;
+  }
+
+  return res;
+}
+
+  updateService() {
+    var name = this.settingsModel.service.service_name;
+
+    if (this.validateName(name).status) {
+      this.modal.confirm(
+        `Confirm saving of updates of "${name}" script`,
+        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        (value) => {
+          if(value !== name )
+            return 'Template name is incorrect!';
+        },
+        'Yes, please save!',
+        'Don`t save'
+    ).then((res) => {
+      this.saveDocJson();
+      this.api.update(`services/${this.settingsModel.service.id}`, this.settingsModel.service).then((resp) => {
+      });
+  
+      }, (err) => {
+        this.modal.alert(err);
+      })
+    } else {
+      this.modal.alert(this.validateName(name).msg);
+    }
   }
 
   deleteService() {
@@ -146,29 +169,31 @@ export class ServicesComponent implements OnInit {
   }
 
   createService() {
-    if (!this.settingsModel.service.service_name) {
-      this.modal.alert("You can't create service with no name");
-      return;
-    }
-    this.modal.confirm(
-      `Confirm creating of "${this.settingsModel.service.service_name}" script`,
-      "Do you really want to save changes of script?<br>If yes, please input template name.",
-      (value) => {
-        if(value !== this.settingsModel.service.service_name )
-          return 'Template name is incorrect!';
-      },
-      'Yes, please save!',
-      'Don`t save'
-  ).then((res) => {
-    this.saveDocJson();
-    this.api.create(`services`, this.settingsModel.service).then((resp) => {
-      this.updateServiceFields(resp);
-      this.cleanServiceFields();
-    });  
+    var name = this.settingsModel.service.service_name;
 
-    }, (err) => {
-      this.modal.alert(err);
-    })
+    if (this.validateName(name).status) {
+      this.modal.confirm(
+        `Confirm creating of "${name}" script`,
+        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        (value) => {
+          if (value !== name)
+            return 'Template name is incorrect!';
+        },
+        'Yes, please save!',
+        'Don`t save'
+    ).then((res) => {
+      this.saveDocJson();
+      this.api.create(`services`, this.settingsModel.service).then((resp) => {
+        this.updateServiceFields(resp);
+        this.cleanServiceFields();
+      });  
+  
+      }, (err) => {
+        this.modal.alert(err);
+      })    
+    } else {
+      this.modal.alert(this.validateName(name).msg);
+    }
   }
 
   docUpdated() {

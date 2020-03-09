@@ -83,27 +83,50 @@ export class MaintenanceComponent implements OnInit {
     });  
   }
 
-  updateMaintenance() {
-    if (!this.settingsModel.maintenance.name) {
-      this.modal.alert("You can't update service with no name");
-      return;
-    }
-    this.modal.confirm(
-      `Confirm saving of updates of "${this.settingsModel.maintenance.name}" script`,
-      "Do you really want to save changes of script?<br>If yes, please input template name.",
-      (value) => {
-        if(value !== this.settingsModel.maintenance.name )
-          return 'Template name is incorrect!';
-      },
-      'Yes, please save!',
-      'Don`t save'
-  ).then((res) => {
-    this.api.update(`maintenances/${this.settingsModel.maintenance.id}`, this.settingsModel.maintenance).then((resp) => {
-    });
+  validateName(name) {
+    var res = {status:true, msg:""};
 
-    }, (err) => {
-      this.modal.alert(err);
-    })
+    if (name) {
+        const regex = new RegExp('^[0-9a-zA-Z_-]+$', 'gm');
+  
+        if (!regex.test(name)) {
+            res.status = false;
+            res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+        } else {
+            res.status = true;
+            res.msg = `Let's go`;  
+        }
+    } else {
+      res.status = false;
+      res.msg = `Dependancy name can't be empty`;
+    }
+
+    return res;
+  }
+
+  updateMaintenance() {
+    var name = this.settingsModel.maintenance.name;
+
+    if (this.validateName(name).status) {
+      this.modal.confirm(
+        `Confirm saving of updates of "${name}" script`,
+        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        (value) => {
+          if(value !== name )
+            return 'Template name is incorrect!';
+        },
+        'Yes, please save!',
+        'Don`t save'
+    ).then((res) => {
+      this.api.update(`maintenances/${this.settingsModel.maintenance.id}`, this.settingsModel.maintenance).then((resp) => {
+      });
+  
+      }, (err) => {
+        this.modal.alert(err);
+      })
+    } else {
+      this.modal.alert(this.validateName(name).msg);
+    }
   }
 
   deleteMaintenance() {
@@ -130,28 +153,30 @@ export class MaintenanceComponent implements OnInit {
   }
 
   createMaintenance() {
-    if (!this.settingsModel.maintenance.name) {
-      this.modal.alert("You can't create service with no name");
-      return;
-    }
-    this.modal.confirm(
-      `Confirm creating of "${this.settingsModel.maintenance.name}" script`,
-      "Do you really want to save changes of script?<br>If yes, please input template name.",
-      (value) => {
-        if(value !== this.settingsModel.maintenance.name )
-          return 'Template name is incorrect!';
-      },
-      'Yes, please save!',
-      'Don`t save'
-  ).then((res) => {
-    this.api.create(`maintenances`, this.settingsModel.maintenance).then((resp) => {
-      this.updateServiceFields(resp);
-      this.cleanMaintenanceFields();
-    });  
+    var name = this.settingsModel.maintenance.name;
 
-    }, (err) => {
-      this.modal.alert(err);
-    })
+    if (this.validateName(name).status) {
+      this.modal.confirm(
+        `Confirm creating of "${name}" script`,
+        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        (value) => {
+          if(value !== name )
+            return 'Template name is incorrect!';
+        },
+        'Yes, please save!',
+        'Don`t save'
+    ).then((res) => {
+      this.api.create(`maintenances`, this.settingsModel.maintenance).then((resp) => {
+        this.updateServiceFields(resp);
+        this.cleanMaintenanceFields();
+      });  
+  
+      }, (err) => {
+        this.modal.alert(err);
+      })
+    } else {
+      this.modal.alert(this.validateName(name).msg);
+    }
   }
 
   preview() {

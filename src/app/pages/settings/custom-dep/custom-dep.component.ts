@@ -72,25 +72,54 @@ export class CustomDepComponent implements OnInit {
         this.initUser();
     }
 
+    validateName(name) {
+        var res = {status:true, msg:""};
+
+        if (name) {
+            const regex = new RegExp('^[0-9a-zA-Z_-]+$', 'gm');
+      
+            if (!regex.test(name)) {
+                res.status = false;
+                res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+            } else {
+                res.status = true;
+                res.msg = `Let's go`;  
+            }
+        } else {
+            res.status = false;
+            res.msg = `Dependancy name can't be empty`;
+    }
+
+        return res;
+    }
+
     update() {
-        this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
-            this.updateList();
-        });  
+        var name = this.settingsModel.dependency.name;
+        
+        if (this.validateName(name).status) {
+            this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
+                this.cleanFields();
+                this.updateList();
+            });  
+        } else {
+            this.modal.alert(this.validateName(name).msg);
+        }
     }
 
     delete() {
         this.api.remove(`custom-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
+            this.cleanFields();
             this.updateList();
         });  
     }
 
     createNew() {
-        if (this.settingsModel.dependency) {
+        if (this.validateName(this.settingsModel.dependency.name).status) {
             this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
                 this.updateList();
             });      
         } else {
-            this.modal.alert("Something went wrong");
+            this.modal.alert(this.validateName(this.settingsModel.dependency.name).msg);
         }
     }
 
@@ -98,13 +127,6 @@ export class CustomDepComponent implements OnInit {
         if (this.settingsModel.dependency.name) {
             this.isNew = false;
         } else {
-            this.settingsModel.dependency = {
-                name:"",
-                users: [],
-                label:"",
-                install_script:"",
-            };
-            this.isNew = true;
             this.initUser();
         }
     }

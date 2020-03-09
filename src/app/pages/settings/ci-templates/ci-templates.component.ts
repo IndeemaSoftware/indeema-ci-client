@@ -82,27 +82,50 @@ export class CITemplatesComponent implements OnInit {
     });  
   }
 
-  updateTemplate() {
-    if (!this.settingsModel.template.name) {
-      this.modal.alert("You can't update service with no name");
-      return;
-    }
-    this.modal.confirm(
-      `Confirm saving of updates of "${this.settingsModel.template.name}" script`,
-      "Do you really want to save changes of script?<br>If yes, please input template name.",
-      (value) => {
-        if(value !== this.settingsModel.template.name )
-          return 'Template name is incorrect!';
-      },
-      'Yes, please save!',
-      'Don`t save'
-  ).then((res) => {
-    this.api.update(`ci-templates/${this.settingsModel.template.id}`, this.settingsModel.template).then((resp) => {
-    });
+  validateName(name) {
+    var res = {status:true, msg:""};
 
-    }, (err) => {
-      this.modal.alert(err);
-    })
+    if (name) {
+        const regex = new RegExp('^[0-9a-zA-Z_-]+$', 'gm');
+  
+        if (!regex.test(name)) {
+            res.status = false;
+            res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+        } else {
+            res.status = true;
+            res.msg = `Let's go`;  
+        }
+    } else {
+      res.status = false;
+      res.msg = `Dependancy name can't be empty`;
+  }
+
+  return res;
+}
+
+  updateTemplate() {
+    var name = this.settingsModel.template.name;
+
+    if (this.validateName(name).status) {
+      this.modal.confirm(
+        `Confirm saving of updates of "${name}" script`,
+        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        (value) => {
+          if(value !== name )
+            return 'Template name is incorrect!';
+        },
+        'Yes, please save!',
+        'Don`t save'
+    ).then((res) => {
+      this.api.update(`ci-templates/${this.settingsModel.template.id}`, this.settingsModel.template).then((resp) => {
+      });
+  
+      }, (err) => {
+        this.modal.alert(err);
+      })
+    } else {
+      this.modal.alert(this.validateName(name).msg);
+    }
   }
 
   deleteTemplate() {
@@ -129,28 +152,30 @@ export class CITemplatesComponent implements OnInit {
   }
 
   createTemaplte() {
-    if (!this.settingsModel.template.name) {
-      this.modal.alert("You can't create service with no name");
-      return;
-    }
-    this.modal.confirm(
-      `Confirm creating of "${this.settingsModel.template.name}" script`,
-      "Do you really want to save changes of script?<br>If yes, please input template name.",
-      (value) => {
-        if(value !== this.settingsModel.template.name )
-          return 'Template name is incorrect!';
-      },
-      'Yes, please save!',
-      'Don`t save'
-  ).then((res) => {
-    this.api.create(`ci-templates`, this.settingsModel.template).then((resp) => {
-      this.updateServiceFields(resp);
-      this.cleanTemplateFields();
-    });  
+    var name = this.settingsModel.template.name;
 
-    }, (err) => {
-      this.modal.alert(err);
-    })
+    if (this.validateName(name).status) {
+      this.modal.confirm(
+        `Confirm creating of "${name}" script`,
+        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        (value) => {
+          if(value !== name )
+            return 'Template name is incorrect!';
+        },
+        'Yes, please save!',
+        'Don`t save'
+    ).then((res) => {
+      this.api.create(`ci-templates`, this.settingsModel.template).then((resp) => {
+        this.updateServiceFields(resp);
+        this.cleanTemplateFields();
+      });  
+  
+      }, (err) => {
+        this.modal.alert(err);
+      })
+    } else {
+      this.modal.alert(this.validateName(name).msg);
+    }
   }
 
   preview() {

@@ -68,10 +68,37 @@ export class ServerDepComponent implements OnInit {
         this.initUser();
     }
 
+    validateName(name) {
+        var res = {status:true, msg:""};
+
+        if (name) {
+            const regex = new RegExp('^[0-9a-zA-Z_-]+$', 'gm');
+      
+            if (!regex.test(name)) {
+                res.status = false;
+                res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+            } else {
+                res.status = true;
+                res.msg = `Let's go`;  
+            }
+        } else {
+            res.status = false;
+            res.msg = `Dependancy name can't be empty`;
+    }
+
+        return res;
+    }
+    
     update() {
-        this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
-            this.updateList();
-        });  
+        var name = this.settingsModel.dependency.package;
+        if (this.validateName(name).status) {
+            this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
+                this.updateList();
+            });  
+    
+        } else {
+            this.modal.alert(this.validateName(name).msg);
+        }
     }
 
     delete() {
@@ -81,12 +108,13 @@ export class ServerDepComponent implements OnInit {
     }
 
     createNew() {
-        if (this.settingsModel.dependency) {
+        var name = this.settingsModel.dependency.package;
+        if (this.validateName(name).status) {
             this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
                 this.updateList();
             });      
         } else {
-            this.modal.alert("Something went wrong");
+            this.modal.alert(this.validateName(name).msg);
         }
     }
 
