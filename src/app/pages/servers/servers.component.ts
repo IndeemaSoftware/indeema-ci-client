@@ -124,7 +124,6 @@ export class ServersComponent implements OnInit {
   }
 
   deleteServer(server) {
-    console.log(server.server_status);
     if ( server.server_status !== 'cleanup_success' 
     && server.server_status !== 'cleanup_failed' 
     && server.server_status !== 'failed'

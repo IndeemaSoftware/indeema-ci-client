@@ -68,7 +68,6 @@ export class MaintenanceComponent implements OnInit {
 
   updateMaintenanceList() {
     this.api.get(`maintenances`).then((resp) => {
-      console.log(resp);
       this.settingsModel.maintenance_list = resp;
     });  
   }

@@ -88,7 +88,6 @@ export class ServicesComponent implements OnInit {
 
   updateServiceList() {
     this.api.get(`services`).then((resp) => {
-      console.log(resp);
       this.settingsModel.service_list = resp;
     });  
   }
@@ -173,7 +172,6 @@ export class ServicesComponent implements OnInit {
   }
 
   docUpdated() {
-    console.log("docUpdated");
     this.settingsModel.jsonValidationMessage = "";
 
     try {

@@ -179,7 +179,6 @@ export class EditServerComponent implements OnInit {
   async createServer() {
     return new Promise((rs, rj) => {
       this.api.create(`server`, {}).then((server) => {
-        console.log(server);
         this.server = server;
         this.serverId = server.id;
         rs();
@@ -228,12 +227,9 @@ export class EditServerComponent implements OnInit {
         return;
       }
 
-      console.log(response);
-
       if (this.modelApi) {
         //Setup files id`s
         for (let file of response) {
-          console.log(file);
           if (this.modelApi.ssh_key && this.modelApi.ssh_key.name === file.name)
             this.modelApi.ssh_key = file.id;
         }
@@ -323,8 +319,6 @@ export class EditServerComponent implements OnInit {
         newModel.custom_dependencies.push(obj.value);
     }
 
-    console.log(model);
-    console.log(newModel);
     if(!newModel.ssh_key)
       delete newModel.ssh_key;
 
@@ -365,13 +359,11 @@ export class EditServerComponent implements OnInit {
       }
     }
 
-    console.log(this.isNew);
     if (this.isNew) {
       await this.createServer();
     }
 
     //Prepare model for api
-    console.log(this.serverModel);
     this.modelApi = this.prepareModel(this.serverModel);
 
     //Remove all files from queue
@@ -418,8 +410,6 @@ export class EditServerComponent implements OnInit {
     //Prepare files list
     const files = [];
     files.push(this.modelApi.ssh_key);
-    console.log(files);
-    console.log(this.modelApi.ssh_key);
 
     //Attach file
     this.uploader.addToQueue(files);

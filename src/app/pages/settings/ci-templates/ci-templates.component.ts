@@ -68,7 +68,6 @@ export class CITemplatesComponent implements OnInit {
 
   updateMaintenanceList() {
     this.api.get(`ci-templates`).then((resp) => {
-      console.log(resp);
       this.settingsModel.maintenance_list = resp;
     });  
   }

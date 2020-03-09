@@ -88,7 +88,6 @@ export class PlatformsComponent implements OnInit {
 
   updatePlatformList() {
     this.api.get(`platforms`).then((resp) => {
-      console.log(resp);
       this.settingsModel.platform_list = resp;
     });  
   }
@@ -173,7 +172,6 @@ export class PlatformsComponent implements OnInit {
   }
 
   docUpdated() {
-    console.log("docUpdated");
     this.settingsModel.jsonValidationMessage = "";
 
     try {

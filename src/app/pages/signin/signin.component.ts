@@ -37,7 +37,6 @@ export class SigninComponent implements OnInit {
       this.route.navigate(['/projects']);
     })
     .catch(e => {
-      console.log(e);
     });
   }
 
@@ -47,7 +46,6 @@ export class SigninComponent implements OnInit {
   }
 
   reset() {
-    console.log("reset");
     this.api.create(`/auth/forgot-password`,
     {
       email: `${this.credentials.identifier}`,
@@ -81,7 +79,6 @@ export class SigninComponent implements OnInit {
 
     //Try to auth
     this.auth.signin(this.credentials).then((user) => {
-      console.log(user);
       this.route.navigate(['/projects']);
     }, (err) => {
       console.log(err);

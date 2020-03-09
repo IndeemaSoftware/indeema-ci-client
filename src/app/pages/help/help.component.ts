@@ -29,7 +29,6 @@ export class HelpComponent implements OnInit {
     }
 
     createTicket() {
-        console.log("Create");
         let body = `<?xml version="1.0"?>\
         <ticket>\
           <issue>\
@@ -57,7 +56,6 @@ export class HelpComponent implements OnInit {
         // this.httpClient.post(`https://redmine.indeema.com/helpdesk/create_ticket.xml`, body, httpOptions);
         this.httpClient.post<any>('https://redmine.indeema.com/helpdesk/create_ticket.xml', body, httpOptions)
         .subscribe(data => {
-            console.log(data);
         })
     }
 

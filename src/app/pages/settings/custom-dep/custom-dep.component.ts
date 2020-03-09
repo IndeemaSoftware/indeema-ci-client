@@ -64,7 +64,6 @@ export class CustomDepComponent implements OnInit {
     createNew() {
         if (this.settingsModel.dependency) {
             this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
-                console.log(resp);
                 this.updateList();
             });      
         } else {

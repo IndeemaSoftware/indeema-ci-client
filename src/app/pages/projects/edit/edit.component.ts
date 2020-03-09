@@ -279,7 +279,6 @@ export class EditComponent implements OnInit {
       this.projectModel.apps[i].server = this.projectModel.apps[i].server.id;
 
       //init maintenances
-      console.log(this.projectModel.apps[i]);
       if (this.projectModel.apps[i].maintenance) {
         this.projectModel.apps[i].maintenance = this.projectModel.apps[i].maintenance.id;
       }
@@ -602,7 +601,6 @@ export class EditComponent implements OnInit {
 
     //Prepare model for api
     this.modelApi = this.prepareModel(this.projectModel);
-    console.log(this.modelApi);
 
     //Remove all files from queue
     this.uploader.queue = [];
