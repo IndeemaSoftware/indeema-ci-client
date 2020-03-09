@@ -17,8 +17,8 @@
     <div class="form-group">
       <textarea [(ngModel)]="settingsModel.template.yml_code" [(value)]="settingsModel.template.yml_code" class="form-control" id="script" name="script" rows="10"></textarea>
     </div>
-    <button (click)="updateTemplate()" id="green-button" *ngIf="!isNewemplate">Update</button>
-    <button (click)="createTemplate()" id="green-button" *ngIf="isNewemplate">Create</button>
-    <button (click)="deleteTemplate()" id="red-button" [disabled]="isNewemplate">Delete</button>
-    <button (click)="preview()" id="yellow-button" [disabled]="isNewemplate">Preview</button>
+    <button (click)="updateTemplate()" id="green-button" *ngIf="!isNewTemplate">Update</button>
+    <button (click)="createTemplate()" id="green-button" *ngIf="isNewTemplate">Create</button>
+    <button (click)="deleteTemplate()" id="red-button" [disabled]="isNewTemplate">Delete</button>
+    <button (click)="preview()" id="yellow-button" [disabled]="isNeweTemplate">Preview</button>
   </div>
