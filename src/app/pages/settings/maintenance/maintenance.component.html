@@ -19,6 +19,6 @@
     </div>
     <button (click)="updateMaintenance()" id="green-button" *ngIf="!isNewMaintenance">Update</button>
     <button (click)="createMaintenance()" id="green-button" *ngIf="isNewMaintenance">Create</button>
-    <button (click)="deleteMaintenance()" id="green-button" [disabled]="isNewMaintenance">Delete</button>
+    <button (click)="deleteMaintenance()" id="red-button" [disabled]="isNewMaintenance">Delete</button>
     <button (click)="preview()" id="yellow-button" [disabled]="isNewMaintenance">Preview</button>
   </div>

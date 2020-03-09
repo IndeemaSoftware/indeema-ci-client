@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
-import { ApiService } from '../../../services/api.service';
 import { Router } from '@angular/router';
+import { ApiService } from '../../../services/api.service';
 import { ModalService } from '../../../services/modal.service';
 
 @Component({
@@ -19,6 +19,7 @@ export class MaintenanceComponent implements OnInit {
   settingsModel: any = {
     maintenance: {
       name:"",
+      users: [],
       html_code: "",
       maintenance_list:[]
     } as any
@@ -28,13 +29,29 @@ export class MaintenanceComponent implements OnInit {
 
   constructor (
     private api: ApiService,
+    private auth: AuthService,
+    private route: Router,
     private modal: ModalService
   ) { 
   };
 
   ngOnInit() {
-    this.updateMaintenanceList();
+    this.auth.getUser().then((user) => {
+      this.initUser();
+      this.updateMaintenanceList();
+    }, (err) => {
+      this.route.navigate(['signin']);
+    });
   }
+
+  initUser() {
+    this.settingsModel.maintenance = {
+      name:"",
+      users: [this.auth.user.id],
+      html_code: "",
+      maintenance_list:[]
+    };
+}
 
   maintenanceSelected(maintenance) {
     if (maintenance) {
@@ -42,10 +59,7 @@ export class MaintenanceComponent implements OnInit {
       this.settingsModel.html_code = maintenance.html_code   
     } else {
       this.isNewMaintenance = true;
-      this.settingsModel.maintenance = {
-        name:"",
-        html_code:""
-      };
+      this.initUser();
       this.cleanMaintenanceFields();
     }
   }
@@ -59,10 +73,7 @@ export class MaintenanceComponent implements OnInit {
     this.isNewMaintenance = true;
     this.settingsModel.new_service_name = "";
     this.settingsModel.html_code = "";
-    this.settingsModel.maintenance = {
-      name:"",
-      html_code:""
-      };
+    this.initUser();
     this.updateMaintenanceList();
   }
 

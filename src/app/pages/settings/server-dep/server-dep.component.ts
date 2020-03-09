@@ -23,6 +23,7 @@ export class ServerDepComponent implements OnInit {
     settingsModel: any = {
         dependency: {
             name:"",
+            users: [],
             label:"",
             package:"",
             pre_install_script:"",
@@ -40,7 +41,21 @@ export class ServerDepComponent implements OnInit {
     ) { };
 
     ngOnInit() {
-        this.updateList();
+        this.auth.getUser().then((user) => {
+            this.initUser();
+            this.updateList();
+              }, (err) => {
+            this.route.navigate(['signin']);
+          });
+    }
+
+    initUser() {
+        this.settingsModel.maintenance = {
+            name:"",
+            users: [this.auth.user.id],
+            html_code: "",
+            maintenance_list:[]
+          };
     }
 
     updateList() {
@@ -50,7 +65,7 @@ export class ServerDepComponent implements OnInit {
     }
 
     cleanFields() {
-        this.settingsModel.dependency = this.newDependency;
+        this.initUser();
     }
 
     update() {
@@ -79,13 +94,7 @@ export class ServerDepComponent implements OnInit {
         if (this.settingsModel.dependency.name) {
             this.isNew = false;
         } else {
-            this.settingsModel.dependency = {
-                name:"",
-                label:"",
-                package:"",
-                pre_install_script:"",
-                post_install_script:""
-            };
+            this.initUser();
             this.isNew = true;
         }
     }

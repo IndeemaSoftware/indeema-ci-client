@@ -21,6 +21,7 @@ export class CustomDepComponent implements OnInit {
     settingsModel: any = {
         dependency: {
             name:"",
+            users: [],
             label:"",
             install_script:"",
         }
@@ -36,7 +37,23 @@ export class CustomDepComponent implements OnInit {
     ) { };
 
     ngOnInit() {
-        this.updateList();
+        this.auth.getUser().then((user) => {
+            this.initUser();
+            this.updateList();
+              }, (err) => {
+            this.route.navigate(['signin']);
+          });
+    }
+
+    initUser() {
+        this.settingsModel.dependency ={
+            dependency: {
+                name:"",
+                users: [this.auth.user.id],
+                label:"",
+                install_script:"",
+            }
+        };
     }
 
     updateList() {
@@ -46,7 +63,13 @@ export class CustomDepComponent implements OnInit {
     }
 
     cleanFields() {
-        this.settingsModel.dependency = this.newDependency;
+        this.settingsModel.dependency = {
+            name:"",
+            users: [],
+            label:"",
+            install_script:"",
+        };
+        this.initUser();
     }
 
     update() {
@@ -77,10 +100,12 @@ export class CustomDepComponent implements OnInit {
         } else {
             this.settingsModel.dependency = {
                 name:"",
+                users: [],
                 label:"",
-                install_script:""
+                install_script:"",
             };
             this.isNew = true;
+            this.initUser();
         }
     }
 }

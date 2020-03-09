@@ -1,7 +1,7 @@
 <div class="container">
-    <h3>Maintenance pages</h3>
+    <h3>Ci Templates</h3>
     <div class="form-group required">
-      <label for="maintenance">Maintenance page template</label>
+      <label for="maintenance">CI Template</label>
       <select (change)="maintenanceSelected(settingsModel.maintenance)" [(ngModel)]="settingsModel.maintenance" enabled class="form-control" name="maintenance" id="maintenance">
         <option [ngValue]="newMaintenance" (value)="newMaintenance">Create new</option>
         <optgroup label="_________"></optgroup>
@@ -11,7 +11,7 @@
       </select>
       </div>
       <div *ngIf="settingsModel.maintenance" class="form-group">
-        <label for="name">Maintenance page name</label>
+        <label for="name">Template page name</label>
         <input [(ngModel)]="settingsModel.maintenance.name" [(value)]="settingsModel.maintenance.name" class="form-control" id="new_maintenance_name" name="new_maintenance_name" placeholder="Please enter name for new maintenance page">
       </div>     
     <div class="form-group">
@@ -19,6 +19,6 @@
     </div>
     <button (click)="updateMaintenance()" id="green-button" *ngIf="!isNewMaintenance">Update</button>
     <button (click)="createMaintenance()" id="green-button" *ngIf="isNewMaintenance">Create</button>
-    <button (click)="deleteMaintenance()" id="green-button" [disabled]="isNewMaintenance">Delete</button>
+    <button (click)="deleteMaintenance()" id="red-button" [disabled]="isNewMaintenance">Delete</button>
     <button (click)="preview()" id="yellow-button" [disabled]="isNewMaintenance">Preview</button>
   </div>

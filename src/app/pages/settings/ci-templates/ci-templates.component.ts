@@ -28,13 +28,29 @@ export class CITemplatesComponent implements OnInit {
 
   constructor (
     private api: ApiService,
-    private modal: ModalService
+    private modal: ModalService,
+    private auth: AuthService,
+    private route: Router,
   ) { 
   };
 
   ngOnInit() {
-    this.updateMaintenanceList();
+    this.auth.getUser().then((user) => {
+      this.initUser();
+      this.updateTemplatesList();
+    }, (err) => {
+      this.route.navigate(['signin']);
+    });
   }
+
+  initUser() {
+    this.settingsModel.maintenance = {
+      name:"",
+      users: [this.auth.user.id],
+      yml_code: "",
+      maintenance_list:[]
+    };
+}
 
   maintenanceSelected(maintenance) {
     if (maintenance) {
@@ -42,31 +58,25 @@ export class CITemplatesComponent implements OnInit {
       this.settingsModel.yml_code = maintenance.yml_code   
     } else {
       this.isNewMaintenance = true;
-      this.settingsModel.maintenance = {
-        name:"",
-        yml_code:""
-      };
+      this.initUser();
       this.cleanMaintenanceFields();
     }
   }
 
   updateServiceFields(data) {
     this.settingsModel.maintenance = data;
-    this.updateMaintenanceList();
+    this.updateTemplatesList();
   }
 
   cleanMaintenanceFields() {
     this.isNewMaintenance = true;
     this.settingsModel.new_service_name = "";
     this.settingsModel.yml_code = "";
-    this.settingsModel.maintenance = {
-      name:"",
-      yml_code:""
-      };
-    this.updateMaintenanceList();
+    this.initUser();
+    this.updateTemplatesList();
   }
 
-  updateMaintenanceList() {
+  updateTemplatesList() {
     this.api.get(`ci-templates`).then((resp) => {
       this.settingsModel.maintenance_list = resp;
     });  

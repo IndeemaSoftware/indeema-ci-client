@@ -101,26 +101,30 @@ export class EditComponent implements OnInit {
 }
 
   ngOnInit() {
-    //Get project
-    if (!this.isNew) {
-      this.api.get(`/projects/${this.projectId}`)
-      .then(data => {
-        this.project = data;
+    this.auth.getUser().then((user) => {
+      //Get project
+      if (!this.isNew) {
+        this.api.get(`/projects/${this.projectId}`)
+        .then(data => {
+          this.project = data;
 
+          this.setupProject();
+        }, err => {
+          this.modal.alert(err);
+          this.route.navigate([`projects`]);
+        });
+      } else {
         this.setupProject();
-      }, err => {
-        this.modal.alert(err);
-        this.route.navigate([`projects`]);
-      });
-    } else {
-      this.setupProject();
-    }
+      }
 
-    this.getTemplates();
-    this.projectModel.users.push(this.auth.user.id);
-    this.getServers();
-    this.updateServiceList();
-    this.updateMaintenanceList();
+      this.getTemplates();
+      this.projectModel.users.push(this.auth.user.id);
+      this.getServers();
+      this.updateServiceList();
+      this.updateMaintenanceList();
+    }, (err) => {
+      this.route.navigate(['signin']);
+    });
   }
 
 
