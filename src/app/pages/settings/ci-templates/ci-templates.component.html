@@ -20,5 +20,5 @@
     <button (click)="updateTemplate()" id="green-button" *ngIf="!isNewTemplate">Update</button>
     <button (click)="createTemplate()" id="green-button" *ngIf="isNewTemplate">Create</button>
     <button (click)="deleteTemplate()" id="red-button" [disabled]="isNewTemplate">Delete</button>
-    <button (click)="preview()" id="yellow-button" [disabled]="isNeweTemplate">Preview</button>
+    <button (click)="preview()" id="yellow-button" [disabled]="isNewTemplate">Preview</button>
   </div>
