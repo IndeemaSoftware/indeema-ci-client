@@ -31,6 +31,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './pages/home/home.component';
 import { SigninComponent } from './pages/signin/signin.component';
+import { ForgotComponent } from './pages/signin/forgot/forgot.component';
 import { HeaderComponent } from './partials/header/header.component';
 import { FooterComponent } from './partials/footer/footer.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
@@ -54,6 +55,7 @@ import { HelpComponent } from './pages/help/help.component';
     AppComponent,
     HomeComponent,
     SigninComponent,
+    ForgotComponent,
     HeaderComponent,
     FooterComponent,
     ProjectsComponent,

@@ -1,0 +1,25 @@
+
+<div class="logo">
+  <div>
+    <img src="/assets/logo.svg" id="logo">
+  </div>
+</div>
+<div class="login" style="background-color: white;">
+  <div class="reset_widget">
+    <label for="code">Unique code</label>
+    <input [(ngModel)]="credentials.identifier" type="email" class="input-field" name="email" placeholder="Enter unique code you received by email">
+    <div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input [(ngModel)]="credentials.password" type="password" class="input-field" name="password" placeholder="Enter password">
+      <label for="password">Repeat</label>
+      <input [(ngModel)]="credentials.password_rep" type="password" class="input-field" name="password_rep" placeholder="Enter password">
+    </div>  
+      <button (click)="signinPressed()" type="button" class="forgot-button" style="color: #4DB05B;font-size: 13px;">Back to sign in</button>
+    </div>
+    <div>
+      <button (click)="reset()" class="login-button" style="color: #FFFFFF;font-size: 16px;">Reset</button>
+    </div>
+  </div>
+</div>
+

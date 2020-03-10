@@ -1,7 +1,7 @@
 
 <div class="logo">
   <div>
-    <img src="src/assets/logo.svg" id="logo">
+    <img src="/assets/logo.svg" id="logo">
   </div>
 </div>
 <div class="login" style="background-color: white;">
@@ -15,29 +15,69 @@
     </div>
     <div class="form-group">
       <label for="password">Password</label>
-        <input [(ngModel)]="credentials.password" type="password" class="input-field" name="password" placeholder="Enter password">
-      </div>
-      <div *ngIf="errors.required" class="alert alert-danger">
-        Username and password is required
-      </div>
-      <div *ngIf="errors.incorrect" class="alert alert-danger">
-        Username or password incorrect.
-      </div>
-      <div>
-        <input type="checkbox" class="checkbox" style="color: #575962;font-size: 16px;">Remember me
-        <button (click)="forgotPressed()" type="button" class="forgot-button" style="color: #4DB05B;font-size: 13px;">Forgot password?</button>
-      </div>
-      <button type="button" class="forgot-button" style="color: #4DB05B;font-size: 13px;">Create account</button>
-      <div>
-        <button (click)="signin()" class="login-button" style="color: #FFFFFF;font-size: 16px;">Sign in</button>
-      </div>
+      <input [(ngModel)]="credentials.password" type="password" class="input-field" name="password" placeholder="Enter password">
     </div>
-    <div *ngIf="isForgot" class="reset_widget">
-      <label for="email">Email address or username</label>
-      <input [(ngModel)]="credentials.identifier" type="email" class="input-field" name="email" placeholder="Enter email">
-      <div>
-        <button (click)="reset()" class="login-button" style="color: #FFFFFF;font-size: 16px;">Reset</button>
-      </div>
+    <div *ngIf="errors.required" class="alert alert-danger">
+      Username and password is required
+    </div>
+    <div *ngIf="errors.incorrect" class="alert alert-danger">
+      Username or password incorrect.
+    </div>
+    <div>
+      <input type="checkbox" class="checkbox" style="color: #575962;font-size: 16px;">Remember me
+      <button (click)="forgotPressed()" type="button" class="forgot-button" style="color: #4DB05B;font-size: 13px;">Forgot password?</button>
+    </div>
+    <div>
+      <button (click)="createPressed()" type="button" class="forgot-button" style="color: #4DB05B;font-size: 13px;">Create account</button>
+    </div>
+    <div>
+      <button (click)="signin()" class="login-button" style="color: #FFFFFF;font-size: 16px;">Sign in</button>
     </div>
   </div>
+  <div *ngIf="isRegister" class="login_widget">
+    <h3>
+      Sign up
+    </h3>
+    <div class="form-group">
+      <label for="username">Email</label>
+      <input [(ngModel)]="credentials.identifier" type="email" class="input-field" name="username" placeholder="Enter your username or email">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input [(ngModel)]="credentials.password" type="password" class="input-field" name="password" placeholder="Enter password">
+      <label for="password">Repeat</label>
+      <input [(ngModel)]="credentials.password_rep" type="password" class="input-field" name="password_rep" placeholder="Enter password">
+    </div>
+    <div *ngIf="errors.required" class="alert alert-danger">
+      Username and password is required
+    </div>
+    <div *ngIf="errors.incorrect" class="alert alert-danger">
+      Username or password incorrect.
+    </div>
+    <div *ngIf="errors.pass_not_match" class="alert alert-danger">
+      Password doesn't match.
+    </div>
+    <div>
+      <input type="checkbox" class="checkbox" style="color: #575962;font-size: 16px;">Remember me
+      <button (click)="forgotPressed()" type="button" class="forgot-button" style="color: #4DB05B;font-size: 13px;">Forgot password?</button>
+    </div>
+    <div>
+      <button (click)="signinPressed()" type="button" class="forgot-button" style="color: #4DB05B;font-size: 13px;">Already have account</button>
+    </div>
+    <div>
+      <button (click)="signup()" class="login-button" style="color: #FFFFFF;font-size: 16px;">Sign up</button>
+    </div>
+  </div>
+  <div *ngIf="isForgot" class="reset_widget">
+    <label for="email">Email address or username</label>
+    <input [(ngModel)]="credentials.identifier" type="email" class="input-field" name="email" placeholder="Enter email">
+    <div>
+      <button (click)="signinPressed()" type="button" class="forgot-button" style="color: #4DB05B;font-size: 13px;">Back to sign in</button>
+    </div>
+    <div>
+      <p *ngIf="isLoading" class="loader text-center"></p>
+      <button *ngIf="!isLoading"(click)="reset()" class="login-button" style="color: #FFFFFF;font-size: 16px;">Reset</button>
+    </div>
+  </div>
+</div>
 
