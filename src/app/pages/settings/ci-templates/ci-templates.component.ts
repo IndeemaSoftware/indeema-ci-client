@@ -19,6 +19,7 @@ export class CITemplatesComponent implements OnInit {
   settingsModel: any = {
     template: {
       name:"",
+      users: [],
       yml_code: "",
       template_list:[]
     } as any
@@ -151,7 +152,7 @@ export class CITemplatesComponent implements OnInit {
     })
   }
 
-  createTemaplte() {
+  createTemplate() {
     var name = this.settingsModel.template.name;
 
     if (this.validateName(name).status) {
