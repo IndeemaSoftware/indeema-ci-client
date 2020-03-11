@@ -48,6 +48,6 @@ export class SettingsComponent implements OnInit {
     }
   
     // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(page).style.display = "block";
+    document.getElementById(page).style.display = "block"; 
   }
 }

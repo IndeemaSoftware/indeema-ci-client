@@ -36,13 +36,15 @@ export class MaintenanceComponent implements OnInit {
   };
 
   ngOnInit() {
+  }
+
+  selected() {
     this.auth.getUser().then((user) => {
       this.initUser();
       this.updateMaintenanceList();
     }, (err) => {
       this.route.navigate(['signin']);
-    });
-  }
+    });  }
 
   initUser() {
     this.settingsModel.maintenance = {

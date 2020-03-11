@@ -43,6 +43,9 @@ export class PlatformsComponent implements OnInit {
   };
 
   ngOnInit() {
+  }
+
+  selected() {
     this.updatePlatformList();
   }
 

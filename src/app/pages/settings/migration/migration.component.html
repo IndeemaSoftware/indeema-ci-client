@@ -1,0 +1,6 @@
+<div class="container">
+    <h3>Migration pages</h3>
+    <input (change)="addFile($event)" type="file" class="form-control" name="projectFile.name" placeholder="Upload SSH pem key">
+  <button (click)="import()" id="green-button" [disabled]="!projectFile">Import</button>
+  <button (click)="export()" id="green-button">Export</button>
+</div>

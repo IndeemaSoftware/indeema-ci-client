@@ -3,38 +3,44 @@
   <div class="row" style="background-color:white;margin-top:20pt; box-shadow: 0pt 1pt 15pt #45414E14;margin-bottom: 50pt;">
     <div class="col-sm-12 col-md-12 col-lg-12"  style="margin: 10pt 10pt 10pt 10pt">
       <div class="tab">
-        <button class="tablinks" (click)="switchSetting('Maintenance')">    Maintenance pages</button>
-        <button class="tablinks" (click)="switchSetting('CI')">             CI Templates</button>
-        <button class="tablinks" (click)="switchSetting('Server-Dep')">     Server Dependencies</button>
-        <button class="tablinks" (click)="switchSetting('Custom-Dep')">     Custom Dependencies</button>
-        <button class="tablinks" (click)="switchSetting('Platforms')">      Platforms</button>
-        <button class="tablinks" (click)="switchSetting('Services')">       Services</button>
+        <button class="tablinks" (click)="maintenance.selected()" (click)="switchSetting('Maintenance')">    Maintenance pages</button>
+        <button class="tablinks" (click)="templates.selected()"   (click)="switchSetting('CI')">             CI Templates</button>
+        <button class="tablinks" (click)="serverDep.selected()"   (click)="switchSetting('Server-Dep')">     Server Dependencies</button>
+        <button class="tablinks" (click)="customDep.selected()"   (click)="switchSetting('Custom-Dep')">     Custom Dependencies</button>
+        <button class="tablinks" (click)="platforms.selected()"   (click)="switchSetting('Platforms')">      Platforms</button>
+        <button class="tablinks" (click)="services.selected()"    (click)="switchSetting('Services')">       Services</button>
+        <button class="tablinks" (click)="services.selected()"    (click)="switchSetting('Migration')">      Migration</button>
         <span style="color:lightgray">App version 0.9.0</span>
       </div>
   
       <div id="Maintenance" class="tabcontent">
-        <maintenance></maintenance>
+        <maintenance #maintenance></maintenance>
       </div>
 
       <div id="CI" class="tabcontent">
-        <ci-templates></ci-templates>
+        <ci-templates #templates></ci-templates>
       </div>
   
       <div id="Server-Dep" class="tabcontent">
-        <server-dep></server-dep>
+        <server-dep #serverDep></server-dep>
       </div>
   
       <div id="Custom-Dep" class="tabcontent">
-        <custom-dep></custom-dep>
+        <custom-dep #customDep></custom-dep>
       </div>
   
       <div id="Platforms" class="tabcontent">
-        <platforms></platforms>
+        <platforms #platforms></platforms>
       </div>
   
       <div id="Services" class="tabcontent">
-        <services></services>
+        <services #services></services>
       </div>
+
+      <div id="Migration" class="tabcontent">
+        <migration></migration>
+      </div>
+
     </div>
   </div>
 </div>

@@ -41,16 +41,19 @@ export class ServerDepComponent implements OnInit {
     ) { };
 
     ngOnInit() {
+    }
+
+    selected() {
         this.auth.getUser().then((user) => {
             this.initUser();
             this.updateList();
               }, (err) => {
             this.route.navigate(['signin']);
-          });
+        });
     }
 
     initUser() {
-        this.settingsModel.maintenance = {
+        this.settingsModel.dependency = {
             name:"",
             users: [this.auth.user.id],
             html_code: "",
@@ -88,7 +91,7 @@ export class ServerDepComponent implements OnInit {
 
         return res;
     }
-    
+
     update() {
         var name = this.settingsModel.dependency.package;
         if (this.validateName(name).status) {
@@ -102,9 +105,27 @@ export class ServerDepComponent implements OnInit {
     }
 
     delete() {
-        this.api.remove(`server-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
-            this.updateList();
-        });  
+        if (!this.settingsModel.dependency.name) {
+            this.modal.alert("You can't delete service with no name");
+            return;
+          }
+          this.modal.confirm(
+            `Confirm deletion of "${this.settingsModel.dependency.name}" template`,
+            "Do you really want to delete this template?<br>If yes, please input template name.",
+            (value) => {
+              if(value !== this.settingsModel.dependency.name)
+                return 'Template name is incorrect!';
+            },
+            'Yes, please remove!',
+            'Don`t remove'
+        ).then((res) => {
+            this.api.remove(`server-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
+                this.updateList();
+                this.cleanFields();
+            });  
+        }, (err) => {
+            this.modal.alert(err);
+        })
     }
 
     createNew() {

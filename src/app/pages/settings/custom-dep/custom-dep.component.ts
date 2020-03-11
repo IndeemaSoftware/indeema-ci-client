@@ -37,6 +37,9 @@ export class CustomDepComponent implements OnInit {
     ) { };
 
     ngOnInit() {
+    }
+
+    selected() {
         this.auth.getUser().then((user) => {
             this.initUser();
             this.updateList();
@@ -95,7 +98,7 @@ export class CustomDepComponent implements OnInit {
 
     update() {
         var name = this.settingsModel.dependency.name;
-        
+
         if (this.validateName(name).status) {
             this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
                 this.cleanFields();
@@ -107,10 +110,27 @@ export class CustomDepComponent implements OnInit {
     }
 
     delete() {
-        this.api.remove(`custom-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
-            this.cleanFields();
-            this.updateList();
-        });  
+        if (!this.settingsModel.dependency.name) {
+            this.modal.alert("You can't delete service with no name");
+            return;
+          }
+          this.modal.confirm(
+            `Confirm deletion of "${this.settingsModel.dependency.name}" template`,
+            "Do you really want to delete this template?<br>If yes, please input template name.",
+            (value) => {
+              if(value !== this.settingsModel.dependency.name)
+                return 'Template name is incorrect!';
+            },
+            'Yes, please remove!',
+            'Don`t remove'
+        ).then((res) => {
+            this.api.remove(`custom-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
+                this.cleanFields();
+                this.updateList();
+            });  
+              }, (err) => {
+            this.modal.alert(err);
+        })
     }
 
     createNew() {

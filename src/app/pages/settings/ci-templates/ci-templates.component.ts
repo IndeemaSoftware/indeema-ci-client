@@ -36,6 +36,9 @@ export class CITemplatesComponent implements OnInit {
   };
 
   ngOnInit() {
+  }
+
+  selected() {
     this.auth.getUser().then((user) => {
       this.initUser();
       this.updateTemplatesList();
@@ -51,7 +54,7 @@ export class CITemplatesComponent implements OnInit {
       yml_code: "",
       template_list:[]
     };
-}
+  }
 
   templateSelected(template) {
     if (template) {

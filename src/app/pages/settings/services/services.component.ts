@@ -43,6 +43,9 @@ export class ServicesComponent implements OnInit {
   };
 
   ngOnInit() {
+  }
+
+  selected() {
     this.updateServiceList();
   }
 

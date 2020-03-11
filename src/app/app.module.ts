@@ -47,6 +47,7 @@ import { CustomDepComponent } from './pages/settings/custom-dep/custom-dep.compo
 import { PlatformsComponent } from './pages/settings/platforms/platforms.component';
 import { ServicesComponent } from './pages/settings/services/services.component';
 import { MaintenanceComponent } from './pages/settings/maintenance/maintenance.component';
+import { MigrationComponent } from './pages/settings/migration/migration.component';
 import { MaintenancePreviewComponent } from './pages/settings/maintenance/maintenance-preview.component';
 import { HelpComponent } from './pages/help/help.component';
 
@@ -71,6 +72,7 @@ import { HelpComponent } from './pages/help/help.component';
     CITemplatesComponent,
     ServicesComponent,
     MaintenanceComponent,
+    MigrationComponent,
     MaintenancePreviewComponent,
     HelpComponent
   ],
