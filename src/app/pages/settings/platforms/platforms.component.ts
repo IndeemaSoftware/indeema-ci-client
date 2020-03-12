@@ -38,7 +38,8 @@ export class PlatformsComponent implements OnInit {
 
   constructor (
     private api: ApiService,
-    private modal: ModalService
+    private modal: ModalService,
+    private auth: AuthService,
   ) { 
   };
 
@@ -57,6 +58,7 @@ export class PlatformsComponent implements OnInit {
       this.isNewPlatform = true;
       this.settingsModel.platform = {
         platform_name:"",
+        users: [this.auth.user.id],
         variables: [{
           key: "",
           value: ""
@@ -79,6 +81,7 @@ export class PlatformsComponent implements OnInit {
     this.settingsModel.doc_string = "";
     this.settingsModel.platform = {
       platform_name:"",
+      users: [this.auth.user.id],
       variables: [{
         key: "",
         value: ""
@@ -96,7 +99,7 @@ export class PlatformsComponent implements OnInit {
   }
 
   saveDocJson() {
-    if (this.settingsModel.doc_string.length) {
+    if (this.settingsModel.doc_string && this.settingsModel.doc_string.length) {
       this.settingsModel.platform.doc = JSON.parse(this.settingsModel.doc_string);
     }
   }

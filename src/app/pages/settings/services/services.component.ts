@@ -38,7 +38,8 @@ export class ServicesComponent implements OnInit {
 
   constructor (
     private api: ApiService,
-    private modal: ModalService
+    private modal: ModalService,
+    private auth: AuthService,
   ) { 
   };
 
@@ -57,6 +58,7 @@ export class ServicesComponent implements OnInit {
       this.isNewService = true;
       this.settingsModel.service = {
         service_name:"",
+        users: [this.auth.user.id],
         variables: [{
           key: "",
           value: ""
@@ -79,6 +81,7 @@ export class ServicesComponent implements OnInit {
     this.settingsModel.doc_string = "";
     this.settingsModel.service = {
       service_name:"",
+      users: [this.auth.user.id],
       variables: [{
         key: "",
         value: ""

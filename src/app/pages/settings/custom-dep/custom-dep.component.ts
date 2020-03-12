@@ -50,12 +50,10 @@ export class CustomDepComponent implements OnInit {
 
     initUser() {
         this.settingsModel.dependency ={
-            dependency: {
-                name:"",
-                users: [this.auth.user.id],
-                label:"",
-                install_script:"",
-            }
+            name:"",
+            users: [this.auth.user.id],
+            label:"",
+            install_script:"",
         };
     }
 
@@ -66,12 +64,6 @@ export class CustomDepComponent implements OnInit {
     }
 
     cleanFields() {
-        this.settingsModel.dependency = {
-            name:"",
-            users: [],
-            label:"",
-            install_script:"",
-        };
         this.initUser();
     }
 
@@ -136,6 +128,7 @@ export class CustomDepComponent implements OnInit {
     createNew() {
         if (this.validateName(this.settingsModel.dependency.name).status) {
             this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
+                console.log(resp);
                 this.updateList();
             });      
         } else {
