@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../../services/auth.service';
-import {Router} from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { ModalService } from '../../../services/modal.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -13,7 +13,6 @@ import { ModalService } from '../../../services/modal.service';
 export class ForgotComponent implements OnInit {
   //Signin credentials
   credentials = {
-    identifier: null,
     password: null,
     password_rep: null
   }
@@ -21,6 +20,8 @@ export class ForgotComponent implements OnInit {
   isForgot = false;
   isRegister = false;
   isLogin = true;
+
+  code: "";
 
   //Errors
   errors = {
@@ -33,22 +34,26 @@ export class ForgotComponent implements OnInit {
       private auth: AuthService,
       private route: Router,
       private api: ApiService,
-      private modal: ModalService
-  ) { }
+      private modal: ModalService,
+      private activatedRoute: ActivatedRoute,
+  ) { 
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.code = params['code']
+    });   
+  }
 
   ngOnInit() {
   }
 
   reset() {
-    this.api.create(`/auth/reset-password`,
-    {
-      email: `${this.credentials.identifier}`,
-      // url: 'http://198.199.125.240:1338/admin/plugins/users-permissions/auth/reset-password'
-      url: 'http://localhost:1338/admin/plugins/users-permissions/auth/reset-password'
+    this.api.create(`/auth/reset-password`, {
+      password: this.credentials.password,
+      passwordConfirmation: this.credentials.password,
+      code:this.code
   })
   .then(response => {
     // Handle success.
-    console.log('Your user received an email',  response);
+    this.modal.alert("You password has been succesfully reset. Go to signin page and continue using the platform");
   })
   .catch(error => {
     // Handle error.

@@ -64,8 +64,8 @@ export class SigninComponent implements OnInit {
     this.isLoading = false;
 
     // Handle success.
-    this.route.navigate(['/forgot']);
-    console.log('Your user received an email');
+    this.route.navigate(['/signin']);
+    this.modal.alert("Please check your email with link to reset password");
   })
   .catch(error => {
     this.isLoading = false;

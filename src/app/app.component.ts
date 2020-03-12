@@ -17,11 +17,11 @@ export class AppComponent {
   }
 
   ngOnInit(){
-    this.auth.getUser().then((user) => {
-      //this.route.navigate(['/runner']);
-    }, (err) => {
-      this.route.navigate(['/signin']);
-    });
+    // this.auth.getUser().then((user) => {
+    //   this.route.navigate(['/projects']);
+    // }, (err) => {
+    //   this.route.navigate(['/signin']);
+    // });
   }
 
   scrollTop() {
