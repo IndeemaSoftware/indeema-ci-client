@@ -21,7 +21,7 @@
     </ul>
   </div>
   <div class="dropdown">
-    <button class="dropbtn">{{user.username}}</button>
+    <button *ngIf="user" class="dropbtn">{{user.username}}</button>
     <div class="dropdown-content">
       <button (click)="logout()" class="btn btn-outline-success my-2 my-sm-0" style="float:center">Logout</button>
     </div>
