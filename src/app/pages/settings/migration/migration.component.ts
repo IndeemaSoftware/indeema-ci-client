@@ -21,6 +21,8 @@ export class MigrationComponent implements OnInit {
   //file uploader 
   public uploader: MultipleFileUploaderService;
 
+  isLoading: boolean
+
   constructor (
     private api: ApiService,
     private auth: AuthService,
@@ -71,6 +73,8 @@ export class MigrationComponent implements OnInit {
         this.api.get(`migrations/import/${hash}`)
         .then((resp) => {
           console.log(resp);
+          this.isLoading = false;
+          this.modal.alert(`Set ${response[0].name} was succesfully imported`);
         }); 
       }
 
@@ -85,6 +89,7 @@ export class MigrationComponent implements OnInit {
     }
 
     this.uploader.onWhenAddingFileFailed = (item: any, filter: any, options: any) => {
+      this.isLoading = false;
       console.log("Failed to upload");
     }
 
@@ -103,12 +108,12 @@ export class MigrationComponent implements OnInit {
   }
 
   import () {
-    console.log("Import");
     const files = [];
     files.push(this.projectFile);
     this.uploader.queue = [];
     this.uploader.addToQueue(files);
 
+    this.isLoading = true;
     //Send files
     this.uploader.uploadAllFiles('files', 'POST');
   }

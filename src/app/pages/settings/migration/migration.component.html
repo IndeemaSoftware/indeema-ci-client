@@ -3,4 +3,5 @@
     <input (change)="addFile($event)" type="file" class="form-control" name="projectFile.name" placeholder="Upload SSH pem key">
   <button (click)="import()" id="green-button">Import</button>
   <button (click)="export()" id="green-button">Export</button>
+  <p *ngIf="isLoading" class="loader"></p>
 </div>
