@@ -102,7 +102,7 @@ export class MigrationComponent implements OnInit {
     }
   }
 
-  import (ev) {
+  import () {
     console.log("Import");
     const files = [];
     files.push(this.projectFile);
