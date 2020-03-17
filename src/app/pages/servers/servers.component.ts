@@ -30,10 +30,19 @@ export class ServersComponent implements OnInit {
 
   ngOnInit() {
     this.auth.getUser().then((user) => {
+      this.checkUser();
       this.getServers();
     }, (err) => {
       this.route.navigate(['signin']);
     });
+  }
+
+  checkUser() {
+    this.api.get(`platforms`).then((resp) => {
+      if (resp.length <= 0) {
+        this.modal.alert(`Hi ${this.auth.user.username} and Welcome to Indeema CI. To start setuping servers, first setup platform scripts. You can use set of ready scripts in Settings/Modules. Install sets with one click.`);
+      }
+    });  
   }
 
   getServers(){

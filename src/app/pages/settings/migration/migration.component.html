@@ -4,4 +4,33 @@
   <button (click)="import()" id="green-button">Import</button>
   <button (click)="export()" id="green-button">Export</button>
   <p *ngIf="isLoading" class="loader"></p>
+
+  <div *ngIf="modules" >
+    <table class="table editable-table">
+      <thead class="thead-transparent">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Version</th>
+          <th scope="col">Author</th>
+          <th scope="col">Description</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let module of modules">
+          <th scope="row">{{ module.name?module.name:"No module name" }}</th>
+          <th scope="row">{{ module.version?module.version:"No module version" }}</th>
+          <th scope="row"><p id="description">{{ module.author?module.author:"No module author" }}</p></th>
+          <th scope="row"><p id="description">{{ module.description?module.description:"No module description" }}</p></th>
+          <th scope="row" style="width:100pt;">
+            <p *ngIf="isInstalling" class="loader"></p>
+            <div *ngIf="auth.user">
+              <button *ngIf="!isInstalling && !auth.user.module.includes(module.identifier)" (click)="installModule(module)" id="green-button">Install</button>
+              <button *ngIf="!isInstalling && auth.user.module.includes(module.identifier)" (click)="uninstallModule(module)" id="red-button">Uninstall</button>
+            </div>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

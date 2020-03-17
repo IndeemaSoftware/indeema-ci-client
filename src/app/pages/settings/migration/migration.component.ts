@@ -17,11 +17,17 @@ export class MigrationComponent implements OnInit {
   projectFile: null;
   errorMsg: "";
   api_url = environment.API_URL;
+  modules: any = [{
+    name:"",
+    description:"",
+    version:""
+  }]
 
   //file uploader 
   public uploader: MultipleFileUploaderService;
 
   isLoading: boolean
+  isInstalling = false;
 
   constructor (
     private api: ApiService,
@@ -32,15 +38,30 @@ export class MigrationComponent implements OnInit {
   };
 
   ngOnInit() {
+  }
+
+  selected () {
+    this.isInstalling = false;
+    this.isLoading = true;
+    this.auth.user = null;//this is needed to get updated users after installing module
     this.auth.getUser().then((user) => {
+      console.log(this.auth.user);
       this.setupUpload();
+      this.updateModules();
+      this.isLoading = false;
     }, (err) => {
       this.route.navigate(['signin']);
+      this.isLoading = false;
     });
   }
 
+  updateModules() {
+    this.api.get(`migrations`).then((resp) => {
+      this.modules = resp;
+    });  
+  }
+
   setupUpload() {
-    console.log("setupUpload");
     const jwt = this.auth.getJWT();
 
     this.uploader = new MultipleFileUploaderService({
@@ -123,5 +144,27 @@ export class MigrationComponent implements OnInit {
     .then((resp) => {
       window.open(environment.API_URL + `/migrations/download/${this.auth.user.id}`,'_blank');
     }); 
+  }
+
+  installModule(module) {
+    if (module.module.length > 0) {
+      this.isInstalling = true;
+      this.api.get(`migrations/import/${module.module[0].hash}`)
+      .then((resp) => {
+        this.isInstalling = false;
+        this.selected();
+      });   
+    }
+  }
+
+  uninstallModule(module) {
+    if (module.module.length > 0) {
+      this.isInstalling = true;
+      this.api.get(`migrations/uninstall/${module.module[0].hash}`)
+      .then((resp) => {
+        this.isInstalling = false;
+        this.selected();
+      });   
+    }
   }
 }

@@ -30,10 +30,19 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit() {
     this.auth.getUser().then((user) => {
+      this.checkUser();
       this.getProjects();
     }, (err) => {
       this.route.navigate(['signin']);
     });
+  }
+
+  checkUser() {
+    this.api.get(`services`).then((resp) => {
+      if (resp.length <= 0) {
+        this.modal.alert(`Hi ${this.auth.user.username} and Welcome to Indeema CI. To start setuping projects, first setup service scripts. You can use set of ready scripts in Settings/Modules. Install sets with one click.`);
+      }
+    });  
   }
 
   getProjects(){
