@@ -119,7 +119,7 @@
                     <option [value]="null" disabled>Please choose server</option>
                     <ng-container *ngFor="let item of servers">
                       <option *ngIf="item.server_status !== success" [value]="item.id" disabled>{{ item.server_name }} ({{item.server_status}})</option>
-                      <option *ngIf="item.server_status === success" [value]="item.id">{{ item.server_name }} ({{item.server_status}})</option>
+                      <option *ngIf="item.server_status === success" [value]="item.id">{{ item.server_name }} ({{item.server_status}}) {{item.ssh_ip}}</option>
                     </ng-container>
                   </select>
                   <div  *ngIf="service && service.doc && service.doc.server">

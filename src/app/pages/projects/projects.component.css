@@ -271,3 +271,29 @@ button#delete-app  {
 button#delete-app:hover {
     opacity: 0.5;
 }
+
+button#link {
+    background-image:url('/assets/link_enabled.svg');
+    background-color: transparent;
+    background-size: 18pt 18pt;
+    width: 18pt;
+    height:18pt;
+    border: none;
+    opacity: 1;
+    margin: 10pt 10pt 10pt 10pt;
+}
+
+button#link:disabled {
+    background-image:url('/assets/link_disabled.svg');
+    background-color: transparent;
+    background-size: 18pt 18pt;
+    width: 18pt;
+    height:18pt;
+    border: none;
+    opacity: 1;
+    margin: 10pt 10pt 10pt 10pt;
+}
+
+button#link:hover {
+    opacity: 0.5;
+}

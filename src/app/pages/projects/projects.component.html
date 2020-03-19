@@ -66,6 +66,7 @@
                       <button (click)="toConsole(project, app)" type="button" id="console" title="Open terminal"></button>
                       <button (click)="cleanupProject(project, app)" [ngClass]="{'disabled': app.app_status === 'cleanup' || app.app_status === 'cleanup_success'}" type="button" id="cleanup" title="Run service cleanup script"></button>
                       <button (click)="deleteProject(project, app)" [ngClass]="{'disabled': app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'}" type="button" id="delete-app" title="Delete application from DB"></button>
+                      <button (click)="preview(project, app)" [disabled]="app.app_status !== 'success' || (!app.domain_name || !app.app_port)" type="button" id="link" title="Visit page"></button>
                     </div>
                   </td>
                 </tr>

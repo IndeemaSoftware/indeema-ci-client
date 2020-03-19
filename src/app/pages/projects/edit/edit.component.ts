@@ -240,11 +240,8 @@ export class EditComponent implements OnInit {
         if (app.server === s.id) {
           this.server = {};
           this.server = s;
-          console.log(this.server.ports);
-          console.log(this.app_port);
 
           if (this.server.ports && !this.server.ports.includes(this.app_port)) {
-            console.log("123");
             this.missing_port = true;
           } else {
             this.missing_port = false;

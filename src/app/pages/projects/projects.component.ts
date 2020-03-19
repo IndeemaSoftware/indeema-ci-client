@@ -197,4 +197,12 @@ export class ProjectsComponent implements OnInit {
     return isNeed;
   }
 
+  preview(project, app) {
+    if (app.isSecure) {
+      window.open(`https://${app.domain_name}:${app.app_port}`,'_blank');
+    } else {
+      window.open(`http://${app.domain_name}:${app.app_port}`,'_blank');
+    }
+  }
+
 }
