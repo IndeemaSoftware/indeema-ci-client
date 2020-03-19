@@ -72,6 +72,8 @@ export class ServicesComponent implements OnInit {
 
   serviceSelected(service) {
     if (service) {
+      delete service.apps;//deleting servers from platform is needed for platform updating
+
       this.isNewService = false;
       this.settingsModel.doc_string = JSON.stringify(service.doc, undefined, 2);    
     } else {

@@ -187,42 +187,50 @@
                   <div  *ngIf="service && service.doc && service.doc.domain_name">
                     <small class="form-text text-muted">{{service.doc.domain_name}}</small>                    
                   </div>              
+              </div>
+                <div class="form-check">
+                  <input [(ngModel)]="model.isSecure" class="form-check-input" type="checkbox" name="isSecure{{ pId }}">
+                  <label class="form-check-label" for="defaultCheck">
+                    Use https connection?
+                  </label>          
                 </div>
-                <div class="form-group">
-                  <div class="form-check">
-                    <input [(ngModel)]="model.automatic_cert" class="form-check-input" type="checkbox" name="automatic_cert{{ pId }}">
-                    <label class="form-check-label" for="defaultCheck1">
-                      Use automatic certificates (self-signed certificates)
-                    </label>
-                    <div  *ngIf="service && service.doc && service.doc.automatic_cert">
-                      <small class="form-text text-muted">{{service.doc.automatic_cert}}</small>                    
-                    </div>              
+                <div *ngIf="model.isSecure">
+                  <div class="form-group">
+                    <div class="form-check">
+                      <input [(ngModel)]="model.automatic_cert" class="form-check-input" type="checkbox" name="automatic_cert{{ pId }}">
+                      <label class="form-check-label" for="defaultCheck1">
+                        Use automatic certificates (self-signed certificates)
+                      </label>
+                      <div  *ngIf="service && service.doc && service.doc.automatic_cert">
+                        <small class="form-text text-muted">{{service.doc.automatic_cert}}</small>                    
+                      </div>              
+                    </div>
                   </div>
-                </div>
-                <div *ngIf="!model.automatic_cert">
-                  <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
-                    <label for="custom_ssl_key">SSL Key file</label>
-                    <input (change)="addKeySSLFile($event, model)" type="file" accept=".key" class="form-control" name="custom_ssl_key{{ pId }}" placeholder="Upload SSL Key file">
-                    <small *ngIf="projectModel.apps[pId] && projectModel.apps[pId].custom_ssl_key && projectModel.apps[pId].custom_ssl_key.name" class="form-text text-muted">SSL Key: {{ projectModel.apps[pId].custom_ssl_key.name }} <a target="_blank" href="{{api_url}}{{ projectModel.apps[pId].custom_ssl_key.url }}">Download</a></small>
-                    <div *ngIf="service && service.doc && service.doc.custom_ssl_key">
-                      <small class="form-text text-muted">{{service.doc.custom_ssl_key}}</small>                    
-                    </div>                
-                  </div>
-                  <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
-                    <label for="custom_ssl_crt">SSL Crt file</label>
-                    <input (change)="addCrtSSLFile($event, model)" type="file" accept=".crt" class="form-control" name="custom_ssl_crt{{ pId }}" placeholder="Upload SSL Crt file">
-                    <small *ngIf="projectModel.apps[pId] && projectModel.apps[pId].custom_ssl_crt && projectModel.apps[pId].custom_ssl_crt.name" class="form-text text-muted">SSL Crt: {{ projectModel.apps[pId].custom_ssl_crt.name }} <a target="_blank" href="{{api_url}}{{ projectModel.apps[pId].custom_ssl_crt.url }}">Download</a></small>
-                    <div *ngIf="service && service.doc && service.doc.custom_ssl_crt">
-                      <small class="form-text text-muted">{{service.doc.custom_ssl_crt}}</small>                    
-                    </div>   
-                  </div>
-                  <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem}">
-                    <label for="custom_ssl_key">SSL Pem file</label>
-                    <input (change)="addPemSSLFile($event, model)" type="file" class="form-control" name="custom_ssl_pem{{ pId }}" placeholder="Upload SSL Pem file">
-                    <small *ngIf="projectModel.apps[pId] && projectModel.apps[pId].custom_ssl_pem && projectModel.apps[pId].custom_ssl_pem.name" class="form-text text-muted">SSL Pem: {{ projectModel.apps[pId].custom_ssl_pem.name }} <a target="_blank" href="{{api_url}}{{ projectModel.apps[pId].custom_ssl_pem.url }}">Download</a></small>
-                    <div *ngIf="service && service.doc && service.doc.custom_ssl_pem">
-                      <small class="form-text text-muted">{{service.doc.custom_ssl_pem}}</small>                    
-                    </div>   
+                  <div *ngIf="!model.automatic_cert">
+                    <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
+                      <label for="custom_ssl_key">SSL Key file</label>
+                      <input (change)="addKeySSLFile($event, model)" type="file" accept=".key" class="form-control" name="custom_ssl_key{{ pId }}" placeholder="Upload SSL Key file">
+                      <small *ngIf="projectModel.apps[pId] && projectModel.apps[pId].custom_ssl_key && projectModel.apps[pId].custom_ssl_key.name" class="form-text text-muted">SSL Key: {{ projectModel.apps[pId].custom_ssl_key.name }} <a target="_blank" href="{{api_url}}{{ projectModel.apps[pId].custom_ssl_key.url }}">Download</a></small>
+                      <div *ngIf="service && service.doc && service.doc.custom_ssl_key">
+                        <small class="form-text text-muted">{{service.doc.custom_ssl_key}}</small>                    
+                      </div>                
+                    </div>
+                    <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
+                      <label for="custom_ssl_crt">SSL Crt file</label>
+                      <input (change)="addCrtSSLFile($event, model)" type="file" accept=".crt" class="form-control" name="custom_ssl_crt{{ pId }}" placeholder="Upload SSL Crt file">
+                      <small *ngIf="projectModel.apps[pId] && projectModel.apps[pId].custom_ssl_crt && projectModel.apps[pId].custom_ssl_crt.name" class="form-text text-muted">SSL Crt: {{ projectModel.apps[pId].custom_ssl_crt.name }} <a target="_blank" href="{{api_url}}{{ projectModel.apps[pId].custom_ssl_crt.url }}">Download</a></small>
+                      <div *ngIf="service && service.doc && service.doc.custom_ssl_crt">
+                        <small class="form-text text-muted">{{service.doc.custom_ssl_crt}}</small>                    
+                      </div>   
+                    </div>
+                    <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem}">
+                      <label for="custom_ssl_key">SSL Pem file</label>
+                      <input (change)="addPemSSLFile($event, model)" type="file" class="form-control" name="custom_ssl_pem{{ pId }}" placeholder="Upload SSL Pem file">
+                      <small *ngIf="projectModel.apps[pId] && projectModel.apps[pId].custom_ssl_pem && projectModel.apps[pId].custom_ssl_pem.name" class="form-text text-muted">SSL Pem: {{ projectModel.apps[pId].custom_ssl_pem.name }} <a target="_blank" href="{{api_url}}{{ projectModel.apps[pId].custom_ssl_pem.url }}">Download</a></small>
+                      <div *ngIf="service && service.doc && service.doc.custom_ssl_pem">
+                        <small class="form-text text-muted">{{service.doc.custom_ssl_pem}}</small>                    
+                      </div>   
+                    </div>
                   </div>
                 </div>
               </div>

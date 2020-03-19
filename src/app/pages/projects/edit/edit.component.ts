@@ -73,7 +73,7 @@ export class EditComponent implements OnInit {
   //Project data
   project = null as any;
   projectId = null as any;
-  app_port = 0;
+  app_port = ``;
   missing_port = false;
 
   //Upload model index
@@ -240,8 +240,11 @@ export class EditComponent implements OnInit {
         if (app.server === s.id) {
           this.server = {};
           this.server = s;
+          console.log(this.server.ports);
+          console.log(this.app_port);
 
           if (this.server.ports && !this.server.ports.includes(this.app_port)) {
+            console.log("123");
             this.missing_port = true;
           } else {
             this.missing_port = false;
@@ -262,6 +265,7 @@ export class EditComponent implements OnInit {
   }
 
   prepareToEdit() {
+    console.log("prepareToEdit");
     this.projectModel = _.cloneDeep(this.project.plain());
     this.modelApi = {};
 
@@ -291,9 +295,14 @@ export class EditComponent implements OnInit {
       this.projectModel.apps[i].service = this.projectModel.apps[i].service.id;
     }
 
+    console.log("Amount of apps: " + this.project.apps.length );
     if (this.project.apps.length > 0) {
       this.activeTab = this.project.apps[0].id;
-      this.app_port = this.project.apps[0].app_port;
+      this.app_port = `${this.project.apps[0].app_port}`;
+      
+      if (this.app_port) {
+        this.missing_port = false;
+      }
 
       this.getServerDetails(this.project.apps[0]);
     }
