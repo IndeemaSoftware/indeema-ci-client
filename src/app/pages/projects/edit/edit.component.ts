@@ -265,7 +265,6 @@ export class EditComponent implements OnInit {
   }
 
   prepareToEdit() {
-    console.log("prepareToEdit");
     this.projectModel = _.cloneDeep(this.project.plain());
     this.modelApi = {};
 
@@ -287,15 +286,15 @@ export class EditComponent implements OnInit {
       this.projectModel.apps[i].server = this.projectModel.apps[i].server.id;
 
       //init maintenances
-      if (this.projectModel.apps[i].maintenance) {
-        this.projectModel.apps[i].maintenance = this.projectModel.apps[i].maintenance.id;
-      }
+      this.projectModel.apps[i].maintenance = this.projectModel.apps[i].maintenance.id;
+
+      //init template
+      this.projectModel.apps[i].ci_template = this.projectModel.apps[i].ci_template.id;
 
       //init services
       this.projectModel.apps[i].service = this.projectModel.apps[i].service.id;
     }
 
-    console.log("Amount of apps: " + this.project.apps.length );
     if (this.project.apps.length > 0) {
       this.activeTab = this.project.apps[0].id;
       this.app_port = `${this.project.apps[0].app_port}`;
