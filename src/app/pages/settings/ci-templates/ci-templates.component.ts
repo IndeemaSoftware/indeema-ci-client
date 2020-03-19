@@ -17,6 +17,7 @@ export class CITemplatesComponent implements OnInit {
     };
 
   settingsModel: any = {
+    template_list:[],
     template: {
       name:"",
       users: [],
@@ -36,6 +37,9 @@ export class CITemplatesComponent implements OnInit {
   };
 
   ngOnInit() {
+    if (this.settingsModel.template_list.length === 0) {
+      this.selected();
+    }            
   }
 
   selected() {

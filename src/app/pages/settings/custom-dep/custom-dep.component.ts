@@ -19,6 +19,7 @@ export class CustomDepComponent implements OnInit {
     };
 
     settingsModel: any = {
+        dependency_list:[],
         dependency: {
             name:"",
             users: [],
@@ -37,6 +38,9 @@ export class CustomDepComponent implements OnInit {
     ) { };
 
     ngOnInit() {
+        if (this.settingsModel.dependency_list.length === 0) {
+            this.selected();
+        }            
     }
 
     selected() {
@@ -92,10 +96,23 @@ export class CustomDepComponent implements OnInit {
         var name = this.settingsModel.dependency.name;
 
         if (this.validateName(name).status) {
-            this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
-                this.cleanFields();
-                this.updateList();
-            });  
+            this.modal.confirm(
+                `Confirm updating of "${name}" template`,
+                "Do you really want to delete this template?<br>If yes, please input template name.",
+                (value) => {
+                  if(value !== name)
+                    return 'Template name is incorrect!';
+                },
+                'Yes, please remove!',
+                'Don`t remove'
+            ).then((res) => {
+                this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
+                    this.cleanFields();
+                    this.updateList();
+                });  
+                    }, (err) => {
+                this.modal.alert(err);
+            })
         } else {
             this.modal.alert(this.validateName(name).msg);
         }
@@ -126,13 +143,27 @@ export class CustomDepComponent implements OnInit {
     }
 
     createNew() {
-        if (this.validateName(this.settingsModel.dependency.name).status) {
-            this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
-                console.log(resp);
-                this.updateList();
-            });      
+        var name = this.settingsModel.dependency.name;
+        if (this.validateName(name).status) {
+            this.modal.confirm(
+                `Confirm updating of "${name}" template`,
+                "Do you really want to delete this template?<br>If yes, please input template name.",
+                (value) => {
+                  if(value !== name)
+                    return 'Template name is incorrect!';
+                },
+                'Yes, please remove!',
+                'Don`t remove'
+            ).then((res) => {
+                this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
+                    this.cleanFields();
+                    this.updateList();
+                });      
+            }, (err) => {
+                this.modal.alert(err);
+            })
         } else {
-            this.modal.alert(this.validateName(this.settingsModel.dependency.name).msg);
+            this.modal.alert(this.validateName(name).msg);
         }
     }
 
@@ -140,6 +171,7 @@ export class CustomDepComponent implements OnInit {
         if (this.settingsModel.dependency.name) {
             this.isNew = false;
         } else {
+            this.isNew = true;
             this.initUser();
         }
     }

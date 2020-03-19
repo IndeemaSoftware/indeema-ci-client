@@ -24,7 +24,7 @@
           <th scope="row"><p id="description">{{ module.description?module.description:"No module description" }}</p></th>
           <th scope="row" style="width:100pt;">
             <p *ngIf="isInstalling" class="loader"></p>
-            <div *ngIf="auth.user">
+            <div *ngIf="auth.user && auth.user.module">
               <button *ngIf="!isInstalling && !auth.user.module.includes(module.identifier)" (click)="installModule(module)" id="green-button">Install</button>
               <button *ngIf="!isInstalling && auth.user.module.includes(module.identifier)" (click)="uninstallModule(module)" id="red-button">Uninstall</button>
             </div>

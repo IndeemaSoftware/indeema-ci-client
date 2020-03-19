@@ -23,6 +23,7 @@ export class PlatformsComponent implements OnInit {
     };
 
   settingsModel: any = {
+    platform_list:[],
     platform: {
       platform_name:"",
       variables: [{
@@ -40,18 +41,29 @@ export class PlatformsComponent implements OnInit {
     private api: ApiService,
     private modal: ModalService,
     private auth: AuthService,
+    private route: Router
   ) { 
   };
 
   ngOnInit() {
+    if (this.settingsModel.platform_list.length === 0) {
+      this.selected();
+    }      
   }
 
   selected() {
-    this.updatePlatformList();
+    this.auth.getUser().then((user) => {
+      this.updatePlatformList();
+      this.cleanPlatformFields();
+      }, (err) => {
+      this.route.navigate(['signin']);
+    });
   }
 
   platformSelected(platform) {
     if (platform) {
+      delete platform.servers;//deleting servers from platform is needed for platform updating
+
       this.isNewPlatform = false;
       this.settingsModel.doc_string = JSON.stringify(platform.doc, undefined, 2);    
     } else {

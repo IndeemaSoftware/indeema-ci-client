@@ -23,6 +23,7 @@ export class ServicesComponent implements OnInit {
     };
 
   settingsModel: any = {
+    service_list:[],
     service: {
       service_name:"",
       variables: [{
@@ -44,10 +45,29 @@ export class ServicesComponent implements OnInit {
   };
 
   ngOnInit() {
+    if (this.settingsModel.service_list.length === 0) {
+      this.selected();
+    }
   }
 
   selected() {
-    this.updateServiceList();
+    this.auth.getUser().then((user) => {
+      this.updateServiceList();
+      this.initUser();
+    });
+  }
+
+  initUser() {
+    this.settingsModel.service = {
+      service_name:"",
+      users: [this.auth.user.id],
+      variables: [{
+        key: "",
+        value: ""
+      }],
+      doc_string: "", 
+      jsonValidationMessage: ""
+    };
   }
 
   serviceSelected(service) {
@@ -56,16 +76,6 @@ export class ServicesComponent implements OnInit {
       this.settingsModel.doc_string = JSON.stringify(service.doc, undefined, 2);    
     } else {
       this.isNewService = true;
-      this.settingsModel.service = {
-        service_name:"",
-        users: [this.auth.user.id],
-        variables: [{
-          key: "",
-          value: ""
-        }],
-        doc_string: "", 
-        jsonValidationMessage: ""
-      };
       this.cleanServiceFields();
     }
   }
@@ -79,16 +89,7 @@ export class ServicesComponent implements OnInit {
     this.isNewService = true;
     this.settingsModel.new_service_name = "";
     this.settingsModel.doc_string = "";
-    this.settingsModel.service = {
-      service_name:"",
-      users: [this.auth.user.id],
-      variables: [{
-        key: "",
-        value: ""
-      }],
-      doc_string: "", 
-      jsonValidationMessage: ""
-      };
+    this.initUser();
     this.updateServiceList();
   }
 
@@ -189,6 +190,7 @@ export class ServicesComponent implements OnInit {
         'Don`t save'
     ).then((res) => {
       this.saveDocJson();
+      console.log(this.settingsModel.service);
       this.api.create(`services`, this.settingsModel.service).then((resp) => {
         this.updateServiceFields(resp);
         this.cleanServiceFields();

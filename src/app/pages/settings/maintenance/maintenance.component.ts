@@ -17,11 +17,11 @@ export class MaintenanceComponent implements OnInit {
     };
 
   settingsModel: any = {
+    maintenance_list:[],
     maintenance: {
       name:"",
       users: [],
       html_code: "",
-      maintenance_list:[]
     } as any
   };
 
@@ -36,6 +36,9 @@ export class MaintenanceComponent implements OnInit {
   };
 
   ngOnInit() {
+    if (this.settingsModel.maintenance_list.length === 0) {
+      this.selected();
+    }      
   }
 
   selected() {

@@ -21,6 +21,7 @@ export class ServerDepComponent implements OnInit {
     };
 
     settingsModel: any = {
+        dependency_list:[],
         dependency: {
             name:"",
             users: [],
@@ -41,6 +42,9 @@ export class ServerDepComponent implements OnInit {
     ) { };
 
     ngOnInit() {
+        if (this.settingsModel.dependency_list.length === 0) {
+            this.selected();
+          }      
     }
 
     selected() {
@@ -53,11 +57,13 @@ export class ServerDepComponent implements OnInit {
     }
 
     initUser() {
-        this.settingsModel.dependency = {
-            name:"",
-            users: [this.auth.user.id],
-            html_code: "",
-            maintenance_list:[]
+        this.settingsModel = {
+            dependency: {
+                name:"",
+                users: [this.auth.user.id],
+                html_code: "",
+                maintenance_list:[]                    
+            }
           };
     }
 
@@ -95,25 +101,39 @@ export class ServerDepComponent implements OnInit {
     update() {
         var name = this.settingsModel.dependency.package;
         if (this.validateName(name).status) {
-            this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
-                this.updateList();
-            });  
-    
+            this.modal.confirm(
+                `Confirm updating of "${name}" template`,
+                "Do you really want to delete this template?<br>If yes, please input template name.",
+                (value) => {
+                  if(value !== name)
+                    return 'Template name is incorrect!';
+                },
+                'Yes, please remove!',
+                'Don`t remove'
+            ).then((res) => {
+                this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
+                    this.updateList();
+                });  
+                }, (err) => {
+                this.modal.alert(err);
+            })
         } else {
             this.modal.alert(this.validateName(name).msg);
         }
     }
 
     delete() {
-        if (!this.settingsModel.dependency.name) {
+        var name = this.settingsModel.dependency.name; 
+        if (!name) {
             this.modal.alert("You can't delete service with no name");
             return;
           }
+
           this.modal.confirm(
-            `Confirm deletion of "${this.settingsModel.dependency.name}" template`,
+            `Confirm deletion of "${name}" template`,
             "Do you really want to delete this template?<br>If yes, please input template name.",
             (value) => {
-              if(value !== this.settingsModel.dependency.name)
+              if(value !== name)
                 return 'Template name is incorrect!';
             },
             'Yes, please remove!',
@@ -131,9 +151,23 @@ export class ServerDepComponent implements OnInit {
     createNew() {
         var name = this.settingsModel.dependency.package;
         if (this.validateName(name).status) {
-            this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
-                this.updateList();
-            });      
+            this.modal.confirm(
+                `Confirm deletion of "${name}" template`,
+                "Do you really want to delete this template?<br>If yes, please input template name.",
+                (value) => {
+                  if(value !== name)
+                    return 'Template name is incorrect!';
+                },
+                'Yes, please remove!',
+                'Don`t remove'
+            ).then((res) => {
+                this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
+                    this.updateList();
+                    this.cleanFields();
+                });      
+            }, (err) => {
+                this.modal.alert(err);
+            })
         } else {
             this.modal.alert(this.validateName(name).msg);
         }

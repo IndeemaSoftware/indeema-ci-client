@@ -58,11 +58,11 @@
             <th scope="row">{{ server.ports?server.ports:"No ports selected" }}</th>
             <td>
               <div class="btn-group btn-group-toggle">
-                <button (click)="setupServer(server)" id="start" type="button" title="Start setup script"></button>
-                <button (click)="toConsole(server, false, false)" id="console"></button>
-                <button (click)="editServer(server)" id="edit" type="button"></button>
-                <button (click)="cleanupServer(server, true, true)" [disabled]="server.server_status !== 'success'" id="cleanup" type="button"></button>
-                <button (click)="deleteServer(server)" id="delete-server" type="button"></button>
+                <button (click)="setupServer(server)" id="start" type="button" title="Start platform setup script"></button>
+                <button (click)="toConsole(server, false, false)" title="Open ternial window" id="console"></button>
+                <button (click)="editServer(server)" id="edit" type="button" title="Edit server configuration"></button>
+                <button (click)="cleanupServer(server, true, true)" [disabled]="server.server_status !== 'success'" id="cleanup" type="button" title="Run platform cleanup script"></button>
+                <button (click)="deleteServer(server)" id="delete-server" type="button" title="Delete server configuration for DB"></button>
               </div>
             </td>
           </tr>

@@ -38,6 +38,9 @@ export class MigrationComponent implements OnInit {
   };
 
   ngOnInit() {
+    if (this.modules.length === 0) {
+      this.selected();
+    }      
   }
 
   selected () {
@@ -45,7 +48,6 @@ export class MigrationComponent implements OnInit {
     this.isLoading = true;
     this.auth.user = null;//this is needed to get updated users after installing module
     this.auth.getUser().then((user) => {
-      console.log(this.auth.user);
       this.setupUpload();
       this.updateModules();
       this.isLoading = false;
@@ -80,9 +82,6 @@ export class MigrationComponent implements OnInit {
     let isUpdateServer = false;
 
     this.uploader.onSuccessItem = (item: any, response: any, status: any, headers: any) => {
-      //Additional check for create project
-      console.log(response);
-
       this.projectFile = null;
 
       response = JSON.parse(response);
@@ -93,7 +92,6 @@ export class MigrationComponent implements OnInit {
         var hash = response[0].hash;
         this.api.get(`migrations/import/${hash}`)
         .then((resp) => {
-          console.log(resp);
           this.isLoading = false;
           this.modal.alert(`Set ${response[0].name} was succesfully imported`);
         }); 
@@ -122,7 +120,6 @@ export class MigrationComponent implements OnInit {
   addFile(ev) {
     if (ev.target.files.length > 0) {
       this.projectFile = ev.target.files[0];
-      console.log("File", this.projectFile);  
     } else {
       this.modal.alert("No file chosen");
     }
