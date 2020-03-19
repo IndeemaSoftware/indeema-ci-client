@@ -18,12 +18,18 @@
           <div class="form-group">
             <label for="desc">Project description</label>
             <textarea [(ngModel)]="projectModel.desc" class="form-control" id="desc" name="desc" rows="3"></textarea>
+            <div>
+              <small class="form-text text-muted">Please provide detailed description of this project, so anybody can understand what it's about after reading this text</small>                    
+            </div>  
           </div>
           <div class="form-group">
             <label for="env">Project environments</label>
             <input (change)="environmentsUpdated()" [(ngModel)]="environments" type="text" class="form-control" name="environments" placeholder="Enter project environment names">
             <div *ngIf="jsonValidationMessage">
               <label class="badge badge-danger" id="json-warning" name="json-warning"> {{jsonValidationMessage}}</label>
+            </div>
+            <div>
+              <small class="form-text text-muted">Provide list of environments devided by comma with no spaces. Example: DEV,PROD,STAGE</small>                    
             </div>      
           </div>
         </div>
@@ -63,6 +69,9 @@
                       <option [ngValue]="item.id">{{ item.name}}</option>
                     </ng-container>
                   </select>
+                  <div>
+                    <small class="form-text text-muted">Please select service script. It will automatically upload description of all fields for this page</small>                    
+                  </div>
                   </div>
                 <div class="form-group required">
                   <label for="app_name">App name</label>
