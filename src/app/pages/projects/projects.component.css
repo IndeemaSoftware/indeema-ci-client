@@ -196,18 +196,7 @@ td#clean{
 }
 
 button#btn-edit {
-    background-image: url('/assets/edit-enaled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
-}
-
-button#btn-edit:disbaled {
-    background-image: url('/assets/edit-disaled.svg');
+    background-image: url('/assets/edit.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
@@ -222,18 +211,7 @@ button#btn-edit:hover {
 }
 
 button#btn-delete {
-    background-image:url('/assets/delete-enabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
-}
-
-button#btn-delete:disabled {
-    background-image:url('/assets/delete-disabled.svg');
+    background-image:url('/assets/delete.svg');
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
