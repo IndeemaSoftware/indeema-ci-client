@@ -122,6 +122,7 @@ export class EditComponent implements OnInit {
       this.getServers();
       this.updateServiceList();
       this.updateMaintenanceList();
+      this.serviceChosen();
     }, (err) => {
       this.route.navigate(['signin']);
     });
@@ -132,6 +133,8 @@ export class EditComponent implements OnInit {
     this.api.get(`maintenances`).then((resp) => {
       this.maintenances = resp;
       this.maintenanceSelected();
+    }, (err) => {
+      console.log(err);
     });  
   }
 
@@ -269,7 +272,6 @@ export class EditComponent implements OnInit {
     for (var i = 0; i < this.projectModel.apps.length; i++) {
       this.activeTab = this.projectModel.apps[i].id;
 
-
       //Clean from dependencies
       delete this.projectModel.apps[i].console;
       delete this.projectModel.apps[i].project;
@@ -291,9 +293,11 @@ export class EditComponent implements OnInit {
       //init services
       this.projectModel.apps[i].service = this.projectModel.apps[i].service.id;
     }
+    this.environments = this.project.environments;
 
     if (this.project.apps.length > 0) {
       this.activeTab = this.project.apps[0].id;
+
       this.app_port = `${this.project.apps[0].app_port}`;
       
       if (this.app_port) {
@@ -302,8 +306,6 @@ export class EditComponent implements OnInit {
 
       this.getServerDetails(this.project.apps[0]);
     }
-
-    this.environments = this.project.environments;
   }
 
   setupProject(){
@@ -692,7 +694,7 @@ export class EditComponent implements OnInit {
   /**
    * Open tab
    */
-  openTab(name){
+  openTab(name) {
     this.activeTab = name;
   }
 }

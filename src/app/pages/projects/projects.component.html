@@ -62,10 +62,10 @@
                   <th scope="row">{{ app.server?app.server.server_name:"Server not selected"}}</th>
                   <td>
                     <div class="btn-group btn-group-toggle">
-                      <button (click)="startProject(project, app)" [ngClass]="{'disabled': app.app_status === 'progress' || app.app_status === 'cleanup'}" type="button" id="start" title="Start service setup script"></button>
+                      <button (click)="startProject(project, app)" [disabled]="app.app_status === 'progress' || app.app_status === 'cleanup'" type="button" id="start" title="Start service setup script"></button>
                       <button (click)="toConsole(project, app)" type="button" id="console" title="Open terminal"></button>
-                      <button (click)="cleanupProject(project, app)" [ngClass]="{'disabled': app.app_status === 'cleanup' || app.app_status === 'cleanup_success'}" type="button" id="cleanup" title="Run service cleanup script"></button>
-                      <button (click)="deleteProject(project, app)" [ngClass]="{'disabled': app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'}" type="button" id="delete-app" title="Delete application from DB"></button>
+                      <button (click)="cleanupProject(project, app)" [disabled]="app.app_status !== 'success' || app.app_status === 'cleanup_success'" type="button" id="cleanup" title="Run service cleanup script"></button>
+                      <button (click)="deleteProject(project, app)" [disabled]=" app.app_status !== 'cleanup_success' && app.app_status === 'success'" type="button" id="delete-app" title="Delete application from DB"></button>
                       <button (click)="preview(project, app)" [disabled]="app.app_status !== 'success' || (!app.domain_name || !app.app_port)" type="button" id="link" title="Visit page"></button>
                     </div>
                   </td>
