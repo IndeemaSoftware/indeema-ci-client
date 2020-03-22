@@ -8,7 +8,8 @@
           <span *ngIf="!consoleLive && consoleLive !== null" id="status-fail">&#9864; Offline</span>
           <span *ngIf="consoleLive == null" id="status-progress">&#9864; Starting</span>
 
-          <span *ngIf="project && app">Setuping {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}</span>
+          <span *ngIf="project && app && !isCleanup">Setuping {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}</span>
+          <span *ngIf="project && app && isCleanup">Cleanning {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}</span>
 
           <button *ngIf="enableDownloadBtn && !hideDownloadBtn" (click)="downloadTemplate()" type="button" class="btn btn-success" id="menu-button">Download CI template</button>
           <button (click)="reloadScript()" type="button" class="btn btn-danger" id="menu-button">Reload script</button>

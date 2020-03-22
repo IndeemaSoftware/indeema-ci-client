@@ -31,17 +31,21 @@
           <br/>
           <br/>
           Parameters to be provided when calling Setup script <br/>
+          $PWD           - path to this script and all setup resources <br/>
           $ENVIRONMENTS  - a list of environments defined in project <br/>
           $ENVIRONMENT   - environments set for application and selected from avalible list from project <br/>
-          $MAINTENANCE   - path to maintenance html file <br/>
+          $MAINTENANCE   - path to maintenance html file use $PWD<br/>
           $APP_STATUS    - setup status<br/>
           $ISSECURE      - "true"|"false" value to know is use https or not<br/>
           $AUTOMATIC_CERT - Use automatic certificates (self-signed certificates) checkbox status. If certificates are not attached then connection should insecure ("true"|"false")<br/>
+          $CUSTOM_SSL_KEY - ssl key file name located in the same folder with this script use $PWD<br/>
+          $CUSTOM_SSL_CRT - ssl crt file name located in the same folder with this script use $PWD<br/>
+          $CUSTOM_SSL_PEM - ssl pem file name located in the same folder with this script use $PWD<br/>
           $APP_NAME      - application name <br/>
           $APP_PORT      - selected application port  <br/>
           $DESC          - application description <br/>
           $DOMAIN_NAME   - domain name<br/>
-          $CI_TEMPLATE   - selected ci template name<br/>
+          $CI_TEMPLATE   - selected ci template name use $PWD<br/>
           $__V           - version<br/>
           $PROJECT_NAME  - project name<br/>
         </div>

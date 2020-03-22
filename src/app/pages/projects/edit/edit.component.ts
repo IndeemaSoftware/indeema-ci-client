@@ -47,6 +47,10 @@ export class EditComponent implements OnInit {
     apps: []
   };
 
+  custom_ssl_key: null;
+  custom_ssl_crt: null;
+  custom_ssl_pem: null;
+
   environments: any = "";
   jsonValidationMessage: any = "";
 
@@ -106,6 +110,7 @@ export class EditComponent implements OnInit {
       if (!this.isNew) {
         this.api.get(`/projects/${this.projectId}`)
         .then(data => {
+          console.log(data);
           this.project = data;
 
           this.setupProject();
@@ -277,8 +282,11 @@ export class EditComponent implements OnInit {
       delete this.projectModel.apps[i].project;
 
       //Remove exist cert
+      this.custom_ssl_key = this.projectModel.apps[i].custom_ssl_key;
       this.projectModel.apps[i].custom_ssl_key = null;
+      this.custom_ssl_crt = this.projectModel.apps[i].custom_ssl_crt;
       this.projectModel.apps[i].custom_ssl_crt = null;
+      this.custom_ssl_pem = this.projectModel.apps[i].custom_ssl_pem;  
       this.projectModel.apps[i].custom_ssl_pem = null;
 
       //init servers
@@ -369,6 +377,7 @@ export class EditComponent implements OnInit {
           const proceed_setup = this.modelApi.proceed_setup;
           delete this.modelApi.proceed_setup;
 
+          console.log(this.modelApi);
           //Update project
           if (this.isNew) {
             this.api.create(`projects/${this.projectId}`, this.modelApi).then((project) => {
@@ -586,10 +595,12 @@ export class EditComponent implements OnInit {
   }
 
   proceedToUpdate(start = false) {
+    console.log("proceedToUpdate");
     //Validate models
     let hasErrors = false;
     for (var i = 0; i < this.projectModel.apps.length; i++) {
       this.projectModel.apps[i].errorMsg = this.validateModel(this.projectModel.apps[i]);
+      console.log(this.projectModel.apps[i].errorMsg);
       if (this.projectModel.apps[i].errorMsg)
         hasErrors = true;
     }
@@ -618,11 +629,14 @@ export class EditComponent implements OnInit {
 
     //Check if user upload any files
     if (this.isFileUploaded()) {
+      console.log("1");
       this.uploadModelIndex = 0;
       this.uploadFiles();
     } else {
+      console.log("2");
       const proceed_setup = this.modelApi.proceed_setup;
       delete this.modelApi.proceed_setup;
+
 
       //Cleanup apps
       for (var i = 0; i < this.modelApi.apps.length; i++) {
@@ -630,6 +644,8 @@ export class EditComponent implements OnInit {
         delete this.modelApi.apps[i].custom_ssl_crt;
         delete this.modelApi.apps[i].custom_ssl_pem;
       }
+
+      console.log(this.modelApi);
 
       //Update project
       if (this.isNew) {
