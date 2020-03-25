@@ -290,16 +290,24 @@ export class EditComponent implements OnInit {
       this.projectModel.apps[i].custom_ssl_pem = null;
 
       //init servers
-      this.projectModel.apps[i].server = this.projectModel.apps[i].server.id;
+      if (this.projectModel.apps[i].server) {
+        this.projectModel.apps[i].server = this.projectModel.apps[i].server.id;
+      }
 
       //init maintenances
-      this.projectModel.apps[i].maintenance = this.projectModel.apps[i].maintenance.id;
+      if (this.projectModel.apps[i].maintenance) {
+        this.projectModel.apps[i].maintenance = this.projectModel.apps[i].maintenance.id;
+      }
 
       //init template
-      this.projectModel.apps[i].ci_template = this.projectModel.apps[i].ci_template.id;
+      if (this.projectModel.apps[i].ci_template) {
+        this.projectModel.apps[i].ci_template = this.projectModel.apps[i].ci_template.id;
+      }
 
       //init services
-      this.projectModel.apps[i].service = this.projectModel.apps[i].service.id;
+      if (this.projectModel.apps[i].service) {
+        this.projectModel.apps[i].service = this.projectModel.apps[i].service.id;
+      }
     }
     this.environments = this.project.environments;
 
