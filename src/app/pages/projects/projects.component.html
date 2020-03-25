@@ -57,7 +57,7 @@
                     <span *ngIf="app.app_status === 'cleanup_success'" id="status-success">&#9864; Cleanup success!</span>
                     <span *ngIf="app.app_status === 'cleanup_failed'" id="status-fail">&#9864; Cleanup failed!</span>
                   </th>
-                  <th scope="row">{{ app.server?app.ci_template.name:"No CI selected"}}</th>
+                  <th scope="row">{{ app.ci_template?app.ci_template.name:"No CI selected"}}</th>
                   <th scope="row">{{ app.environment?app.environment:"No environment selected" }}</th>
                   <th scope="row">{{ app.server?app.server.server_name:"Server not selected"}}</th>
                   <td>
