@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import Swal from 'ngx-angular8-sweetalert2';
 
 import guideIntro from './guide/guide-intro.html';
+import guideOverview from './guide/guide-overview.html';
+import guideStructureGeneral from './guide/guide-structure-general.html';
+import guideStructureSettings from './guide/guide-structure-settings.html';
+import guideStructureServers from './guide/guide-structure-servers.html';
+import guideStructureProjects from './guide/guide-structure-projects.html';
+import guideStructureThanks from './guide/guide-structure-thanks.html';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +15,11 @@ import guideIntro from './guide/guide-intro.html';
 export class ModalService {
 
   index: any;
-  lastIndex: any;
+  guidePageAmount: any;
 
   constructor() { 
     this.index = 0;
-    this.lastIndex = 5;
+    this.guidePageAmount = 7;
   }
 
   /**
@@ -44,23 +50,71 @@ export class ModalService {
   }
 
   guide(): Promise<void>{
-    console.log(this.index);
     var params;
+
     if (this.index === 0) {
       params = {
-        confirmButtonText: 'Next',
+        showCancelButton: true,
+        showConfirmButton: false,
+        cancelButtonText: 'Next',
         html: guideIntro
+      } as any;  
+    } else if (this.index === 1) { 
+      params = {
+        showCancelButton: true,
+        showConfirmButton: true,
+        cancelButtonText: 'Next',
+        confirmButtonText: 'Back',
+        html: guideOverview
+      } as any;  
+    } else if (this.index === 2) { 
+      params = {
+        showCancelButton: true,
+        showConfirmButton: true,
+        cancelButtonText: 'Next',
+        confirmButtonText: 'Back',
+        html: guideStructureGeneral
+      } as any;  
+    } else if (this.index === 3) { 
+      params = {
+        showCancelButton: true,
+        showConfirmButton: true,
+        cancelButtonText: 'Next',
+        confirmButtonText: 'Back',
+        html: guideStructureSettings
+      } as any;  
+    } else if (this.index === 4) { 
+      params = {
+        showCancelButton: true,
+        showConfirmButton: true,
+        cancelButtonText: 'Next',
+        confirmButtonText: 'Back',
+        html: guideStructureServers
+      } as any;  
+    } else if (this.index === 5) { 
+      params = {
+        showCancelButton: true,
+        showConfirmButton: true,
+        cancelButtonText: 'Next',
+        confirmButtonText: 'Back',
+        html: guideStructureProjects
       } as any;  
     } else {
       params = {
-        confirmButtonText: 'Finish',
-        html: guideIntro
+        showCancelButton: true,
+        showConfirmButton: false,
+        cancelButtonText: 'Finish',
+        html: guideStructureThanks
       } as any;  
     }
 
     return new Promise((rs, rj) => {
       Swal.fire(params).then((res) => {
-        this.index++;
+        if (res.dismiss === "cancel") {
+          this.index++;
+        } else {
+          this.index--;
+        }
 
         if(res.dismiss){
           rj(res.dismiss)
@@ -68,7 +122,7 @@ export class ModalService {
           rs();
         } 
 
-        if (this.index <= this.lastIndex) {
+        if (this.index < this.guidePageAmount) {
           this.guide();
         } else {
           this.index = 0;
