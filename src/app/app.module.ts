@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -84,7 +84,7 @@ import { HelpComponent } from './pages/help/help.component';
     SocketIoModule.forRoot(config),
     FileUploadModule,
     RestangularModule.forRoot(RestangularConfigFactory),
-    BrowserAnimationsModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

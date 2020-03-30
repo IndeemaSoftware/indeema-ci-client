@@ -1,11 +1,13 @@
 <div class="container">
     <h3>Migration pages</h3>
-    <input (change)="addFile($event)" type="file" class="form-control" name="projectFile.name" placeholder="Upload SSH pem key">
-  <button (click)="import()" id="green-button">Import</button>
-  <button (click)="export()" id="green-button">Export</button>
+  <p>Custom migration</p>
+  <input (change)="addFile($event)" type="file" class="form-control" name="projectFile.name" placeholder="Upload SSH pem key">
+  <button (click)="import()" id="green-button" title="Import custom modules">Import</button>
+  <button (click)="export()" id="green-button" title="Export all your scripts and share it with others">Export</button>
   <p *ngIf="isLoading" class="loader"></p>
 
   <div *ngIf="modules" >
+    <p><br/><br/><br/>Available modules on market</p>
     <table class="table editable-table">
       <thead class="thead-transparent">
         <tr>
@@ -25,8 +27,8 @@
           <th scope="row" style="width:100pt;">
             <p *ngIf="isInstalling" class="loader"></p>
             <div *ngIf="auth.user && auth.user.module">
-              <button *ngIf="!isInstalling && !auth.user.module.includes(module.identifier)" (click)="installModule(module)" id="green-button">Install</button>
-              <button *ngIf="!isInstalling && auth.user.module.includes(module.identifier)" (click)="uninstallModule(module)" id="red-button">Uninstall</button>
+              <button *ngIf="!isInstalling && !auth.user.module.includes(module.identifier)" (click)="installModule(module)" id="green-button" title="Install all scripts and templates">Install</button>
+              <button *ngIf="!isInstalling && auth.user.module.includes(module.identifier)" (click)="uninstallModule(module)" id="red-button" title="Uninstall all scripts and templates">Uninstall</button>
             </div>
           </th>
         </tr>

@@ -4,6 +4,7 @@ import {ApiService} from '../../services/api.service';
 import {Router} from '@angular/router';
 import {ModalService} from '../../services/modal.service';
 
+
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
@@ -25,10 +26,12 @@ export class ProjectsComponent implements OnInit {
       private auth: AuthService,
       private api: ApiService,
       private route: Router,
-      private modal: ModalService
+      private modal: ModalService,
   ) { }
 
   ngOnInit() {
+    this.modal.guide();
+
     this.auth.getUser().then((user) => {
       this.checkUser();
       this.getProjects();
