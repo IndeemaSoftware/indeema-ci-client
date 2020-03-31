@@ -185,8 +185,4 @@ export class CITemplatesComponent implements OnInit {
       this.modal.alert(this.validateName(name).msg);
     }
   }
-
-  preview() {
-    window.open(`preview?id=${this.settingsModel.template.id}`, '_blank');
-  }
 }
