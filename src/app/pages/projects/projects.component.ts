@@ -200,7 +200,7 @@ export class ProjectsComponent implements OnInit {
 
   preview(project, app) {
     if (app.isSecure) {
-      window.open(`https://${app.domain_name}:${app.app_port}`,'_blank');
+      window.open(`https://${app.domain_name}:443`,'_blank');
     } else {
       window.open(`http://${app.domain_name}:${app.app_port}`,'_blank');
     }
