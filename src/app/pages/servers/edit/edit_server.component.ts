@@ -251,6 +251,7 @@ export class EditServerComponent implements OnInit {
 
   addPemFile(ev, model){
     model.ssh_key = ev.target.files[0];
+    this.server.ssh_key = null;
   }
 
   addRepeatField(arr) {

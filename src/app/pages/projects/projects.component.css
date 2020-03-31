@@ -95,6 +95,12 @@
     font-size: 10pt;
 }
 
+#status-waiting {
+    font-weight: 10;
+    color:rgba(150, 150, 150, 1);
+    font-size: 10pt;
+}
+
 #status-success {
     font-weight: 10;
     color:#4DB05B;

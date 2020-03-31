@@ -50,7 +50,7 @@
                 <tr *ngFor="let app of project.apps" id="tr-apps">
                   <th scope="row" id="tr-apps">
                     {{ app.app_name }} <br>
-                    <span *ngIf="app.app_status === 'waiting'" id="status-progress">&#9864; Created...</span>
+                    <span *ngIf="app.app_status === 'waiting'" id="status-waiting">&#9864; Created...</span>
                     <span *ngIf="app.app_status === 'progress'" id="status-progress">&#9864; In progress...</span>
                     <span *ngIf="app.app_status === 'success'" id="status-success">&#9864; Setup success!</span>
                     <span *ngIf="app.app_status === 'failed'" id="status-fail">&#9864; Setup failed!</span>
