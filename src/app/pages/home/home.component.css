@@ -1,31 +1,146 @@
-#footer {
-    position: fixed;
-    height: 50px;
-    background-color: red;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    margin-bottom: 0px;
+.navbar {
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:100;
 }
 
-.loader {
-    margin: auto auto auto auto;
-    border: 7px solid rgba(77, 176, 91, 0.3); /* Light grey */
-    border-top: 7px solid rgba(77, 176, 91, 1); /* Blue */
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
-    animation: spin 2s linear infinite;
-}
-      
-/* Safari */
-@-webkit-keyframes spin {
-0% { -webkit-transform: rotate(0deg); }
-100% { -webkit-transform: rotate(360deg); }
+.navbar a:link {
+    font-family: "Poppins-Regular";
+    font-style: normal;
+    font-size: 13pt;
+    color: #FFFFFF;
 }
 
-@keyframes spin {
-0% { transform: rotate(0deg); }
-100% { transform: rotate(360deg); }
+.navbar a:active{
+    font-family: "Poppins-Regular";
+    font-style: bold;
+    font-size: 13pt;
+    color: #4DB05B;
+}
+
+.navbar li.active a{
+    font-family: "Poppins-Regular";
+    font-style: bold;
+    font-size: 13pt;
+    color: #4DB05B;
+}
+
+#header-logo {
+    margin-left: 40pt;
+    background-image: url(/assets/indeema_logo.svg);
+    background-size: 230pt 25pt;
+    background-repeat: no-repeat;
+    background-position: left;
+    background-clip: border-box;
+
+    display: block;
+    width: 230px;
+    height: 25px;
+    text-decoration: none;
+    cursor: pointer;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space:nowrap;
+}
+
+.collapse {
+    margin-left: 30pt;
+}
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+  }
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {background-color: #ddd;}
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {display: block;}
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+.body-box {
+    background-color: blue;
+    margin: 0 auto ;
+    width: 80%;
+    height:100%;
+    padding: 100pt 100pt 100pt 100pt
+}
+
+.body-item {
+    margin: 0 auto ;
+    background-color:red;
+    display: block;
+    float: left;
+    width: auto;
+    height:100%;
+}
+
+  #home {
+      display: block;
+      float: left top;
+      background-color: white;
+      width: 100%;
+      height: 400pt;
+  }
+
+#features {
+    display: block;
+    float: left top;
+    background-color: #EFF4F9;
+    width: 100%;
+    height: 300pt;
+}
+
+#partners {
+    display: block;
+    float: left top;
+  background-color: white;
+    width: 100%;
+    height: 300pt;
+}
+
+#get-started {
+    display: block;
+    float: left top;
+  background-color: #2C2E3E;
+    width: 100%;
+    height: 300pt;
+}
+
+.footer {
+    height: 40pt;
+    width: 100%;
+    background-color: #2C2E3E;
 }
