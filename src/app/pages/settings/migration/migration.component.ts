@@ -158,8 +158,8 @@ export class MigrationComponent implements OnInit {
       this.isInstalling = module.identifier;
       this.api.get(`migrations/isused/${module.module[0].hash}`)
       .then((resp) => {
-        this.isInstalling = null;
         if (resp.apps.length > 0) {
+          this.isInstalling = null;
           var apps = "";
           for (var a of resp.apps) {
             apps += ` ${a.app_name},`;
@@ -167,6 +167,7 @@ export class MigrationComponent implements OnInit {
 
           this.modal.alert(`You may not delete this module as applications${apps} are still using some components of from this module. Please change componets from application first and then you can delete this module`);
         } else if (resp.servers.length > 0) {
+          this.isInstalling = null;
           var servers = "";
           for (var s of resp.servers) {
             servers += ` ${s.server_name},`;
