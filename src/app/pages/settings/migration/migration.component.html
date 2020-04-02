@@ -25,10 +25,10 @@
           <th scope="row"><p id="description">{{ module.author?module.author:"No module author" }}</p></th>
           <th scope="row"><p id="description">{{ module.description?module.description:"No module description" }}</p></th>
           <th scope="row" style="width:100pt;">
-            <p *ngIf="isInstalling" class="loader"></p>
+            <p *ngIf="isInstalling && isInstalling === module.identifier" class="loader"></p>
             <div *ngIf="auth.user && auth.user.module">
-              <button *ngIf="!isInstalling && !auth.user.module.includes(module.identifier)" (click)="installModule(module)" id="green-button" title="Install all scripts and templates">Install</button>
-              <button *ngIf="!isInstalling && auth.user.module.includes(module.identifier)" (click)="uninstallModule(module)" id="red-button" title="Uninstall all scripts and templates">Uninstall</button>
+              <button *ngIf="(!isInstalling || isInstalling !== module.identifier) && !auth.user.module.includes(module.identifier)" (click)="installModule(module)" id="green-button" title="Install all scripts and templates">Install</button>
+              <button *ngIf="(!isInstalling || isInstalling !== module.identifier) && auth.user.module.includes(module.identifier)" (click)="uninstallModule(module)" id="red-button" title="Uninstall all scripts and templates">Uninstall</button>
             </div>
           </th>
         </tr>
