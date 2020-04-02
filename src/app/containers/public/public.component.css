@@ -1,0 +1,33 @@
+html, body {
+  height: 100%;
+  width:100%;
+  background-color: #EFF4F9;
+}
+.logo {
+  float: left;
+  width: 50%;
+  height: 100%;
+  min-height: 100vh;
+  background-image: url(/src/assets/logo_background.svg) no-repeat;
+  opacity: 1;
+  position: relative;
+}
+.logo img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 250px;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+.public-container {
+  float: left;
+  width: 50%;
+  height: 100%;
+  min-height: 100vh;
+  position: relative;
+  background-color: white;
+}

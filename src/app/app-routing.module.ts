@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from "./pages/home/home.component";
 import { SigninComponent } from "./pages/signin/signin.component";
-import { ForgotComponent } from "./pages/signin/forgot/forgot.component";
 import { ProjectsComponent } from './pages/projects/projects.component';
 import { UsersComponent } from './pages/users/users.component';
 import { EditComponent } from './pages/projects/edit/edit.component';
@@ -12,6 +11,11 @@ import { EditServerComponent } from './pages/servers/edit/edit_server.component'
 import { SettingsComponent } from './pages/settings/settings.component';
 import { MaintenancePreviewComponent } from './pages/settings/maintenance/maintenance-preview.component';
 import { HelpComponent } from './pages/help/help.component';
+import {PublicComponent} from './containers/public/public.component';
+import {SignupComponent} from './pages/signup/signup.component';
+import {ForgotPasswordComponent} from './pages/signin/forgot-password/forgot-password.component';
+import {ResetPasswordComponent} from './pages/signin/reset-password/reset-password.component';
+import {TermsComponent} from './pages/terms/terms.component';
 
 const routes: Routes = [
   {
@@ -20,11 +24,58 @@ const routes: Routes = [
   },
   {
     path: 'signin',
-    component: SigninComponent
+    component: PublicComponent,
+    children: [
+      {
+        path: '',
+        component: SigninComponent,
+        pathMatch: 'full'
+      }
+    ]
   },
   {
-    path: 'forgot',
-    component: ForgotComponent
+    path: 'signup',
+    component: PublicComponent,
+    children: [
+      {
+        path: '',
+        component: SignupComponent,
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: 'forgot-password',
+    component: PublicComponent,
+    children: [
+      {
+        path: '',
+        component: ForgotPasswordComponent,
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: 'reset-password',
+    component: PublicComponent,
+    children: [
+      {
+        path: '',
+        component: ResetPasswordComponent,
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: 'terms',
+    component: PublicComponent,
+    children: [
+      {
+        path: '',
+        component: TermsComponent,
+        pathMatch: 'full'
+      }
+    ]
   },
   {
     path: 'projects',

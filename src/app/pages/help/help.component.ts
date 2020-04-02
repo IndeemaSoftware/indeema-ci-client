@@ -12,18 +12,16 @@ import { DomSanitizer, SafeHtml, SafeStyle, SafeScript, SafeUrl, SafeResourceUrl
 })
 export class HelpComponent implements OnInit {
 
-    constructor(
-        private httpClient: HttpClient,
-        protected sanitizer: DomSanitizer,
-        ) {  
-        };
-
     subject: any;
     desc: any;
     email: any;
     first_name: any;
     last_name: any;
 
+    constructor(
+        private httpClient: HttpClient,
+        protected sanitizer: DomSanitizer,
+    ) {  }
     ngOnInit() {
         this.switchSetting('Doc');
     }

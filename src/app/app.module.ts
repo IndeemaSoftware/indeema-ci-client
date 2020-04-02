@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ElementRef } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FileUploadModule } from 'ng2-file-upload';
 import { RestangularModule, Restangular } from 'ngx-restangular';
@@ -31,7 +31,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './pages/home/home.component';
 import { SigninComponent } from './pages/signin/signin.component';
-import { ForgotComponent } from './pages/signin/forgot/forgot.component';
 import { HeaderComponent } from './partials/header/header.component';
 import { FooterComponent } from './partials/footer/footer.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
@@ -50,13 +49,17 @@ import { MaintenanceComponent } from './pages/settings/maintenance/maintenance.c
 import { MigrationComponent } from './pages/settings/migration/migration.component';
 import { MaintenancePreviewComponent } from './pages/settings/maintenance/maintenance-preview.component';
 import { HelpComponent } from './pages/help/help.component';
+import { SignupComponent } from './pages/signup/signup.component';
+import { ForgotPasswordComponent } from './pages/signin/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './pages/signin/reset-password/reset-password.component';
+import { PublicComponent } from './containers/public/public.component';
+import { TermsComponent } from './pages/terms/terms.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     SigninComponent,
-    ForgotComponent,
     HeaderComponent,
     FooterComponent,
     ProjectsComponent,
@@ -74,13 +77,19 @@ import { HelpComponent } from './pages/help/help.component';
     MaintenanceComponent,
     MigrationComponent,
     MaintenancePreviewComponent,
-    HelpComponent
+    HelpComponent,
+    SignupComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    PublicComponent,
+    TermsComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     SocketIoModule.forRoot(config),
     FileUploadModule,
     RestangularModule.forRoot(RestangularConfigFactory),

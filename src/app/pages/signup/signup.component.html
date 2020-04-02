@@ -1,0 +1,45 @@
+<div class="signup-container">
+  <h3>
+    Sign up
+  </h3>
+  <form (ngSubmit)="signup()" [formGroup]="signupForm">
+    <div class="form-group">
+      <label for="username">Email</label>
+      <input formControlName="email" type="email" class="ci__input" name="username" placeholder="Enter your email">
+    </div>
+    <div *ngIf="signupForm.get('email').hasError('email') && (signupForm.get('email').dirty && signupForm.get('email').touched)" class="alert alert-danger">
+      Please enter a valid email
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input formControlName="password" type="password" class="ci__input" name="password" placeholder="Enter password">
+    </div>
+    <div class="form-group">
+      <label for="passwordConfirmation">Repeat password</label>
+      <input formControlName="passwordConfirmation" type="password" class="ci__input" name="passwordConfirmation" placeholder="Enter password again">
+    </div>
+    <div *ngIf="signupForm.get('passwordConfirmation').hasError('matchPassword') && (signupForm.get('passwordConfirmation').dirty || signupForm.get('passwordConfirmation').touched)" class="alert alert-danger">
+      Password doesn't match.
+    </div>
+    <div class="form-group form-check ci__checkbox">
+      <input formControlName="terms" type="checkbox" class="form-check-input" name="terms">
+      <label class="form-check-label" for="terms">I agree of the <a routerLink="/terms" target="_blank" class="ci__link" style="font-size: 16px">terms of service</a></label>
+    </div>
+    <div *ngIf="signupForm.get('terms').hasError('required')" class="alert alert-danger">
+      If you wanna to sign up, you must to agree with terms of service
+    </div>
+    <div>
+      <a routerLink="/forgot-password" class="ci__link" >Forgot password?</a>
+    </div>
+    <div>
+      <a routerLink="/signin" class="ci__link">Already have account</a>
+    </div>
+    <div *ngIf="signupError !== ''" class="alert alert-danger">
+      {{ signupError }}
+    </div>
+    <div>
+      <p *ngIf="isLoading" class="loader text-center"></p>
+      <button *ngIf="!isLoading" type="submit" class="ci__btn-default">Sign up</button>
+    </div>
+  </form>
+</div>
