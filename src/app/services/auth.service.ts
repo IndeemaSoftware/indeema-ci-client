@@ -176,9 +176,89 @@ export class AuthService {
 
           //Parse errors
           if (err.data.statusCode === 400) {
-            reject(err.data.message);
+            reject(err.data.message[0].messages[0].message || err.data.message);
           }
         })
+    });
+  }
+
+  /**
+   * Sign up action
+   *
+   * @param credentials Object with identifier string - email, password and passwordConfirmation string
+   * @return Promise
+   */
+  signup(credentials) : Promise<Object> {
+    return new Promise((resolve, reject) => {
+      credentials.username = credentials.email.split('@')[0];
+
+      this.rest.all('auth/local/register').customPOST(credentials).toPromise()
+        .then((result) => {
+            //Make
+            this.auth(result.jwt, result.user);
+
+            resolve(result.user);
+          },
+          (err) => {
+            console.error('ERROR', err);
+
+            //Parse errors
+            if (err.data.statusCode === 400) {
+              reject(err.data.message[0].messages[0].message || err.data.message);
+            }
+          });
+    });
+  }
+
+  /**
+   * Forgot password action
+   *
+   * @param credentials Object with email string
+   * @return Promise
+   */
+  forgot(credentials) : Promise<Object> {
+    return new Promise((resolve, reject) => {
+      credentials.url = `${window.location.origin}/reset-password`;
+
+
+      this.rest.all('auth/forgot-password').customPOST(credentials).toPromise()
+        .then((result) => {
+            resolve(result);
+          },
+          (err) => {
+            console.error('ERROR', err);
+
+            //Parse errors
+            if (err.data.statusCode === 400) {
+              reject(err.data.message[0].messages[0].message || err.data.message);
+            }
+          });
+    });
+  }
+
+  /**
+   * Reset password action
+   *
+   * @param credentials Object with password and passwordConfiration string
+   * @param code string
+   * @return Promise
+   */
+  reset(credentials, code) : Promise<Object> {
+    return new Promise((resolve, reject) => {
+      credentials.code = code;
+
+      this.rest.all('auth/reset-password').customPOST(credentials).toPromise()
+          .then((result) => {
+                resolve(result);
+              },
+              (err) => {
+                console.error('ERROR', err);
+
+                //Parse errors
+                if (err.data.statusCode === 400) {
+                  reject(err.data.message[0].messages[0].message || err.data.message);
+                }
+              });
     });
   }
 }

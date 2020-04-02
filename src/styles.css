@@ -2,7 +2,8 @@ html, body {
   background-color: #EFF4F9;
   height: 100%; 
   padding: 0; 
-  margin: 0; 
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
 footer {
@@ -131,4 +132,69 @@ footer {
 @keyframes spin {
 0% { transform: rotate(0deg); }
 100% { transform: rotate(360deg); }
+}
+
+/** INDEEMA CI DEFAULT STYLES **/
+.ci__btn-default {
+  background-color: #4DB05B;
+  border-radius: 60px;
+  opacity: 1;
+  border: none;
+  margin: 20px 0 0;
+  padding: 10px 15px;
+  width: auto;
+  height: auto;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  color: #FFFFFF;
+  font-size: 16px;
+}
+.ci__btn-default:hover,
+.ci__btn-default:active {
+  background-color: #322f41;
+}
+.ci__btn-default:focus{
+  outline: none !important;
+}
+
+.ci__checkbox > label.form-check-label{
+  color: #575962;
+  font-size: 16px;
+}
+.ci__checkbox:focus{
+  outline: none !important;
+}
+
+.ci__link{
+  cursor: pointer;
+  color: #4DB05B;
+  font-size: 13px;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.ci__link:hover,
+.ci__link:active {
+  color: #322f41;
+}
+.ci__link:focus{
+  outline: none !important;
+}
+
+.ci__input{
+  display: block;
+  background: transparent url(/src/assets/input_field.svg) 0% 0% no-repeat padding-box;
+  border: 2pt solid #EFF4F9;
+  border-radius: 5pt;
+  padding: 4pt 4pt 4pt 4pt;
+  opacity: 1;
+  font-size: 14px;
+}
+.ci__input:focus{
+  outline: none !important;
+}
+.ci__input.ng-invalid.ng-touched{
+  background: rgba(255, 0, 0, 0.25) !important;
+  border-color: rgba(255, 0, 0, 0.05) !important;
+  color: red !important;
 }
