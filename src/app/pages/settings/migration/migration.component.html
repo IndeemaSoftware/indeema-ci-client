@@ -4,7 +4,9 @@
   <input (change)="addFile($event)" type="file" class="form-control" name="projectFile.name" placeholder="Upload SSH pem key">
   <button (click)="import()" id="green-button" title="Import custom modules">Import</button>
   <button (click)="export()" id="green-button" title="Export all your scripts and share it with others">Export</button>
-  <p *ngIf="isLoading" class="loader"></p>
+  <div style="height: 50pt;">
+    <p *ngIf="isLoading" class="loader"></p>
+  </div>
 
   <div *ngIf="modules" >
     <p><br/><br/><br/>Available modules on market</p>
