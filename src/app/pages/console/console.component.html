@@ -22,7 +22,9 @@
       </h2>
       <div class="console">
         <div id="consoleOutput">
-          <p *ngFor="let item of consoleOutput" class="{{ item.type || 'message' }}"><span>runner@server:~$</span> {{ item.value}}</p>
+          <p *ngFor="let item of consoleOutput" class="{{ item.type || 'message' }}">
+            <span style="display:inline-block; white-space:nowrap;">runner@server:~$</span> {{ item.value}} {{ item.progress}} 
+          </p>
         </div>
       </div>
     </div>

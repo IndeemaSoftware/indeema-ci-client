@@ -28,6 +28,7 @@ export class EditComponent implements OnInit {
     app_name: '',
     desc: '',
     environment: 'development',
+    server: null,
     app_port:'',
 
     //Domain setup
@@ -438,6 +439,8 @@ export class EditComponent implements OnInit {
     const newApp = _.cloneDeep(this.modelDefault);
     newApp.id = 'project-app-' + (this.projectModel.apps.length + 1) + new Date().getTime();
 
+    this.app_port = '';
+
     this.projectModel.apps.push(newApp);
 
     //Open current tab
@@ -490,6 +493,7 @@ export class EditComponent implements OnInit {
         || !model.service
         || this.missing_port
     ) {
+      console.log(model);
       return 'Please input all required fields.';
     } else if (!this.server.ports || this.server.ports.length == 0) {
       return 'You may not use this server as it doesn\'t have any open ports';

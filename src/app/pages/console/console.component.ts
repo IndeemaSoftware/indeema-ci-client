@@ -243,12 +243,17 @@ export class ConsoleComponent implements OnInit {
     msg = msg.replace('"', '');
     msg = msg.replace('"', '');
 
-    
-
-    this.consoleOutput.push({
-      type: type,
-      value: msg
-    });
+    if (msg === '.') {
+      var item = this.consoleOutput[this.consoleOutput.length - 1];
+      item.progress += msg;
+      this.consoleOutput[this.consoleOutput.length - 1] = item;
+    } else {
+      this.consoleOutput.push({
+        type: type,
+        value: msg,
+        progress: '.'
+      });
+    }
 
     if(type === 'build_success') {
       this.consoleTitle = `Setup ${this.projectId?"project":"server"} has success!`;

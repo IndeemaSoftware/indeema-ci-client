@@ -61,7 +61,7 @@
       <h4>Service documentation</h4>
       <div>
         Available keys: <br/>
-        project_name, app_name, app_port, custom_ssl_key, custom_ssl_crt, domain_name, environment, desc, server, automatic_cert, ci_template
+        server, custom_ssl_crt, domain_name, app_name, desc, project_name, ci_template, environment, automatic_cert, custom_ssl_key, app_port
       </div>
       <textarea (change)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.service"></textarea>
       <div *ngIf="settingsModel.jsonValidationMessage">

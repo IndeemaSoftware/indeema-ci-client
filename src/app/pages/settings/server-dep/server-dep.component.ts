@@ -81,18 +81,18 @@ export class ServerDepComponent implements OnInit {
         var res = {status:true, msg:""};
 
         if (name) {
-            const regex = new RegExp('^[0-9a-zA-Z_-]+$', 'gm');
+            const regex = new RegExp('^[0-9a-zA-Z_-]\.+$', 'gm');
       
             if (!regex.test(name)) {
                 res.status = false;
-                res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+                res.msg = 'Package name is invalid. Please use: letters and numbers only'
             } else {
                 res.status = true;
                 res.msg = `Let's go`;  
             }
         } else {
             res.status = false;
-            res.msg = `Dependancy name can't be empty`;
+            res.msg = `Package name can't be empty`;
     }
 
         return res;

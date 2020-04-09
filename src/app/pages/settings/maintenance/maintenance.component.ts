@@ -96,14 +96,14 @@ export class MaintenanceComponent implements OnInit {
   
         if (!regex.test(name)) {
             res.status = false;
-            res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+            res.msg = 'Maintenance name is invalid. Please use: letters and numbers only'
         } else {
             res.status = true;
             res.msg = `Let's go`;  
         }
     } else {
       res.status = false;
-      res.msg = `Dependancy name can't be empty`;
+      res.msg = `Maintenance name can't be empty`;
     }
 
     return res;
