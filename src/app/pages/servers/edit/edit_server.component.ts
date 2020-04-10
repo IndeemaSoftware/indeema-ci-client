@@ -259,11 +259,15 @@ export class EditServerComponent implements OnInit {
   }
 
   removeRepeatField(arr, key){
-    arr.splice(key, 1);
+    if (arr.length === 1) {
+      arr[key] = {value:""};
+    } else {
+      arr.splice(key, 1);
+    }
   }
 
   cleanFields(arr){
-    arr[0] = null;
+    arr[0] = {value:""};
   }
 
   validateModel(model){
@@ -312,18 +316,12 @@ export class EditServerComponent implements OnInit {
       if(obj && obj.value !== "")
         newModel.server_dependencies.push(obj.value);
     }
-    if (newModel.server_dependencies.length == 0) {
-      delete newModel.custom_dependencies;
-    }
 
     delete newModel.custom_dependencies;
     newModel.custom_dependencies = [];
     for (let obj of newModel.custom_dependency) {
       if (obj && obj.value !== "")
         newModel.custom_dependencies.push(obj.value);
-    }
-    if (newModel.custom_dependencies.length == 0) {
-      delete newModel.custom_dependencies;
     }
 
     if(!newModel.ssh_key)
@@ -385,7 +383,6 @@ export class EditServerComponent implements OnInit {
 
     //Prepare model for api
     this.modelApi = this.prepareModel(this.serverModel);
-    console.log(this.modelApi);
 
     //Remove all files from queue
     this.uploader.queue = [];
