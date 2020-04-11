@@ -22,7 +22,7 @@
               <small class="form-text text-muted">Please provide detailed description of this project, so anybody can understand what it's about after reading this text</small>                    
             </div>  
           </div>
-          <div class="form-group">
+          <div class="form-group required">
             <label for="env">Project environments</label>
             <input (change)="environmentsUpdated()" [(ngModel)]="environments" type="text" class="form-control" name="environments" placeholder="Enter project environment names">
             <div *ngIf="jsonValidationMessage">
@@ -65,14 +65,7 @@
                     <small class="form-text text-muted">Please select service script. It will automatically upload description of all fields for this page</small>                    
                   </div>
                 </div>
-                <div class="form-group required">
-                  <label for="maintenance">Maintenance page template</label>
-                  <select (change)="maintenanceSelected()" [(ngModel)]="projectModel.apps[pId].maintenance" enabled class="form-control" name="maintenance{{ pId }}">
-                    <ng-container *ngFor="let item of maintenances">
-                      <option [ngValue]="item.id">{{ item.name}}</option>
-                    </ng-container>
-                  </select>
-                  </div>
+
                 <div class="form-group required">
                   <label for="app_name">App name</label>
                   <input [(ngModel)]="model.app_name" type="text" class="form-control" name="app_name{{ pId }}" placeholder="Enter app name">
@@ -80,6 +73,14 @@
                     <small class="form-text text-muted">{{service.doc.app_name}}</small>                    
                   </div>
                 </div>
+                <div class="form-group">
+                  <label for="maintenance">Maintenance page template</label>
+                  <select (change)="maintenanceSelected()" [(ngModel)]="projectModel.apps[pId].maintenance" enabled class="form-control" name="maintenance{{ pId }}">
+                    <ng-container *ngFor="let item of maintenances">
+                      <option [ngValue]="item.id">{{ item.name}}</option>
+                    </ng-container>
+                  </select>
+                  </div>
                 <div class="form-group">
                   <label for="desc{{ pId }}">App description</label>
                   <textarea [(ngModel)]="model.desc" class="form-control" id="desc{{ pId }}" name="desc{{ pId }}" rows="3"></textarea>

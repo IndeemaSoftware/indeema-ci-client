@@ -22,14 +22,15 @@ export class EditComponent implements OnInit {
 
   modelDefault: any = {
     //CI templates
-    ci_template: 'gitlab_ci',
+    ci_template: null,
 
-    //Project configuration
-    app_name: '',
-    desc: '',
-    environment: 'development',
+    //Application configuration
+    service: null,
+    app_name: null,
+    desc: null,
+    environment: null,
     server: null,
-    app_port:'',
+    app_port:null,
 
     //Domain setup
     domain_name: null,
@@ -382,7 +383,7 @@ export class EditComponent implements OnInit {
         this.uploadModelIndex++;
 
         const isAvaliable = this.uploadFiles();
-        if(!isAvaliable){
+        if (!isAvaliable) {
           const proceed_setup = this.modelApi.proceed_setup;
           delete this.modelApi.proceed_setup;
 
@@ -393,9 +394,9 @@ export class EditComponent implements OnInit {
               isUpdateProject = false;
   
               //PROJECT CREATED
-              if(proceed_setup){
+              if (proceed_setup) {
                 this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
-              }else{
+              } else {
                 this.route.navigate([`projects`]);
               }
             }, (err) => {
@@ -407,9 +408,9 @@ export class EditComponent implements OnInit {
               isUpdateProject = false;
   
               //PROJECT CREATED
-              if(proceed_setup){
+              if (proceed_setup) {
                 this.route.navigate([`console/${project.id}`], { queryParams: { start: 'true' } });
-              }else{
+              } else {
                 this.route.navigate([`projects`]);
               }
             }, (err) => {
@@ -484,13 +485,23 @@ export class EditComponent implements OnInit {
   }
 
   validateModel(model) {
+
+    console.log("apps");
+    console.log(model);
+    if (!model.service) {
+      return 'Service script is required';
+    } else if (!model.app_name) {
+      return 'Application name is required';
+    } else if (!model.ci_template) {
+      return 'CI template is required';
+    } else if (!model.environment) {
+      return 'Environment is required';
+    } else if (!model.server) {
+      return 'Server is required';
+    }
+
     if (
-        !model.server
-        || !model.app_name
-        || !model.environment
-        || !model.ci_template
-        || !model.app_port
-        || !model.service
+        !model.app_port
         || this.missing_port
     ) {
       console.log(model);
@@ -607,7 +618,6 @@ export class EditComponent implements OnInit {
   }
 
   proceedToUpdate(start = false) {
-    console.log("proceedToUpdate");
     //Validate models
     let hasErrors = false;
     for (var i = 0; i < this.projectModel.apps.length; i++) {
@@ -624,6 +634,9 @@ export class EditComponent implements OnInit {
     this.errorMsg = '';
     if (!this.projectModel.project_name) {
       this.errorMsg = 'Project name is required';
+      return false;
+    } else if (!this.projectModel.environments) {
+      this.errorMsg = 'List of environments are required';
       return false;
     } else {
       const projectNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');
