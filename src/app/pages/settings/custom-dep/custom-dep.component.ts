@@ -49,7 +49,7 @@ export class CustomDepComponent implements OnInit {
             this.updateList();
               }, (err) => {
             this.route.navigate(['signin']);
-          });
+        });
     }
 
     initUser() {
