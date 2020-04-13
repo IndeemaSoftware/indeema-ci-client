@@ -53,7 +53,7 @@ export class CustomDepComponent implements OnInit {
     }
 
     initUser() {
-        this.settingsModel.dependency ={
+        this.settingsModel.dependency = {
             name:"",
             users: [this.auth.user.id],
             label:"",

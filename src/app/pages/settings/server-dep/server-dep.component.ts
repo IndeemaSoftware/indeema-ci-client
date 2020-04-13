@@ -57,13 +57,13 @@ export class ServerDepComponent implements OnInit {
     }
 
     initUser() {
-        this.settingsModel = {
-            dependency: {
-                name:"",
-                users: [this.auth.user.id],
-                html_code: "",
-                maintenance_list:[]                    
-            }
+        this.settingsModel.dependency = {
+            name:"",
+            users: [this.auth.user.id],
+            label:"",
+            package:"",
+            pre_install_script:"",
+            post_install_script:"",            
           };
     }
 
@@ -162,8 +162,8 @@ export class ServerDepComponent implements OnInit {
                 'Don`t remove'
             ).then((res) => {
                 this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
-                    this.updateList();
                     this.cleanFields();
+                    this.updateList();
                 });      
             }, (err) => {
                 this.modal.alert(err);
@@ -177,8 +177,8 @@ export class ServerDepComponent implements OnInit {
         if (this.settingsModel.dependency.name) {
             this.isNew = false;
         } else {
-            this.initUser();
             this.isNew = true;
+            this.initUser();
         }
     }
 }
