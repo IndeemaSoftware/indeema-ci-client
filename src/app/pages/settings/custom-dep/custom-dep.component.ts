@@ -103,8 +103,8 @@ export class CustomDepComponent implements OnInit {
                   if(value !== name)
                     return 'Template name is incorrect!';
                 },
-                'Yes, please remove!',
-                'Don`t remove'
+                'Yes, please update!',
+                'Don`t update'
             ).then((res) => {
                 this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
                     this.cleanFields();
@@ -120,15 +120,15 @@ export class CustomDepComponent implements OnInit {
 
     delete() {
         if (!this.settingsModel.dependency.name) {
-            this.modal.alert("You can't delete service with no name");
+            this.modal.alert("You can't delete custom dependancy with no name");
             return;
           }
           this.modal.confirm(
-            `Confirm deletion of "${this.settingsModel.dependency.name}" template`,
-            "Do you really want to delete this template?<br>If yes, please input template name.",
+            `Confirm deletion of "${this.settingsModel.dependency.name}"`,
+            "Do you really want to delete this custom dependancy?<br>If yes, please input name.",
             (value) => {
               if(value !== this.settingsModel.dependency.name)
-                return 'Template name is incorrect!';
+                return 'Custom dependancy name is incorrect!';
             },
             'Yes, please remove!',
             'Don`t remove'
@@ -146,11 +146,11 @@ export class CustomDepComponent implements OnInit {
         var name = this.settingsModel.dependency.name;
         if (this.validateName(name).status) {
             this.modal.confirm(
-                `Confirm updating of "${name}" template`,
-                "Do you really want to delete this template?<br>If yes, please input template name.",
+                `Confirm creating of "${name}" custom dependancy`,
+                "Do you really want to update this custom dependancy?<br>If yes, please input name.",
                 (value) => {
                   if(value !== name)
-                    return 'Template name is incorrect!';
+                    return 'Custom dependancy name is incorrect!';
                 },
                 'Yes, please remove!',
                 'Don`t remove'

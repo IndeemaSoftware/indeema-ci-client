@@ -85,14 +85,14 @@ export class ServerDepComponent implements OnInit {
       
             if (!regex.test(name)) {
                 res.status = false;
-                res.msg = 'Package name is invalid. Please use: letters and numbers only'
+                res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
             } else {
                 res.status = true;
                 res.msg = `Let's go`;  
             }
         } else {
             res.status = false;
-            res.msg = `Package name can't be empty`;
+            res.msg = `Dependancy name can't be empty`;
     }
 
         return res;
@@ -102,11 +102,11 @@ export class ServerDepComponent implements OnInit {
         var name = this.settingsModel.dependency.package;
         if (this.validateName(name).status) {
             this.modal.confirm(
-                `Confirm updating of "${name}" template`,
-                "Do you really want to delete this template?<br>If yes, please input template name.",
+                `Confirm updating of "${name}" Ddpendancy`,
+                "Do you really want to update this dependancy?<br>If yes, please input dependancy name.",
                 (value) => {
                   if(value !== name)
-                    return 'Template name is incorrect!';
+                    return 'Dependancy name is incorrect!';
                 },
                 'Yes, please remove!',
                 'Don`t remove'
@@ -125,16 +125,16 @@ export class ServerDepComponent implements OnInit {
     delete() {
         var name = this.settingsModel.dependency.name; 
         if (!name) {
-            this.modal.alert("You can't delete service with no name");
+            this.modal.alert("You can't delete dependancy with no name");
             return;
           }
 
           this.modal.confirm(
-            `Confirm deletion of "${name}" template`,
-            "Do you really want to delete this template?<br>If yes, please input template name.",
+            `Confirm deletion of "${name}" dependancy`,
+            "Do you really want to delete this dependancy?<br>If yes, please input dependancy name.",
             (value) => {
               if(value !== name)
-                return 'Template name is incorrect!';
+                return 'Dependancy name is incorrect!';
             },
             'Yes, please remove!',
             'Don`t remove'
@@ -152,11 +152,11 @@ export class ServerDepComponent implements OnInit {
         var name = this.settingsModel.dependency.package;
         if (this.validateName(name).status) {
             this.modal.confirm(
-                `Confirm deletion of "${name}" template`,
-                "Do you really want to delete this template?<br>If yes, please input template name.",
+                `Confirm creating of "${name}" dependancy`,
+                "Do you really want to create this dependancy?<br>If yes, please input dependancy name.",
                 (value) => {
                   if(value !== name)
-                    return 'Template name is incorrect!';
+                    return 'Dependancy name is incorrect!';
                 },
                 'Yes, please remove!',
                 'Don`t remove'
