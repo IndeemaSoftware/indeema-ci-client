@@ -37,6 +37,8 @@ export class PlatformsComponent implements OnInit {
 
   isNewPlatform: boolean = true;
 
+  isVariableUnique: boolean = true;
+
   constructor (
     private api: ApiService,
     private modal: ModalService,
@@ -132,12 +134,17 @@ export class PlatformsComponent implements OnInit {
     } else {
         res.status = false;
         res.msg = `Platform name can't be empty`;
-}
+    }
 
     return res;
 }
 
   updatePlatform() {
+    if (!this.isVariableUnique) {
+      this.modal.alert(`Variable names should be unique`);
+      return;
+    }
+
     if (this.validateName(this.settingsModel.platform.platform_name ).status) {
       this.modal.confirm(
         `Confirm saving of updates of "${this.settingsModel.platform.platform_name}" script`,
@@ -166,6 +173,7 @@ export class PlatformsComponent implements OnInit {
       this.modal.alert("You can't delete platform with no name");
       return;
     }
+
     this.modal.confirm(
       `Confirm deletion of "${this.settingsModel.platform.platform_name}" template`,
       "Do you really want to delete this template?<br>If yes, please input template name.",
@@ -185,6 +193,12 @@ export class PlatformsComponent implements OnInit {
   }
 
   createPlatform() {
+    console.log("Variable nmae: " + this.isVariableUnique);
+    if (!this.isVariableUnique) {
+      this.modal.alert(`Variable names should be unique`);
+      return;
+    }
+
     if (this.validateName(this.settingsModel.platform.platform_name).status) {
       this.modal.confirm(
         `Confirm creating of "${this.settingsModel.platform.platform_name}" script`,
@@ -210,6 +224,22 @@ export class PlatformsComponent implements OnInit {
     }
   }
 
+  variableNameChange(name) {
+    var count = 0;
+
+    for (let v of this.settingsModel.platform.variables) {
+      if (v.name === name) {
+        count++;
+      }
+    }
+
+    if (count > 1) {
+      this.isVariableUnique = false;
+    } else {
+      this.isVariableUnique = true;
+    }
+  }
+
   docUpdated() {
     this.settingsModel.jsonValidationMessage = "";
 
@@ -221,7 +251,9 @@ export class PlatformsComponent implements OnInit {
   }
 
   addRepeatField(arr){
-  arr.push({value: null});
+    if (this.isVariableUnique) {
+      arr.push({value: null});
+    }
   }
 
   removeRepeatField(arr, key){

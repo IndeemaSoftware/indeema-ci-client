@@ -37,6 +37,8 @@ export class ServicesComponent implements OnInit {
 
   isNewService: boolean = true;
 
+  isVariableUnique: boolean = true;
+
   constructor (
     private api: ApiService,
     private modal: ModalService,
@@ -131,6 +133,11 @@ export class ServicesComponent implements OnInit {
   updateService() {
     var name = this.settingsModel.service.service_name;
 
+    if (!this.isVariableUnique) {
+      this.modal.alert(`Variable names should be unique`);
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
         `Confirm saving of updates of "${name}" script`,
@@ -180,6 +187,11 @@ export class ServicesComponent implements OnInit {
   createService() {
     var name = this.settingsModel.service.service_name;
 
+    if (!this.isVariableUnique) {
+      this.modal.alert(`Variable names should be unique`);
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
         `Confirm creating of "${name}" script`,
@@ -203,6 +215,22 @@ export class ServicesComponent implements OnInit {
       })    
     } else {
       this.modal.alert(this.validateName(name).msg);
+    }
+  }
+
+  variableNameChange(name) {
+    var count = 0;
+
+    for (let v of this.settingsModel.service.variables) {
+      if (v.name === name) {
+        count++;
+      }
+    }
+
+    if (count > 1) {
+      this.isVariableUnique = false;
+    } else {
+      this.isVariableUnique = true;
     }
   }
 

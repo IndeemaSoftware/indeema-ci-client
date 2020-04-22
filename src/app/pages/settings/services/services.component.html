@@ -17,10 +17,13 @@
     <div class="form-container">
       <h4>Service variables</h4>
       <div *ngFor="let item of settingsModel.service.variables let i = index" class="form-group repeated">
-        <input [(ngModel)]="settingsModel.service.variables[i].name"  class="form-control" id="service-name" name="service-name" placeholder="Enter variable key">
+        <input [(ngModel)]="settingsModel.service.variables[i].name"  class="form-control" (input)="variableNameChange(settingsModel.service.variables[i].name)" id="service-name" name="service-name" placeholder="Enter variable key">
         <input [(ngModel)]="settingsModel.service.variables[i].value" class="form-control" id="service-value" name="service-value" placeholder="Enter variable value">
         <span (click)="removeRepeatField(settingsModel.service.variables, i)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length > 1" class="text-danger remove-btn">Remove</span>
         <span (click)="cleanFields(settingsModel.service.variables)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length === 1 && settingsModel.service.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+      </div>
+      <div>
+        <span *ngIf="!isVariableUnique"style="color:red">Variable names should be unique</span>
       </div>
     <button (click)="addRepeatField(settingsModel.service.variables)" type="button" id="yellow-button">Add another variable</button>
     </div>
