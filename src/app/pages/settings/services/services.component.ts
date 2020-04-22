@@ -133,7 +133,7 @@ export class ServicesComponent implements OnInit {
   validateRequiredFields() {
     var res = {status:true, msg:""};
 
-    if (!this.settingsModel.service.platform_name) {
+    if (!this.settingsModel.service.service_name) {
         res.status = false;
         res.msg = "Service name is required"
     }
