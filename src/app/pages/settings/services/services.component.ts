@@ -125,10 +125,29 @@ export class ServicesComponent implements OnInit {
     } else {
       res.status = false;
       res.msg = `Service name can't be empty`;
+    }
+
+    return res;
   }
 
-  return res;
-}
+  validateRequiredFields() {
+    var res = {status:true, msg:""};
+
+    if (!this.settingsModel.service.platform_name) {
+        res.status = false;
+        res.msg = "Service name is required"
+    }
+    if (!this.settingsModel.service.setup_script) {
+        res.status = false;
+        res.msg = "Setup script is required"
+    }
+    if (!this.settingsModel.service.cleanup_script) {
+        res.status = false;
+        res.msg = "Cleanup script is required"
+    }
+
+    return res;
+  }
 
   updateService() {
     var name = this.settingsModel.service.service_name;
@@ -138,13 +157,19 @@ export class ServicesComponent implements OnInit {
       return;
     }
 
+
+    if (!this.validateRequiredFields().status) {
+      this.modal.alert(this.validateRequiredFields().msg);
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
-        `Confirm saving of updates of "${name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm saving of updates of "${name}" service`,
+        "Do you really want to save changes of service?<br>If yes, please input service name.",
         (value) => {
           if(value !== name )
-            return 'Template name is incorrect!';
+            return 'Service name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'
@@ -167,11 +192,11 @@ export class ServicesComponent implements OnInit {
       return;
     }
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.service.service_name}" template`,
-      "Do you really want to delete this template?<br>If yes, please input template name.",
+      `Confirm deletion of "${this.settingsModel.service.service_name}" service`,
+      "Do you really want to delete this service?<br>If yes, please input service name.",
       (value) => {
         if(value !== this.settingsModel.service.service_name)
-          return 'Template name is incorrect!';
+          return 'Service name is incorrect!';
       },
       'Yes, please remove!',
       'Don`t remove'
@@ -192,16 +217,22 @@ export class ServicesComponent implements OnInit {
       return;
     }
 
+
+    if (!this.validateRequiredFields().status) {
+      this.modal.alert(this.validateRequiredFields().msg);
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
-        `Confirm creating of "${name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm creating of "${name}" service`,
+        "Do you really want to save changes of service?<br>If yes, please input service name.",
         (value) => {
           if (value !== name)
-            return 'Template name is incorrect!';
+            return 'Service name is incorrect!';
         },
-        'Yes, please save!',
-        'Don`t save'
+        'Yes, please create!',
+        'Don`t create'
     ).then((res) => {
       this.saveDocJson();
       console.log(this.settingsModel.service);

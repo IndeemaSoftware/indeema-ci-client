@@ -13,9 +13,15 @@
       <div *ngIf="settingsModel.maintenance" class="form-group">
         <label for="name">Maintenance page name</label>
         <input [(ngModel)]="settingsModel.maintenance.name" [(value)]="settingsModel.maintenance.name" class="form-control" id="new_maintenance_name" name="new_maintenance_name" placeholder="Please enter name for new maintenance page">
+        <div *ngIf="!settingsModel.maintenance.name">
+          <small class="form-text text-muted">Name is required.</small>                    
+        </div>
       </div>     
     <div class="form-group">
       <textarea [(ngModel)]="settingsModel.maintenance.html_code" [(value)]="settingsModel.maintenance.html_code" class="form-control" id="script" name="script" rows="10"></textarea>
+      <div *ngIf="!settingsModel.maintenance.html_code">
+        <small class="form-text text-muted">Maintenance html code is required</small>                    
+      </div>
     </div>
     <button (click)="updateMaintenance()" id="green-button" *ngIf="!isNewMaintenance">Update</button>
     <button (click)="createMaintenance()" id="green-button" *ngIf="isNewMaintenance">Create</button>

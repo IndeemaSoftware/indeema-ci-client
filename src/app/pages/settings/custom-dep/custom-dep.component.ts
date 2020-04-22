@@ -87,13 +87,37 @@ export class CustomDepComponent implements OnInit {
         } else {
             res.status = false;
             res.msg = `Dependancy name can't be empty`;
+        }
+
+        return res;
     }
+
+    validateRequiredFields() {
+        var res = {status:true, msg:""};
+
+        if (!this.settingsModel.dependency.name) {
+            res.status = false;
+            res.msg = "Dependancy name is required"
+        }
+        if (!this.settingsModel.dependency.label) {
+            res.status = false;
+            res.msg = "Dependancy label is required"
+        }
+        if (!this.settingsModel.dependency.install_script) {
+            res.status = false;
+            res.msg = "Dependancy install script is required"
+        }
 
         return res;
     }
 
     update() {
         var name = this.settingsModel.dependency.name;
+
+        if (!this.validateRequiredFields().status) {
+            this.modal.alert(this.validateRequiredFields().msg);
+            return;
+        }
 
         if (this.validateName(name).status) {
             this.modal.confirm(
@@ -144,6 +168,12 @@ export class CustomDepComponent implements OnInit {
 
     createNew() {
         var name = this.settingsModel.dependency.name;
+
+        if (!this.validateRequiredFields().status) {
+            this.modal.alert(this.validateRequiredFields().msg);
+            return;
+        }
+
         if (this.validateName(name).status) {
             this.modal.confirm(
                 `Confirm creating of "${name}" custom dependancy`,
@@ -152,8 +182,8 @@ export class CustomDepComponent implements OnInit {
                   if(value !== name)
                     return 'Custom dependancy name is incorrect!';
                 },
-                'Yes, please remove!',
-                'Don`t remove'
+                'Yes, please create!',
+                'Don`t create'
             ).then((res) => {
                 this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
                     this.cleanFields();

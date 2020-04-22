@@ -12,12 +12,21 @@
 
       <h4>Name</h4>
       <input [(ngModel)]="settingsModel.dependency.name"  class="form-control" id="custom-dep-name" name="custom-dep-name" placeholder="Enter name for dependancy with no whitespaces">
+      <div *ngIf="!settingsModel.dependency.name">
+        <small class="form-text text-muted">Name is required</small>                    
+      </div>
 
       <h4>Label</h4>
       <input [(ngModel)]="settingsModel.dependency.label"  class="form-control" id="custom-dep-label" name="custom-dep-label" placeholder="Enter label for dependancy">
+      <div *ngIf="!settingsModel.dependency.label">
+        <small class="form-text text-muted">Label is required</small>                    
+      </div>
 
       <h4>Install script</h4>
       <textarea  [(ngModel)]="settingsModel.dependency.install_script" [(value)]="settingsModel.install_script" class="form-control" id="script" name="script" rows="10" ></textarea>
+      <div *ngIf="!settingsModel.dependency.install_script">
+        <small class="form-text text-muted">Install script is required</small>                    
+      </div>
 
       <button (click)="update()" id="green-button" *ngIf="!isNew">Update</button>
       <button (click)="createNew()" id="green-button"  *ngIf="isNew" class="btn btn-danger">Create</button>  

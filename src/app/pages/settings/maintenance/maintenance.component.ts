@@ -112,13 +112,18 @@ export class MaintenanceComponent implements OnInit {
   updateMaintenance() {
     var name = this.settingsModel.maintenance.name;
 
+    if (!this.settingsModel.maintenance.html_code) {
+      this.modal.alert("Maintenance page html code can't be empty");
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
-        `Confirm saving of updates of "${name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm saving of updates of "${name}" maintenance page`,
+        "Do you really want to save changes of maintenance page?<br>If yes, please input maintenance page name.",
         (value) => {
           if(value !== name )
-            return 'Template name is incorrect!';
+            return 'Maintenance name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'
@@ -136,12 +141,12 @@ export class MaintenanceComponent implements OnInit {
 
   deleteMaintenance() {
     if (!this.settingsModel.maintenance.name) {
-      this.modal.alert("You can't delete service with no name");
+      this.modal.alert("You can't delete maintenance page with no name");
       return;
     }
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.maintenance.name}" template`,
-      "Do you really want to delete this template?<br>If yes, please input template name.",
+      `Confirm deletion of "${this.settingsModel.maintenance.name}" maintenance`,
+      "Do you really want to delete this maintenance page?<br>If yes, please input maintenance name.",
       (value) => {
         if(value !== this.settingsModel.maintenance.name)
           return 'Template name is incorrect!';
@@ -160,13 +165,18 @@ export class MaintenanceComponent implements OnInit {
   createMaintenance() {
     var name = this.settingsModel.maintenance.name;
 
+    if (!this.settingsModel.maintenance.html_code) {
+      this.modal.alert("Maintenance page html code can't be empty");
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
-        `Confirm creating of "${name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm creating of "${name}" maintenance page`,
+        "Do you really want to save changes of maintenance page?<br>If yes, please input maintenance page name.",
         (value) => {
           if(value !== name )
-            return 'Template name is incorrect!';
+            return 'Maintenance page name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'

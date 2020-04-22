@@ -114,6 +114,11 @@ export class CITemplatesComponent implements OnInit {
   updateTemplate() {
     var name = this.settingsModel.template.name;
 
+    if (!this.settingsModel.template.yml_code) {
+      this.modal.alert("CI script is required for new template");
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
         `Confirm saving of updates of "${name}" script`,
@@ -161,6 +166,11 @@ export class CITemplatesComponent implements OnInit {
 
   createTemplate() {
     var name = this.settingsModel.template.name;
+
+    if (!this.settingsModel.template.yml_code) {
+      this.modal.alert("CI script is required for new template");
+      return;
+    }
 
     if (this.validateName(name).status) {
       this.modal.confirm(

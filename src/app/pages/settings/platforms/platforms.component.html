@@ -13,6 +13,9 @@
       <div *ngIf="settingsModel.platform" class="form-group">
         <label for="platform_name">Platform name</label>
         <input [(ngModel)]="settingsModel.platform.platform_name" [(value)]="settingsModel.platform.platform_name" class="form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform">
+        <div *ngIf="!settingsModel.platform.platform_name">
+          <small class="form-text text-muted">Name is required</small>                    
+        </div>
       </div>     
     <div class="form-container">
       <h4>Platform variables</h4>
@@ -47,10 +50,16 @@
         <h4>Platform setup script</h4>
       </div>
       <textarea [(ngModel)]="settingsModel.platform.setup_script" [(value)]="settingsModel.platform.setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <div *ngIf="!settingsModel.platform.setup_script">
+        <small class="form-text text-muted">Setup script is required</small>                    
+      </div>
     </div>
     <div class="form-group">
       <h4>Platform cleanup script</h4>
       <textarea [(ngModel)]="settingsModel.platform.cleanup_script" [(value)]="settingsModel.platform.cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <div *ngIf="!settingsModel.platform.cleanup_script">
+        <small class="form-text text-muted">Cleanup script is required</small>                    
+      </div>
     </div>
     <div class="form-group">
       <h4>Platform documentation</h4>
@@ -58,7 +67,7 @@
         Available keys: <br/>
         server_name, description, ssh_ip, ssh_key, ssh_username, ports, server_dependencies, custom_dependencies, platform
       </div>
-      <textarea (change)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform"></textarea>
+      <textarea (input)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform"></textarea>
       <div *ngIf="settingsModel.jsonValidationMessage">
         <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
       </div>

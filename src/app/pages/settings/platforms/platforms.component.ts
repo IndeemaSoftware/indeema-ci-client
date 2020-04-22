@@ -137,6 +137,25 @@ export class PlatformsComponent implements OnInit {
     }
 
     return res;
+  }
+
+  validateRequiredFields() {
+    var res = {status:true, msg:""};
+
+    if (!this.settingsModel.platform.platform_name) {
+        res.status = false;
+        res.msg = "Platform name is required"
+    }
+    if (!this.settingsModel.platform.setup_script) {
+        res.status = false;
+        res.msg = "Setup script is required"
+    }
+    if (!this.settingsModel.platform.cleanup_script) {
+        res.status = false;
+        res.msg = "Cleanup script is required"
+    }
+
+    return res;
 }
 
   updatePlatform() {
@@ -145,13 +164,18 @@ export class PlatformsComponent implements OnInit {
       return;
     }
 
+    if (!this.validateRequiredFields().status) {
+      this.modal.alert(this.validateRequiredFields().msg);
+      return;
+    }
+
     if (this.validateName(this.settingsModel.platform.platform_name ).status) {
       this.modal.confirm(
-        `Confirm saving of updates of "${this.settingsModel.platform.platform_name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm saving of updates of "${this.settingsModel.platform.platform_name}" platform`,
+        "Do you really want to save changes of platform?<br>If yes, please input platform name.",
         (value) => {
           if(value !== this.settingsModel.platform.platform_name )
-            return 'Template name is incorrect!';
+            return 'Platform name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'
@@ -175,11 +199,11 @@ export class PlatformsComponent implements OnInit {
     }
 
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.platform.platform_name}" template`,
-      "Do you really want to delete this template?<br>If yes, please input template name.",
+      `Confirm deletion of "${this.settingsModel.platform.platform_name}" platform`,
+      "Do you really want to delete this platform?<br>If yes, please input platform name.",
       (value) => {
         if(value !== this.settingsModel.platform.platform_name)
-          return 'Template name is incorrect!';
+          return 'Platform name is incorrect!';
       },
       'Yes, please remove!',
       'Don`t remove'
@@ -193,19 +217,23 @@ export class PlatformsComponent implements OnInit {
   }
 
   createPlatform() {
-    console.log("Variable nmae: " + this.isVariableUnique);
     if (!this.isVariableUnique) {
       this.modal.alert(`Variable names should be unique`);
       return;
     }
 
+    if (!this.validateRequiredFields().status) {
+      this.modal.alert(this.validateRequiredFields().msg);
+      return;
+    }
+
     if (this.validateName(this.settingsModel.platform.platform_name).status) {
       this.modal.confirm(
-        `Confirm creating of "${this.settingsModel.platform.platform_name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm creating of "${this.settingsModel.platform.platform_name}" platform`,
+        "Do you really want to save changes of platform?<br>If yes, please input platform name.",
         (value) => {
           if(value !== this.settingsModel.platform.platform_name )
-            return 'Template name is incorrect!';
+            return 'Platform name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'

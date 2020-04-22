@@ -85,21 +85,50 @@ export class ServerDepComponent implements OnInit {
       
             if (!regex.test(name)) {
                 res.status = false;
-                res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+                res.msg = 'Dependancy package name is invalid. Please use: letters and numbers only'
             } else {
                 res.status = true;
                 res.msg = `Let's go`;  
             }
         } else {
             res.status = false;
-            res.msg = `Dependancy name can't be empty`;
+            res.msg = `Dependancy package name can't be empty`;
     }
+
+        return res;
+    }
+
+    validateRequiredFields() {
+        var res = {status:true, msg:""};
+
+        if (!this.settingsModel.dependency.name) {
+            res.status = false;
+            res.msg = "Dependancy name is required"
+        }
+        if (!this.settingsModel.dependency.label) {
+            res.status = false;
+            res.msg = "Dependancy label is required"
+        }
+        if (!this.settingsModel.dependency.pre_install_script) {
+            res.status = false;
+            res.msg = "Dependancy install script is required"
+        }
+        if (!this.settingsModel.dependency.post_install_script) {
+            res.status = false;
+            res.msg = "Dependancy post install script is required"
+        }
 
         return res;
     }
 
     update() {
         var name = this.settingsModel.dependency.package;
+
+        if (!this.validateRequiredFields().status) {
+            this.modal.alert(this.validateRequiredFields().msg);
+            return;
+        }
+        
         if (this.validateName(name).status) {
             this.modal.confirm(
                 `Confirm updating of "${name}" Ddpendancy`,
@@ -108,8 +137,8 @@ export class ServerDepComponent implements OnInit {
                   if(value !== name)
                     return 'Dependancy name is incorrect!';
                 },
-                'Yes, please remove!',
-                'Don`t remove'
+                'Yes, please update!',
+                'Don`t update'
             ).then((res) => {
                 this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
                     this.updateList();
@@ -150,6 +179,12 @@ export class ServerDepComponent implements OnInit {
 
     createNew() {
         var name = this.settingsModel.dependency.package;
+
+        if (!this.validateRequiredFields().status) {
+            this.modal.alert(this.validateRequiredFields().msg);
+            return;
+        }
+
         if (this.validateName(name).status) {
             this.modal.confirm(
                 `Confirm creating of "${name}" dependancy`,
@@ -158,8 +193,8 @@ export class ServerDepComponent implements OnInit {
                   if(value !== name)
                     return 'Dependancy name is incorrect!';
                 },
-                'Yes, please remove!',
-                'Don`t remove'
+                'Yes, please create!',
+                'Don`t create'
             ).then((res) => {
                 this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
                     this.cleanFields();
