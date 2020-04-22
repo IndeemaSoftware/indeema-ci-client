@@ -42,6 +42,7 @@ export class MaintenanceComponent implements OnInit {
   }
 
   selected() {
+    this.isNewMaintenance = true;
     this.auth.getUser().then((user) => {
       this.initUser();
       this.updateMaintenanceList();
