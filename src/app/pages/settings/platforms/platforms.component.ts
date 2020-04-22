@@ -183,7 +183,7 @@ export class PlatformsComponent implements OnInit {
       this.saveDocJson();
       this.api.update(`platforms/${this.settingsModel.platform.id}`, this.settingsModel.platform).then((resp) => {
       });
-  
+        this.modal.alert(`Platform ${this.settingsModel.platform.platform_name} was succesfully updated.`);  
       }, (err) => {
         this.modal.alert(err);
       })
@@ -210,6 +210,7 @@ export class PlatformsComponent implements OnInit {
   ).then((res) => {
     this.api.remove(`platforms/${this.settingsModel.platform.id}`).then((resp) => {
       this.cleanPlatformFields();
+      this.modal.alert(`Platform ${this.settingsModel.platform.platform_name} was succesfully removed.`);  
     });
     }, (err) => {
       this.modal.alert(err);
@@ -242,6 +243,7 @@ export class PlatformsComponent implements OnInit {
       this.api.create(`platforms`, this.settingsModel.platform).then((resp) => {
         this.updatePlatformFields(resp);
         this.cleanPlatformFields();
+        this.modal.alert(`Platform ${this.settingsModel.platform.platform_name} was succesfully created. To rpoceed working with it, please select it from ilst in the top of this page.`);  
       });  
   
       }, (err) => {

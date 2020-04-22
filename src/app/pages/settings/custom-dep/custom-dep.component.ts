@@ -133,6 +133,7 @@ export class CustomDepComponent implements OnInit {
                 this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
                     this.cleanFields();
                     this.updateList();
+                    this.modal.alert(`Dependency ${name} was succesfully updated. To proceed with it, please select it from the list in the top of this page.`);  
                 });  
                     }, (err) => {
                 this.modal.alert(err);
@@ -160,6 +161,7 @@ export class CustomDepComponent implements OnInit {
             this.api.remove(`custom-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
                 this.cleanFields();
                 this.updateList();
+                this.modal.alert(`Dependency ${name} was succesfully removed.`);  
             });  
               }, (err) => {
             this.modal.alert(err);
@@ -188,6 +190,7 @@ export class CustomDepComponent implements OnInit {
                 this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
                     this.cleanFields();
                     this.updateList();
+                    this.modal.alert(`Dependency ${name} was succesfully created. To proceed with it, please select it from the list in the top of this page.`);  
                 });      
             }, (err) => {
                 this.modal.alert(err);

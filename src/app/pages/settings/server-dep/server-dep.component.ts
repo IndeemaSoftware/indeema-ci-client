@@ -142,6 +142,7 @@ export class ServerDepComponent implements OnInit {
             ).then((res) => {
                 this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
                     this.updateList();
+                    this.modal.alert(`Dependency ${name} was succesfully updated.`);  
                 });  
                 }, (err) => {
                 this.modal.alert(err);
@@ -171,6 +172,7 @@ export class ServerDepComponent implements OnInit {
             this.api.remove(`server-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
                 this.updateList();
                 this.cleanFields();
+                this.modal.alert(`Dependency ${name} was succesfully removed.`);  
             });  
         }, (err) => {
             this.modal.alert(err);
@@ -199,6 +201,7 @@ export class ServerDepComponent implements OnInit {
                 this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
                     this.cleanFields();
                     this.updateList();
+                    this.modal.alert(`Dependency ${name} was succesfully created. To proceed working with it please select it from list in the top of page.`);  
                 });      
             }, (err) => {
                 this.modal.alert(err);

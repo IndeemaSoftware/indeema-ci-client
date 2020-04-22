@@ -177,7 +177,7 @@ export class ServicesComponent implements OnInit {
       this.saveDocJson();
       this.api.update(`services/${this.settingsModel.service.id}`, this.settingsModel.service).then((resp) => {
       });
-  
+        this.modal.alert(`Service ${name} was succesfully updated.`);  
       }, (err) => {
         this.modal.alert(err);
       })
@@ -203,6 +203,7 @@ export class ServicesComponent implements OnInit {
   ).then((res) => {
     this.api.remove(`services/${this.settingsModel.service.id}`).then((resp) => {
       this.cleanServiceFields();
+      this.modal.alert(`Service ${name} was succesfully removed.`);  
     });
     }, (err) => {
       this.modal.alert(err);
@@ -239,6 +240,7 @@ export class ServicesComponent implements OnInit {
       this.api.create(`services`, this.settingsModel.service).then((resp) => {
         this.updateServiceFields(resp);
         this.cleanServiceFields();
+        this.modal.alert(`Service ${name} was succesfully created. To proceed working with it please select it from list in the top of page.`);  
       });  
   
       }, (err) => {

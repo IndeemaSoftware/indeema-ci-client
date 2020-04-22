@@ -131,7 +131,7 @@ export class MaintenanceComponent implements OnInit {
     ).then((res) => {
       this.api.update(`maintenances/${this.settingsModel.maintenance.id}`, this.settingsModel.maintenance).then((resp) => {
       });
-  
+        this.modal.alert(`Maintenance page ${name} was succesfully updated.`);  
       }, (err) => {
         this.modal.alert(err);
       })
@@ -157,6 +157,7 @@ export class MaintenanceComponent implements OnInit {
   ).then((res) => {
     this.api.remove(`maintenances/${this.settingsModel.maintenance.id}`).then((resp) => {
       this.cleanMaintenanceFields();
+      this.modal.alert(`Maintenance page ${name} was succesfully deleted.`);  
     });
     }, (err) => {
       this.modal.alert(err);
@@ -185,6 +186,7 @@ export class MaintenanceComponent implements OnInit {
       this.api.create(`maintenances`, this.settingsModel.maintenance).then((resp) => {
         this.updateServiceFields(resp);
         this.cleanMaintenanceFields();
+        this.modal.alert(`Maintenance page ${name} was succesfully created. To proceed working with it, please selected it from list in the top of this page.`);  
       });  
   
       }, (err) => {

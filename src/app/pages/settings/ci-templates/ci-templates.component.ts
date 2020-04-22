@@ -132,7 +132,7 @@ export class CITemplatesComponent implements OnInit {
     ).then((res) => {
       this.api.update(`ci-templates/${this.settingsModel.template.id}`, this.settingsModel.template).then((resp) => {
       });
-  
+        this.modal.alert(`CI template ${name} was succesfully updated.`);  
       }, (err) => {
         this.modal.alert(err);
       })
@@ -158,6 +158,7 @@ export class CITemplatesComponent implements OnInit {
   ).then((res) => {
     this.api.remove(`ci-templates/${this.settingsModel.template.id}`).then((resp) => {
       this.cleanTemplateFields();
+      this.modal.alert(`CI template ${name} was succesfully removed.`);  
     });
     }, (err) => {
       this.modal.alert(err);
@@ -186,6 +187,7 @@ export class CITemplatesComponent implements OnInit {
       this.api.create(`ci-templates`, this.settingsModel.template).then((resp) => {
         this.updateServiceFields(resp);
         this.cleanTemplateFields();
+        this.modal.alert(`CI template ${name} was succesfully created. To proceed working with it selected it from list in the top of this page.`);  
       });  
   
       }, (err) => {
