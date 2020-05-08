@@ -243,7 +243,7 @@ export class PlatformsComponent implements OnInit {
       this.api.create(`platforms`, this.settingsModel.platform).then((resp) => {
         this.updatePlatformFields(resp);
         this.cleanPlatformFields();
-        this.modal.alert(`Platform ${this.settingsModel.platform.platform_name} was succesfully created. To rpoceed working with it, please select it from ilst in the top of this page.`);  
+        this.modal.alert(`Platform ${this.settingsModel.platform.platform_name} was successfully created. To proceed working with it, please select it from list in the top of this page.`);  
       });  
   
       }, (err) => {
@@ -288,6 +288,10 @@ export class PlatformsComponent implements OnInit {
 
   removeRepeatField(arr, key){
     arr.splice(key, 1);
+
+    for (let obj of arr) {
+      this.variableNameChange(obj.key);
+    }
   }
 
   cleanFields(arr){

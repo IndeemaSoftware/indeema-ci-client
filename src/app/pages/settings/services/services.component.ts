@@ -283,6 +283,10 @@ export class ServicesComponent implements OnInit {
 
   removeRepeatField(arr, key){
     arr.splice(key, 1);
+
+    for (let obj of arr) {
+      this.variableNameChange(obj.key);
+    }
   }
 
   cleanFields(arr){
