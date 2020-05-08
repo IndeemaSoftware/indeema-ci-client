@@ -53,6 +53,7 @@ export class ServicesComponent implements OnInit {
   }
 
   selected() {
+    this.isNewService = true;
     this.auth.getUser().then((user) => {
       this.updateServiceList();
       this.initUser();

@@ -44,7 +44,7 @@ export class MigrationComponent implements OnInit {
   }
 
   selected () {
-    this.isInstalling = null;
+    this.isInstalling = true;
     this.isLoading = true;
     this.auth.user = null;//this is needed to get updated users after installing module
     this.auth.getUser().then((user) => {

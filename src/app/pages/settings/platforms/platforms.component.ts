@@ -54,6 +54,7 @@ export class PlatformsComponent implements OnInit {
   }
 
   selected() {
+    this.isNewPlatform = true;
     this.auth.getUser().then((user) => {
       this.updatePlatformList();
       this.cleanPlatformFields();

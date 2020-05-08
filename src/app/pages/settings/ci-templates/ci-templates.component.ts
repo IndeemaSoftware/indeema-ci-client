@@ -43,6 +43,7 @@ export class CITemplatesComponent implements OnInit {
   }
 
   selected() {
+    this.isNewTemplate = true;
     this.auth.getUser().then((user) => {
       this.initUser();
       this.updateTemplatesList();

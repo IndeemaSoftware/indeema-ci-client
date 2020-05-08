@@ -48,6 +48,7 @@ export class ServerDepComponent implements OnInit {
     }
 
     selected() {
+        this.isNew = true;
         this.auth.getUser().then((user) => {
             this.initUser();
             this.updateList();
