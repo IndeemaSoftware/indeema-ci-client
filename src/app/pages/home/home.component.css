@@ -6,21 +6,21 @@
 }
 
 .navbar a:link {
-    font-family: "Poppins-Regular";
+    font-family: "Poppins";
     font-style: normal;
     font-size: 13pt;
     color: #FFFFFF;
 }
 
 .navbar a:active{
-    font-family: "Poppins-Regular";
+    font-family: "Poppins";
     font-style: bold;
     font-size: 13pt;
     color: #4DB05B;
 }
 
 .navbar li.active a{
-    font-family: "Poppins-Regular";
+    font-family: "Poppins";
     font-style: bold;
     font-size: 13pt;
     color: #4DB05B;

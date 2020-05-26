@@ -134,14 +134,20 @@ footer {
 100% { transform: rotate(360deg); }
 }
 
-/** INDEEMA CI DEFAULT STYLES **/
+.not-found{
+  color: silver;
+  text-align: center;
+  margin: 0;
+}
+
+/** INDEEMA CI STYLES **/
 .ci__btn-default {
   background-color: #4DB05B;
   border-radius: 60px;
   opacity: 1;
   border: none;
-  margin: 20px 0 0;
-  padding: 10px 15px;
+  margin: 0;
+  padding: 10px 25px;
   width: auto;
   height: auto;
   cursor: pointer;
@@ -153,6 +159,8 @@ footer {
 .ci__btn-default:hover,
 .ci__btn-default:active {
   background-color: #322f41;
+  color: #FFFFFF;
+  text-decoration: none;
 }
 .ci__btn-default:focus{
   outline: none !important;
@@ -189,6 +197,7 @@ footer {
   padding: 4pt 4pt 4pt 4pt;
   opacity: 1;
   font-size: 14px;
+  min-width: 200px;
 }
 .ci__input:focus{
   outline: none !important;
@@ -198,3 +207,64 @@ footer {
   border-color: rgba(255, 0, 0, 0.05) !important;
   color: red !important;
 }
+
+.ci_label{
+  display: inline-block;
+  margin: 5px 0 5px 10px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 13px;
+}
+.ci_label.yellow{
+  background: #FEF5D2;
+  color: #FEC02E;
+}
+.ci_label.red{
+  background: #FCD1D9;
+  color: #DA3148;
+}
+.ci_label.green{
+  background: #D5F3DD;
+  color: #4DB05B;
+}
+
+  /*** CI Widget items ***/
+.ci__widget{
+  width: 100%;
+  height: auto;
+  background: #fff;
+  position: relative;
+  padding: 20px 30px;
+  box-shadow: 0px 1px 15px #45414E14;
+}
+.ci__widget .ci__widget-header{
+  display: table;
+  width: 100%;
+  height: auto;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #EFF4F9;
+}
+.ci__widget .ci__widget-header .ci__widget-title{
+  float: left;
+  margin: 0 15px 0 0;
+}
+.ci__widget .ci__widget-header .ci__widget-title > h1,
+.ci__widget .ci__widget-header .ci__widget-title > h2
+.ci__widget .ci__widget-header .ci__widget-title > h3{
+  font-size: 32px;
+  line-height: 40px;
+  margin: 0;
+  padding: 0;
+}
+.ci__widget .ci__widget-header .ci__widget-action{
+  float: right;
+  display: inline;
+}
+.ci__widget .ci__widget-body{
+  padding: 20px 0 0 0;
+}
+.ci__widget .ci__widget-body .ci__widget-action{
+  display: table;
+  width: 100%;
+}
+

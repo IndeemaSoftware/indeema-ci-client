@@ -54,6 +54,7 @@ import { ForgotPasswordComponent } from './pages/signin/forgot-password/forgot-p
 import { ResetPasswordComponent } from './pages/signin/reset-password/reset-password.component';
 import { PublicComponent } from './containers/public/public.component';
 import { TermsComponent } from './pages/terms/terms.component';
+import { PrivateComponent } from './containers/private/private.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { TermsComponent } from './pages/terms/terms.component';
     ForgotPasswordComponent,
     ResetPasswordComponent,
     PublicComponent,
-    TermsComponent
+    TermsComponent,
+    PrivateComponent
   ],
   imports: [
     BrowserModule,

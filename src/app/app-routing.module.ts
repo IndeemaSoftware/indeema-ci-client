@@ -16,11 +16,28 @@ import {SignupComponent} from './pages/signup/signup.component';
 import {ForgotPasswordComponent} from './pages/signin/forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './pages/signin/reset-password/reset-password.component';
 import {TermsComponent} from './pages/terms/terms.component';
+import {PrivateComponent} from './containers/private/private.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent
+  },
+  {
+    path: '',
+    component: PrivateComponent,
+    children: [
+      {
+        path: 'projects',
+        component: ProjectsComponent,
+        pathMatch: 'full'
+      },
+      {
+        path: 'servers',
+        component: ServersComponent,
+        pathMatch: 'full'
+      }
+    ]
   },
   {
     path: 'signin',
@@ -78,10 +95,6 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'projects',
-    component: ProjectsComponent
-  },
-  {
     path: 'projects/:id',
     component: EditComponent
   },
@@ -100,10 +113,6 @@ const routes: Routes = [
   {
     path: 'servers/:id',
     component: EditServerComponent
-  },
-  {
-    path: 'servers',
-    component: ServersComponent
   },
   {
     path: 'settings',

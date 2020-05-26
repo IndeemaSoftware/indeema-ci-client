@@ -1,5 +1,29 @@
+.ci__link{
+    font-size: 16px;
+}
+.ci__link:hover,
+.ci__link:active{
+    color: #4DB05B !important;
+}
 .footer {
     height: 40pt;
     width: 100%;
     background-color: #2C2E3E;
+    padding: 15px 30px;
+}
+.footer-title{
+    color: #fff;
+    text-align: center;
+    margin-bottom: auto;
+    margin-top: 0pt;
+    position: relative;
+}
+.copyright{
+    color: #fff;
+    margin-bottom: 0pt;
+    margin-top: auto;
+    font-size: 7pt;
+    line-height: 30px;
+    position: absolute;
+    right: 0;
 }

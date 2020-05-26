@@ -1,3 +1,7 @@
+.setup-server {
+    float:right;
+}
+
 #status-label-success {
     background-color: rgba(77, 176, 91, 0.3);
     color: rgba(77, 176, 91, 1);

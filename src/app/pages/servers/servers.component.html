@@ -1,75 +1,83 @@
-<app-header></app-header>
-<div class="container" style="min-height: calc(100vh - 40pt)">
-  <div class="row" style="background-color:white;margin-top:20pt; margin-bottom:20pt; box-shadow: 0pt 1pt 15pt #45414E14;padding-bottom: 10pt;padding-top: 10pt;">
-    <div class="col-sm-12 col-md-12 col-lg-12">
-      <h2 style="margin-top: 10pt">
-        Servers list
-        <span *ngIf="statuses.progress" id="status-label-progress">{{ statuses.progress }} In progress...</span>
-        <span *ngIf="statuses.success" id="status-label-success">{{ statuses.success }} Setup success!</span>
-        <span *ngIf="statuses.failed" id="status-label-fail">{{ statuses.failed }} Setup failed</span>
-        <span *ngIf="statuses.cleanup" id="status-label-progress">{{ statuses.cleanup }} Cleanup in progress...</span>
-        <span *ngIf="statuses.cleanup_success" id="status-label-success">{{ statuses.cleanup_success }} Cleanup success!</span>
-        <span *ngIf="statuses.cleanup_failed" id="status-label-fail">{{ statuses.cleanup_failed }} Cleanup failed</span>
-      </h2>
-      <a id="setup-button" routerLink="/servers/new">Setup server</a>
-      <p *ngIf="!servers" class="loader text-center"></p>
-      <p *ngIf="servers && !servers.length" class="text-muted text-center">Servers not found</p>
-      <table *ngIf="servers && servers.length" class="table editable-table">
-        <thead class="thead-transparent">
-          <tr>
-            <th scope="col">Server name</th>
-            <th scope="col">Installed Modules</th>
-            <th scope="col">Platform</th>
-            <th scope="col">Server SSH</th>
-            <th scope="col">Open Ports</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let server of servers">
-            <th scope="row" class="thread-light">
-              <span *ngIf="server.server_status === 'progress'" style="color:rgba(254, 192, 46, 1)">&#9864;</span>
-              <span *ngIf="server.server_status === 'success'" style="color:rgba(77, 176, 91, 1)">&#9864;</span>
-              <span *ngIf="server.server_status === 'failed'" style="color:rgba(218, 49, 72, 1)">&#9864;</span>
-              <span *ngIf="server.server_status === 'waiting'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
-              <span *ngIf="server.server_status === 'cleanup_success'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
-              <span *ngIf="server.server_status === 'cleanup_failed'" style="color:rgba(218, 49, 72, 1)">&#9864;</span>
-              {{ server.server_name }}<br/>
-              <tr *ngFor="let user of server.users" style="background-color: transparent;">
-                <th scope="row" style="background-color: transparent;">
-                  <i style="font-weight: 400; background-color: transparent;">{{ user.username || 'User not found' }}</i>
-                </th>
-            </th>
-            <td>
-              <div *ngIf="server && server.server_dependencies && server.server_dependencies.length > 0" class="form-group">
-                  <label *ngFor="let dep of server.server_dependencies; let i = index" class="badge badge-success">
-                    {{ dep.label}}
-                  </label>
-              </div>
-              
-              <div *ngIf="server && server.custom_dependencies && server.custom_dependencies.length > 0" class="form-group">
-                  <label *ngFor="let dep of server.custom_dependencies; let i = index" class="badge badge-success">
-                    {{ dep.label}} 
-                  </label>
-              </div>
-            </td>
-            <th scope="row">{{ server.platform?server.platform.platform_name:"No platform selected" }}</th>
-            <th scope="row">{{ server.ssh_username?server.ssh_username:"No user defined for host" }}@{{server.ssh_ip?server.ssh_ip:"No host defined"}}</th>
-            <th scope="row">{{ server.ports?server.ports:"No ports selected" }}</th>
-            <td>
-              <div class="btn-group btn-group-toggle">
-                <button (click)="setupServer(server)" id="start" type="button" title="Start platform setup script"></button>
-                <button (click)="toConsole(server, false, false)" title="Open ternial window" id="console"></button>
-                <button (click)="editServer(server)" id="edit" type="button" title="Edit server configuration"></button>
-                <button (click)="cleanupServer(server, true, true)" [disabled]="server.server_status !== 'success'" id="cleanup" type="button" title="Run platform cleanup script"></button>
-                <button (click)="deleteServer(server)" id="delete-server" type="button" title="Delete server configuration for DB"></button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1>Servers</h1>
+    </div>
+    <div class="ci__widget-action">
+      <div *ngIf="statuses.success" class="ci_label green"><strong>{{ statuses.success }}</strong> setup success</div>
+      <div *ngIf="statuses.failed" class="ci_label red"><strong>{{ statuses.failed }}</strong> setup failed</div>
+      <div *ngIf="statuses.progress" class="ci_label yellow"><strong>{{ statuses.progress }}</strong> setup in progress</div>
+
+      <div *ngIf="statuses.cleanup" class="ci_label yellow"><strong>{{ statuses.cleanup }}</strong> cleanup in progress</div>
+      <div *ngIf="statuses.cleanup_success" class="ci_label green"><strong>{{ statuses.cleanup_success }}</strong> cleanup success</div>
+      <div *ngIf="statuses.cleanup_failed" class="ci_label red"><strong>{{ statuses.cleanup_failed }}</strong> cleanup failed</div>
     </div>
   </div>
+  <!-- widget header end -->
+
+  <div class="ci__widget-body">
+    <div class="ci__widget-action">
+      <a class="ci__btn-default setup-server" routerLink="/servers/new">+ Setup server</a>
+    </div>
+
+    <p *ngIf="!servers" class="loader text-center"></p>
+    <p *ngIf="servers && !servers.length" class="not-found">Servers not found</p>
+
+    <table *ngIf="servers && servers.length" class="table editable-table">
+      <thead class="thead-transparent">
+        <tr>
+          <th scope="col">Server name</th>
+          <th scope="col">Installed Modules</th>
+          <th scope="col">Platform</th>
+          <th scope="col">Server SSH</th>
+          <th scope="col">Open Ports</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let server of servers">
+          <th scope="row" class="thread-light">
+            <span *ngIf="server.server_status === 'progress'" style="color:rgba(254, 192, 46, 1)">&#9864;</span>
+            <span *ngIf="server.server_status === 'success'" style="color:rgba(77, 176, 91, 1)">&#9864;</span>
+            <span *ngIf="server.server_status === 'failed'" style="color:rgba(218, 49, 72, 1)">&#9864;</span>
+            <span *ngIf="server.server_status === 'waiting'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
+            <span *ngIf="server.server_status === 'cleanup_success'" style="color:rgba(150, 150, 150, 1)">&#9864;</span>
+            <span *ngIf="server.server_status === 'cleanup_failed'" style="color:rgba(218, 49, 72, 1)">&#9864;</span>
+            {{ server.server_name }}<br/>
+        <tr *ngFor="let user of server.users" style="background-color: transparent;">
+          <th scope="row" style="background-color: transparent;">
+            <i style="font-weight: 400; background-color: transparent;">{{ user.username || 'User not found' }}</i>
+          </th>
+          </th>
+          <td>
+            <div *ngIf="server && server.server_dependencies && server.server_dependencies.length > 0" class="form-group">
+              <label *ngFor="let dep of server.server_dependencies; let i = index" class="badge badge-success">
+                {{ dep.label}}
+              </label>
+            </div>
+
+            <div *ngIf="server && server.custom_dependencies && server.custom_dependencies.length > 0" class="form-group">
+              <label *ngFor="let dep of server.custom_dependencies; let i = index" class="badge badge-success">
+                {{ dep.label}}
+              </label>
+            </div>
+          </td>
+          <th scope="row">{{ server.platform?server.platform.platform_name:"No platform selected" }}</th>
+          <th scope="row">{{ server.ssh_username?server.ssh_username:"No user defined for host" }}@{{server.ssh_ip?server.ssh_ip:"No host defined"}}</th>
+          <th scope="row">{{ server.ports?server.ports:"No ports selected" }}</th>
+          <td>
+            <div class="btn-group btn-group-toggle">
+              <button (click)="setupServer(server)" id="start" type="button" title="Start platform setup script"></button>
+              <button (click)="toConsole(server, false, false)" title="Open ternial window" id="console"></button>
+              <button (click)="editServer(server)" id="edit" type="button" title="Edit server configuration"></button>
+              <button (click)="cleanupServer(server, true, true)" [disabled]="server.server_status !== 'success'" id="cleanup" type="button" title="Run platform cleanup script"></button>
+              <button (click)="deleteServer(server)" id="delete-server" type="button" title="Delete server configuration for DB"></button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 </div>
-<app-footer></app-footer>
+<!-- widget body end -->
+</div>
 
