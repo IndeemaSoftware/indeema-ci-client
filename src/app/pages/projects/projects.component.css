@@ -1,251 +1,101 @@
-.setup-project {
-    float:right;
-}
-
 table {
-    border:0px;
-    border-collapse:collapse;
-    border-spacing:0px;
-    margin:0px; 
-}
-    
-td { 
-    padding:0px; 
-    border-width:0px; 
-    margin:0px; 
-    border-top: none;
     border: none;
-    border-bottom: none;
+    margin: 0px;
+}
+td {
+    padding: 0px;
+    margin: 0px;
+    border: none;
 }
 
-th { 
-    border-width:0px; 
-    border:none;
-    margin:0px; 
+th {
+    border: none;
+    margin: 0px;
 }
 
-th#project { 
-    border-width:0px; 
-    border:none;
-    margin:0px; 
-    padding: 0pt 0pt 0pt 0pt;
+td.project {
+    border: none;
+    margin: 0px;
+    padding: 0px;
 }
 
-tr { 
-    border-width:0px; 
-    border:none;
-    margin:0px; 
+tr {
+    border: none;
+    margin: 0px;
 }
 
-tr#tr-apps { 
-    border-width:1px; 
-    margin:0px; 
+tr.tr-apps {
+    border-width:1px;
+    margin:0px;
 }
 
-th#tr-apps { 
-    border-width:1px; 
-    margin:0px; 
-}
-
-td#clean{
-    opacity: 1;
-}
-
-#filled-td {
-    background-color: #EFF4F9;
-}
-
-.row {
-    background-color: #FFFF;
-}
-
-.thead-transparent {
-    opacity: 1;
-}
-
-#head-block {
-    height: 100pt;
-    width: 100%;
-    background-color: #EFF4F9;
+.setup-project {
+    float: right;
 }
 
 .thead-custom {
-    margin:0px; 
-    height: 100pt;
-    width: 100pt;
+    margin: 0px;
     background-color: #EFF4F9;
-    opacity: 1;
 }
 
-#cell-project {
+.cell-project {
     background-color: #EFF4F9;
     width: 100%;
-    height: 36pt;
-    margin: 0pt 0pt 0pt 0pt;
+    height: 48px;
+    margin: 0px;
 }
 
-#cell-apps {
-    margin-top: 0pt;
-    margin-left: 0pt;
-    margin-right: 0pt;
-}
-
-button#btn-edit {
-    background-image: url('/assets/edit.svg');
+button.ci__action_btn{
     background-color: transparent;
     background-size: 18pt 18pt;
     width: 18pt;
     height:18pt;
     border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
+    margin: 5px;
+    cursor: pointer;
 }
-
-button#btn-edit:hover {
-    opacity: 0.5;
-}
-
-button#btn-delete {
+button.btn-delete {
     background-image:url('/assets/delete.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#btn-delete:hover {
-    opacity: 0.5;
+button.btn-edit {
+    background-image: url('/assets/edit.svg');
 }
-
-button#start  {
+button.btn-start  {
     background-image:url(/assets/start_enabled.svg);
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#start:disabled  {
+button.btn-start:disabled  {
     background-image:url(/assets/start_disabled.svg);
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#start:hover {
-    opacity: 0.5;
+button.btn-console {
+    background-image: url(/assets/console_enabled.svg);
 }
-
-button#console  {
-    background-image:url(/assets/console_enabled.svg);
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
-}
-
-button#console:disbaled  {
+button.btn-console:disabled  {
     background-image:url(/assets/console_disabled.svg);
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#console:hover {
-    opacity: 0.5;
-}
-
-button#cleanup  {
+button.btn-cleanup  {
     background-image:url('/assets/cleanup_enabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#cleanup:disabled  {
+button.btn-cleanup:disabled  {
     background-image:url('/assets/cleanup_disabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#cleanup:hover {
-    opacity: 0.5;
-}
-
-button#delete-app  {
+button.btn-delete-app  {
     background-image:url('/assets/delete_enabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#delete-app:disabled  {
+button.btn-delete-app:disabled  {
     background-image:url('/assets/delete_disabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#delete-app:hover {
-    opacity: 0.5;
-}
-
-button#link {
+button.btn-link {
     background-image:url('/assets/link_enabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#link:disabled {
+button.btn-link:disabled {
     background-image:url('/assets/link_disabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 10pt 10pt 10pt 10pt;
 }
-
-button#link:hover {
+button.btn-link:hover,
+button.btn-delete-app:hover,
+button.btn-cleanup:hover,
+button.btn-console:hover,
+button.btn-start:hover,
+button.btn-edit:hover,
+button.btn-delete:hover {
     opacity: 0.5;
 }

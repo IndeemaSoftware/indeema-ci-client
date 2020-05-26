@@ -1,77 +1,18 @@
-.setup-server {
-    float:right;
-}
-
-#status-label-success {
-    background-color: rgba(77, 176, 91, 0.3);
-    color: rgba(77, 176, 91, 1);
-    float:right;
-    font-size: 10pt; 
-    font-weight: 20;
-    border-radius: 59px;
-    margin-left: 20pt;
-    padding: 5pt 10pt 5pt 10pt;
-}
-
-#status-label-progress {
-    background-color: rgba(254, 192, 46, 0.3);
-    color: rgba(254, 192, 46, 1);
-    float:right;
-    font-size: 10pt; 
-    font-weight: 20;
-    border-radius: 59px;
-    margin-left: 20pt;
-    padding: 5pt 10pt 5pt 10pt;
-}
-
-#status-label-fail {
-    background-color: rgba(218, 49, 72, 0.3);
-    color: rgba(218, 49, 72, 1);
-    float:right;
-    font-size: 10pt; 
-    font-weight: 20;
-    border-radius: 59px;
-    margin-left: 20pt;
-    padding: 5pt 10pt 5pt 10pt;
-}
-
-#setup-button {
-    background-color: #4DB05B;
-    border-radius: 59px;  
-    color: white;
-    opacity: 1;
-    border: none;
-    margin-top:20px;
-    font-size: 10pt;
-    font-weight: 50;
-    float:right;
-    padding: 5pt 10pt 5pt 10pt;
-}
-
-
 table {
-    border:0px;
-    border-collapse:collapse;
-    border-spacing:0px;
-    margin:0px; 
+    border: 0px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    margin: 0px;
 }
-    
-td { 
-    padding:0px; 
-    border-width:0px; 
-    margin:0px; 
-    border-top: none;
+td {
+    padding: 0px;
+    margin: 0px;
     border: none;
-    border-bottom: 1pt;
 }
-
-th { 
-    border-width:0px; 
+th {
     border:none;
-    margin:0px; 
-    border-bottom: 1pt;
+    margin:0px;
 }
-
 tr:nth-child(even) {
     background: #EFF4F9;
 }
@@ -79,121 +20,72 @@ tr:nth-child(odd) {
     background: #FFF;
 }
 
-button#start  {
+.setup-server {
+    float: right;
+}
+
+.progress-dot-status{
+    color: rgba(254, 192, 46, 1);
+}
+.success-dot-status{
+    color: rgba(77, 176, 91, 1);
+}
+.failed-dot-status{
+    color: rgba(218, 49, 72, 1);
+}
+.waiting-dot-status{
+    color: rgba(150, 150, 150, 1);
+}
+.cleanup-success-dot-status{
+    color: rgba(150, 150, 150, 1);
+}
+.cleanup-failed-dot-status{
+    color: rgba(218, 49, 72, 1);
+}
+.badge{
+    margin: 1px 2px;
+}
+
+button.ci__action_btn{
+    background-color: transparent;
+    background-size: 18pt 18pt;
+    width: 18pt;
+    height:18pt;
+    border: none;
+    margin: 5px;
+    cursor: pointer;
+}
+button.btn-start  {
     background-image:url('/assets/start_enabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 5pt 10pt 25pt 10pt;
 }
-
-button#start:hover {
-    opacity: 0.5;
-}
-
-button#edit  {
+button.btn-edit  {
     background-image:url('/assets/edit_server.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 5pt 10pt 25pt 10pt;
 }
-
-button#edit:disabled  {
+button.btn-edit:disabled  {
     background-image:url('/assets/edit.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 5pt 10pt 25pt 10pt;
 }
-
-button#edit:hover {
-    opacity: 0.5;
-}
-
-button#console  {
+button.btn-console  {
     background-image:url('/assets/console_enabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 5pt 10pt 25pt 10pt;
 }
-
-button#console:disabled  {
+button.btn-console:disabled  {
     background-image:url('/assets/console_disabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 5pt 10pt 25pt 10pt;
 }
-
-button#console:hover {
-    opacity: 0.5;
-}
-
-button#cleanup  {
+button.btn-cleanup  {
     background-image:url('/assets/cleanup_enabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 5pt 10pt 25pt 10pt;
 }
-
-button#cleanup:disabled  {
+button.btn-cleanup:disabled  {
     background-image:url('/assets/cleanup_disabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 5pt 10pt 25pt 10pt;
 }
-
-button#cleanup:hover {
-    opacity: 0.5;
-}
-
-button#delete-server  {
+button.btn-delete-server  {
     background-image:url('/assets/delete_enabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 5pt 10pt 25pt 10pt;
 }
-
-button#delete-server:disabled  {
+button.btn-delete-server:disabled  {
     background-image:url('/assets/delete_disabled.svg');
-    background-color: transparent;
-    background-size: 18pt 18pt;
-    width: 18pt;
-    height:18pt;
-    border: none;
-    opacity: 1;
-    margin: 5pt 10pt 25pt 10pt;
 }
-
-button#delete-server:hover {
+button.btn-cleanup:hover,
+button.btn-edit:hover,
+button.btn-start:hover,
+button.btn-console:hover,
+button.btn-delete-server:hover {
     opacity: 0.5;
 }

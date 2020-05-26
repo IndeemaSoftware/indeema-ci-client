@@ -24,75 +24,84 @@
     <p *ngIf="projects && !projects.length" class="not-found">Projects not found</p>
 
     <table *ngIf="projects && projects.length" class="table editable-table" id="table" cellspacing="0" cellpadding="0">
-      <thead class="thead-transparent">
-      <tr>
-        <th scope="col">Project name</th>
-        <th scope="col">Project apps</th>
-        <th scope="col"></th>
-      </tr>
+      <thead>
+        <tr>
+          <th>Project name</th>
+          <th>Project apps</th>
+          <th></th>
+        </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let project of projects">
-        <th scope="row" id="project">
-          <div id="cell-project">
-            <i style="font-weight: 300; opacity:1; margin:40pt 5pt 5pt 5pt; color: #4DB05B;">{{ project.project_name }}</i>
-      <tr *ngFor="let user of project.users">
-        <th scope="row" id="project">
-          <i style="font-weight: 100; opacity:1; margin:35pt 5pt 5pt 5pt;">{{ user.username || 'User not found' }}</i>
-        </th>
-        <td>
-  </div>
-  </th>
-  <td>
-
-    <table *ngIf="project.apps && project.apps.length" class="table editable-table" id="table-apps" cellspacing="0" cellpadding="0">
-      <thead class="thead-custom">
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">CI</th>
-        <th scope="col">Env</th>
-        <th scope="col">Server</th>
-        <th scope="col"></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let app of project.apps" id="tr-apps">
-        <th scope="row" id="tr-apps">
-          {{ app.app_name }} <br>
-          <span *ngIf="app.app_status === 'waiting'" id="status-waiting">&#9864; Created...</span>
-          <span *ngIf="app.app_status === 'progress'" id="status-progress">&#9864; In progress...</span>
-          <span *ngIf="app.app_status === 'success'" id="status-success">&#9864; Setup success!</span>
-          <span *ngIf="app.app_status === 'failed'" id="status-fail">&#9864; Setup failed!</span>
-          <span *ngIf="app.app_status === 'cleanup'" id="status-progress">&#9864; Cleanup in progress...</span>
-          <span *ngIf="app.app_status === 'cleanup_success'" id="status-fail">&#9864; Cleanup success!</span>
-          <span *ngIf="app.app_status === 'cleanup_failed'" id="status-fail">&#9864; Cleanup failed!</span>
-        </th>
-        <th scope="row">{{ app.ci_template?app.ci_template.name:"No CI selected"}}</th>
-        <th scope="row">{{ app.environment?app.environment:"No environment selected" }}</th>
-        <th scope="row">{{ app.server?app.server.server_name:"Server not selected"}}</th>
-        <td>
-          <div class="btn-group btn-group-toggle">
-            <button (click)="startProject(project, app)" [disabled]="app.app_status === 'progress' || app.app_status === 'cleanup'" type="button" id="start" title="Start service setup script"></button>
-            <button (click)="toConsole(project, app)" type="button" id="console" title="Open terminal"></button>
-            <button (click)="cleanupProject(project, app)" [disabled]="app.app_status !== 'success' || app.app_status === 'cleanup_success'" type="button" id="cleanup" title="Run service cleanup script"></button>
-            <button (click)="deleteProject(project, app)" [disabled]=" app.app_status !== 'cleanup_success' && app.app_status === 'success'" type="button" id="delete-app" title="Delete application from DB"></button>
-            <button (click)="preview(project, app)" [disabled]="app.app_status !== 'success' || (!app.domain_name || !app.app_port)" type="button" id="link" title="Visit page"></button>
-          </div>
-        </td>
-      </tr>
+        <tr *ngFor="let project of projects">
+          <td class="project">
+            <div class="cell-project">
+              <i style="font-weight: 300; opacity:1; margin:40pt 5pt 5pt 5pt; color: #4DB05B;">{{ project.project_name }}</i>
+              <table>
+                <tbody>
+                  <tr *ngFor="let user of project.users">
+                    <td id="project">
+                      <i style="font-weight: 100; opacity:1; margin:35pt 5pt 5pt 5pt;">{{ user.username || 'User not found' }}</i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+          <td>
+            <table *ngIf="project.apps && project.apps.length" class="table editable-table" cellspacing="0" cellpadding="0">
+              <thead class="thead-custom">
+                <tr>
+                  <th>Name</th>
+                  <th>CI</th>
+                  <th>Env</th>
+                  <th>Server</th>
+                  <th ></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let app of project.apps" class="tr-apps">
+                  <td class="tr-apps">
+                    {{ app.app_name }} <br/>
+                    <span *ngIf="app.app_status === 'waiting'">&#9864; Created...</span>
+                    <span *ngIf="app.app_status === 'progress'">&#9864; In progress...</span>
+                    <span *ngIf="app.app_status === 'success'">&#9864; Setup success!</span>
+                    <span *ngIf="app.app_status === 'failed'">&#9864; Setup failed!</span>
+                    <span *ngIf="app.app_status === 'cleanup'">&#9864; Cleanup in progress...</span>
+                    <span *ngIf="app.app_status === 'cleanup_success'">&#9864; Cleanup success!</span>
+                    <span *ngIf="app.app_status === 'cleanup_failed'">&#9864; Cleanup failed!</span>
+                  </td>
+                  <td>
+                    {{ app.ci_template ? app.ci_template.name : "No CI selected" }}
+                  </td>
+                  <td>
+                    {{ app.environment ? app.environment : "No environment selected" }}
+                  </td>
+                  <td>
+                    {{ app.server ? app.server.server_name : "Server not selected" }}
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-toggle">
+                      <button (click)="setupProject(project, app)" [disabled]="app.app_status === 'progress' || app.app_status === 'cleanup'" type="button" class="ci__action_btn btn-start" title="Start service setup script"></button>
+                      <button (click)="toConsole(project, app)" type="button" class="ci__action_btn btn-console" title="Open terminal"></button>
+                      <button (click)="cleanupProject(project, app)" [disabled]="app.app_status !== 'success' || app.app_status === 'cleanup_success'" type="button" class="ci__action_btn btn-cleanup" title="Run service cleanup script"></button>
+                      <button (click)="deleteProject(project, app)" [disabled]=" app.app_status !== 'cleanup_success' && app.app_status === 'success'" type="button" class="ci__action_btn btn-delete-app" title="Delete application from DB"></button>
+                      <button (click)="preview(project, app)" [disabled]="app.app_status !== 'success' || (!app.domain_name || !app.app_port)" type="button" class="ci__action_btn btn-link" title="Visit page"></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td class="clean">
+            <div class="cell-project">
+              <button (click)="editProject(project)" type="button" class="ci__action_btn btn-edit" title="Edit project settings"></button>
+              <button (click)="deleteProject(project)" [ngClass]="{'disabled': isAppsNeedToCleanup(project)}" type="button" class="ci__action_btn btn-delete" title="Delete project from DB"></button>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
-  </td>
-  <td id="clean">
-    <div id="cell-project">
-      <button (click)="editProject(project)" type="button" id="btn-edit" title="Edit project settings"></button>
-      <button (click)="deleteProject(project)" [ngClass]="{'disabled': isAppsNeedToCleanup(project)}" type="button" id="btn-delete" title="Delete project from DB"></button>
-    </div>
-  </td>
-  </tr>
-  </tbody>
-  </table>
-
   </div>
   <!-- widget body end -->
+
 </div>
