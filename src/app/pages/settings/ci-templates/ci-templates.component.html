@@ -13,9 +13,15 @@
       <div *ngIf="settingsModel.template" class="form-group">
         <label for="name">Template page name</label>
         <input [(ngModel)]="settingsModel.template.name" [(value)]="settingsModel.template.name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Please enter name for new template script">
+        <div *ngIf="!settingsModel.template.name">
+          <small class="form-text text-muted">Name is required.</small>                    
+        </div>
       </div>     
     <div class="form-group">
       <textarea [(ngModel)]="settingsModel.template.yml_code" [(value)]="settingsModel.template.yml_code" class="form-control" id="script" name="script" rows="10"></textarea>
+      <div *ngIf="!settingsModel.template.yml_code">
+        <small class="form-text text-muted">Code is required.</small>                    
+      </div>
     </div>
     <button (click)="updateTemplate()" id="green-button" *ngIf="!isNewTemplate">Update</button>
     <button (click)="createTemplate()" id="green-button" *ngIf="isNewTemplate">Create</button>

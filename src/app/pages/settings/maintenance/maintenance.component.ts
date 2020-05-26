@@ -42,6 +42,7 @@ export class MaintenanceComponent implements OnInit {
   }
 
   selected() {
+    this.isNewMaintenance = true;
     this.auth.getUser().then((user) => {
       this.initUser();
       this.updateMaintenanceList();
@@ -96,14 +97,14 @@ export class MaintenanceComponent implements OnInit {
   
         if (!regex.test(name)) {
             res.status = false;
-            res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+            res.msg = 'Maintenance name is invalid. Please use: letters and numbers only'
         } else {
             res.status = true;
             res.msg = `Let's go`;  
         }
     } else {
       res.status = false;
-      res.msg = `Dependancy name can't be empty`;
+      res.msg = `Maintenance name can't be empty`;
     }
 
     return res;
@@ -112,20 +113,25 @@ export class MaintenanceComponent implements OnInit {
   updateMaintenance() {
     var name = this.settingsModel.maintenance.name;
 
+    if (!this.settingsModel.maintenance.html_code) {
+      this.modal.alert("Maintenance page html code can't be empty");
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
-        `Confirm saving of updates of "${name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm saving of updates of "${name}" maintenance page`,
+        "Do you really want to save changes of maintenance page?<br>If yes, please input maintenance page name.",
         (value) => {
           if(value !== name )
-            return 'Template name is incorrect!';
+            return 'Maintenance name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'
     ).then((res) => {
       this.api.update(`maintenances/${this.settingsModel.maintenance.id}`, this.settingsModel.maintenance).then((resp) => {
       });
-  
+        this.modal.alert(`Maintenance page ${name} was succesfully updated.`);  
       }, (err) => {
         this.modal.alert(err);
       })
@@ -136,12 +142,12 @@ export class MaintenanceComponent implements OnInit {
 
   deleteMaintenance() {
     if (!this.settingsModel.maintenance.name) {
-      this.modal.alert("You can't delete service with no name");
+      this.modal.alert("You can't delete maintenance page with no name");
       return;
     }
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.maintenance.name}" template`,
-      "Do you really want to delete this template?<br>If yes, please input template name.",
+      `Confirm deletion of "${this.settingsModel.maintenance.name}" maintenance`,
+      "Do you really want to delete this maintenance page?<br>If yes, please input maintenance name.",
       (value) => {
         if(value !== this.settingsModel.maintenance.name)
           return 'Template name is incorrect!';
@@ -151,6 +157,7 @@ export class MaintenanceComponent implements OnInit {
   ).then((res) => {
     this.api.remove(`maintenances/${this.settingsModel.maintenance.id}`).then((resp) => {
       this.cleanMaintenanceFields();
+      this.modal.alert(`Maintenance page ${name} was succesfully deleted.`);  
     });
     }, (err) => {
       this.modal.alert(err);
@@ -160,13 +167,18 @@ export class MaintenanceComponent implements OnInit {
   createMaintenance() {
     var name = this.settingsModel.maintenance.name;
 
+    if (!this.settingsModel.maintenance.html_code) {
+      this.modal.alert("Maintenance page html code can't be empty");
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
-        `Confirm creating of "${name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm creating of "${name}" maintenance page`,
+        "Do you really want to save changes of maintenance page?<br>If yes, please input maintenance page name.",
         (value) => {
           if(value !== name )
-            return 'Template name is incorrect!';
+            return 'Maintenance page name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'
@@ -174,6 +186,7 @@ export class MaintenanceComponent implements OnInit {
       this.api.create(`maintenances`, this.settingsModel.maintenance).then((resp) => {
         this.updateServiceFields(resp);
         this.cleanMaintenanceFields();
+        this.modal.alert(`Maintenance page ${name} was succesfully created. To proceed working with it, please selected it from list in the top of this page.`);  
       });  
   
       }, (err) => {

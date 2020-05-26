@@ -37,6 +37,8 @@ export class PlatformsComponent implements OnInit {
 
   isNewPlatform: boolean = true;
 
+  isVariableUnique: boolean = true;
+
   constructor (
     private api: ApiService,
     private modal: ModalService,
@@ -52,6 +54,7 @@ export class PlatformsComponent implements OnInit {
   }
 
   selected() {
+    this.isNewPlatform = true;
     this.auth.getUser().then((user) => {
       this.updatePlatformList();
       this.cleanPlatformFields();
@@ -124,27 +127,56 @@ export class PlatformsComponent implements OnInit {
   
         if (!regex.test(name)) {
             res.status = false;
-            res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+            res.msg = 'Platform name is invalid. Please use: letters and numbers only'
         } else {
             res.status = true;
             res.msg = `Let's go`;  
         }
     } else {
         res.status = false;
-        res.msg = `Dependancy name can't be empty`;
-}
+        res.msg = `Platform name can't be empty`;
+    }
+
+    return res;
+  }
+
+  validateRequiredFields() {
+    var res = {status:true, msg:""};
+
+    if (!this.settingsModel.platform.platform_name) {
+        res.status = false;
+        res.msg = "Platform name is required"
+    }
+    if (!this.settingsModel.platform.setup_script) {
+        res.status = false;
+        res.msg = "Setup script is required"
+    }
+    if (!this.settingsModel.platform.cleanup_script) {
+        res.status = false;
+        res.msg = "Cleanup script is required"
+    }
 
     return res;
 }
 
   updatePlatform() {
+    if (!this.isVariableUnique) {
+      this.modal.alert(`Variable names should be unique`);
+      return;
+    }
+
+    if (!this.validateRequiredFields().status) {
+      this.modal.alert(this.validateRequiredFields().msg);
+      return;
+    }
+
     if (this.validateName(this.settingsModel.platform.platform_name ).status) {
       this.modal.confirm(
-        `Confirm saving of updates of "${this.settingsModel.platform.platform_name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm saving of updates of "${this.settingsModel.platform.platform_name}" platform`,
+        "Do you really want to save changes of platform?<br>If yes, please input platform name.",
         (value) => {
           if(value !== this.settingsModel.platform.platform_name )
-            return 'Template name is incorrect!';
+            return 'Platform name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'
@@ -152,7 +184,7 @@ export class PlatformsComponent implements OnInit {
       this.saveDocJson();
       this.api.update(`platforms/${this.settingsModel.platform.id}`, this.settingsModel.platform).then((resp) => {
       });
-  
+        this.modal.alert(`Platform ${this.settingsModel.platform.platform_name} was succesfully updated.`);  
       }, (err) => {
         this.modal.alert(err);
       })
@@ -166,18 +198,20 @@ export class PlatformsComponent implements OnInit {
       this.modal.alert("You can't delete platform with no name");
       return;
     }
+
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.platform.platform_name}" template`,
-      "Do you really want to delete this template?<br>If yes, please input template name.",
+      `Confirm deletion of "${this.settingsModel.platform.platform_name}" platform`,
+      "Do you really want to delete this platform?<br>If yes, please input platform name.",
       (value) => {
         if(value !== this.settingsModel.platform.platform_name)
-          return 'Template name is incorrect!';
+          return 'Platform name is incorrect!';
       },
       'Yes, please remove!',
       'Don`t remove'
   ).then((res) => {
     this.api.remove(`platforms/${this.settingsModel.platform.id}`).then((resp) => {
       this.cleanPlatformFields();
+      this.modal.alert(`Platform ${this.settingsModel.platform.platform_name} was succesfully removed.`);  
     });
     }, (err) => {
       this.modal.alert(err);
@@ -185,13 +219,23 @@ export class PlatformsComponent implements OnInit {
   }
 
   createPlatform() {
+    if (!this.isVariableUnique) {
+      this.modal.alert(`Variable names should be unique`);
+      return;
+    }
+
+    if (!this.validateRequiredFields().status) {
+      this.modal.alert(this.validateRequiredFields().msg);
+      return;
+    }
+
     if (this.validateName(this.settingsModel.platform.platform_name).status) {
       this.modal.confirm(
-        `Confirm creating of "${this.settingsModel.platform.platform_name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm creating of "${this.settingsModel.platform.platform_name}" platform`,
+        "Do you really want to save changes of platform?<br>If yes, please input platform name.",
         (value) => {
           if(value !== this.settingsModel.platform.platform_name )
-            return 'Template name is incorrect!';
+            return 'Platform name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'
@@ -200,6 +244,7 @@ export class PlatformsComponent implements OnInit {
       this.api.create(`platforms`, this.settingsModel.platform).then((resp) => {
         this.updatePlatformFields(resp);
         this.cleanPlatformFields();
+        this.modal.alert(`Platform ${this.settingsModel.platform.platform_name} was successfully created. To proceed working with it, please select it from list in the top of this page.`);  
       });  
   
       }, (err) => {
@@ -207,6 +252,22 @@ export class PlatformsComponent implements OnInit {
       }) 
     } else {
       this.modal.alert(this.validateName(this.settingsModel.platform.platform_name).msg);
+    }
+  }
+
+  variableNameChange(name) {
+    var count = 0;
+
+    for (let v of this.settingsModel.platform.variables) {
+      if (v.name === name) {
+        count++;
+      }
+    }
+
+    if (count > 1) {
+      this.isVariableUnique = false;
+    } else {
+      this.isVariableUnique = true;
     }
   }
 
@@ -221,11 +282,17 @@ export class PlatformsComponent implements OnInit {
   }
 
   addRepeatField(arr){
-  arr.push({value: null});
+    if (this.isVariableUnique) {
+      arr.push({value: null});
+    }
   }
 
   removeRepeatField(arr, key){
     arr.splice(key, 1);
+
+    for (let obj of arr) {
+      this.variableNameChange(obj.key);
+    }
   }
 
   cleanFields(arr){

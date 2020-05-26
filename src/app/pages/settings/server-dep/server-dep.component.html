@@ -12,18 +12,33 @@
 
       <h4>Name</h4>
       <input [(ngModel)]="settingsModel.dependency.name"  class="form-control" id="server-dep-name" name="server-dep-name" placeholder="Enter name for dependancy with no whitespaces">
+      <div *ngIf="!settingsModel.dependency.name">
+        <small class="form-text text-muted">Name is required</small>                    
+      </div>
 
       <h4>Label</h4>
       <input [(ngModel)]="settingsModel.dependency.label"  class="form-control" id="server-dep-label" name="server-dep-label" placeholder="Enter label for dependancy">
+      <div *ngIf="!settingsModel.dependency.label">
+        <small class="form-text text-muted">Label is required</small>                    
+      </div>
 
       <h4>Package name</h4>
       <input [(ngModel)]="settingsModel.dependency.package"  class="form-control" id="server-dep-package-name" name="server-dep-package-name" placeholder="Enter package name for dependancy">
+      <div *ngIf="!settingsModel.dependency.package">
+        <small class="form-text text-muted">Package name is required</small>                    
+      </div>
 
       <h4>Preinstall script</h4>
       <textarea  [(ngModel)]="settingsModel.dependency.pre_install_script" [(value)]="settingsModel.pre_install_script" class="form-control" id="pre_install_script" name="pre_install_script" rows="10" ></textarea>
+      <div *ngIf="!settingsModel.dependency.pre_install_script">
+        <small class="form-text text-muted">Pre install script is required</small>                    
+      </div>
 
       <h4>Postinstall script</h4>
       <textarea [(ngModel)]="settingsModel.dependency.post_install_script" [(value)]="settingsModel.post_install_script" class="form-control" id="post_install_script" name="post_install_script" rows="10" ></textarea>
+      <div *ngIf="!settingsModel.dependency.post_install_script">
+        <small class="form-text text-muted">Post install script is required</small>                    
+      </div>
 
       <button (click)="update()" id="green-button" *ngIf="!isNew">Update</button>
       <button (click)="createNew()" id="green-button" *ngIf="isNew">Create new</button>  

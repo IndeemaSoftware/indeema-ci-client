@@ -78,12 +78,12 @@
           <div class="form-container">
             <h3>Server dependencies:</h3>
             <div *ngFor="let item of serverModel.server_dependency; let i = index" class="form-group repeated">
-              <select [(ngModel)]="serverModel.server_dependency[i].value" class="form-control" name="server_dependency[{{ pId }}{{ i }}]">
+              <select *ngIf="serverModel.server_dependency" [(ngModel)]="serverModel.server_dependency[i].value" class="form-control" name="server_dependency[{{ pId }}{{ i }}]">
                 <option [value]="null"  disabled>Chose dependency for server</option>
                 <option *ngFor="let item of server_dependency_list" [ngValue]="item.id">{{ item.label }}</option>
               </select>
               <span (click)="removeRepeatField(serverModel.server_dependency, i)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length > 1" class="text-danger remove-btn">Remove</span>
-              <span (click)="cleanFields(serverModel.server_dependency)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length === 1 && serverModel.server_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+              <span (click)="cleanFields(serverModel.server_dependency)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length === 1 && serverModel.server_dependency[0].value !== ''" style="right: -50px" class="text-warning remove-btn">Reset</span>
             </div>
             <button (click)="addRepeatField(serverModel.server_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
             <div *ngIf="platform && platform.doc && platform.doc.server_dependencies">
@@ -93,12 +93,12 @@
           <div class="form-container">
             <h3>Custom dependencies:</h3>
             <div *ngFor="let item of serverModel.custom_dependency; let i = index" class="form-group repeated">
-              <select [(ngModel)]="serverModel.custom_dependency[i].value" class="form-control" name="custom_dependency[{{ pId }}{{ i }}]">
+              <select *ngIf="serverModel.custom_dependency" [(ngModel)]="serverModel.custom_dependency[i].value" class="form-control" name="custom_dependency[{{ pId }}{{ i }}]">
                 <option [value]="null" disabled>Chose custom dependancies for server</option>
                 <option *ngFor="let item of custom_dependency_list" [value]="item.id">{{ item.label }}</option>
               </select>
               <span (click)="removeRepeatField(serverModel.custom_dependency, i)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length > 1" class="text-danger remove-btn">Remove</span>
-              <span (click)="cleanFields(serverModel.custom_dependency)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length === 1 && serverModel.custom_dependency[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+              <span (click)="cleanFields(serverModel.custom_dependency)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length === 1 && serverModel.custom_dependency[0].value !== ''" style="right: -50px" class="text-warning remove-btn">Reset</span>
             </div>
             <button (click)="addRepeatField(serverModel.custom_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
             <div *ngIf="platform && platform.doc && platform.doc.custom_dependencies">

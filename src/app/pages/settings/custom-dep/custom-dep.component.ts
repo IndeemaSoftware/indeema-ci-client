@@ -44,16 +44,17 @@ export class CustomDepComponent implements OnInit {
     }
 
     selected() {
+        this.isNew = true;
         this.auth.getUser().then((user) => {
             this.initUser();
             this.updateList();
               }, (err) => {
             this.route.navigate(['signin']);
-          });
+        });
     }
 
     initUser() {
-        this.settingsModel.dependency ={
+        this.settingsModel.dependency = {
             name:"",
             users: [this.auth.user.id],
             label:"",
@@ -87,13 +88,37 @@ export class CustomDepComponent implements OnInit {
         } else {
             res.status = false;
             res.msg = `Dependancy name can't be empty`;
+        }
+
+        return res;
     }
+
+    validateRequiredFields() {
+        var res = {status:true, msg:""};
+
+        if (!this.settingsModel.dependency.name) {
+            res.status = false;
+            res.msg = "Dependancy name is required"
+        }
+        if (!this.settingsModel.dependency.label) {
+            res.status = false;
+            res.msg = "Dependancy label is required"
+        }
+        if (!this.settingsModel.dependency.install_script) {
+            res.status = false;
+            res.msg = "Dependancy install script is required"
+        }
 
         return res;
     }
 
     update() {
         var name = this.settingsModel.dependency.name;
+
+        if (!this.validateRequiredFields().status) {
+            this.modal.alert(this.validateRequiredFields().msg);
+            return;
+        }
 
         if (this.validateName(name).status) {
             this.modal.confirm(
@@ -103,12 +128,13 @@ export class CustomDepComponent implements OnInit {
                   if(value !== name)
                     return 'Template name is incorrect!';
                 },
-                'Yes, please remove!',
-                'Don`t remove'
+                'Yes, please update!',
+                'Don`t update'
             ).then((res) => {
                 this.api.update(`custom-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
                     this.cleanFields();
                     this.updateList();
+                    this.modal.alert(`Dependency ${name} was succesfully updated. To proceed with it, please select it from the list in the top of this page.`);  
                 });  
                     }, (err) => {
                 this.modal.alert(err);
@@ -120,15 +146,15 @@ export class CustomDepComponent implements OnInit {
 
     delete() {
         if (!this.settingsModel.dependency.name) {
-            this.modal.alert("You can't delete service with no name");
+            this.modal.alert("You can't delete custom dependancy with no name");
             return;
           }
           this.modal.confirm(
-            `Confirm deletion of "${this.settingsModel.dependency.name}" template`,
-            "Do you really want to delete this template?<br>If yes, please input template name.",
+            `Confirm deletion of "${this.settingsModel.dependency.name}"`,
+            "Do you really want to delete this custom dependancy?<br>If yes, please input name.",
             (value) => {
               if(value !== this.settingsModel.dependency.name)
-                return 'Template name is incorrect!';
+                return 'Custom dependancy name is incorrect!';
             },
             'Yes, please remove!',
             'Don`t remove'
@@ -136,6 +162,7 @@ export class CustomDepComponent implements OnInit {
             this.api.remove(`custom-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
                 this.cleanFields();
                 this.updateList();
+                this.modal.alert(`Dependency ${name} was succesfully removed.`);  
             });  
               }, (err) => {
             this.modal.alert(err);
@@ -144,20 +171,27 @@ export class CustomDepComponent implements OnInit {
 
     createNew() {
         var name = this.settingsModel.dependency.name;
+
+        if (!this.validateRequiredFields().status) {
+            this.modal.alert(this.validateRequiredFields().msg);
+            return;
+        }
+
         if (this.validateName(name).status) {
             this.modal.confirm(
-                `Confirm updating of "${name}" template`,
-                "Do you really want to delete this template?<br>If yes, please input template name.",
+                `Confirm creating of "${name}" custom dependancy`,
+                "Do you really want to update this custom dependancy?<br>If yes, please input name.",
                 (value) => {
                   if(value !== name)
-                    return 'Template name is incorrect!';
+                    return 'Custom dependancy name is incorrect!';
                 },
-                'Yes, please remove!',
-                'Don`t remove'
+                'Yes, please create!',
+                'Don`t create'
             ).then((res) => {
                 this.api.create(`custom-dependencies`, this.settingsModel.dependency).then((resp) => {
                     this.cleanFields();
                     this.updateList();
+                    this.modal.alert(`Dependency ${name} was succesfully created. To proceed with it, please select it from the list in the top of this page.`);  
                 });      
             }, (err) => {
                 this.modal.alert(err);

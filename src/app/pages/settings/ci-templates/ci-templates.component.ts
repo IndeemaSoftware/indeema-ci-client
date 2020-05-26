@@ -43,6 +43,7 @@ export class CITemplatesComponent implements OnInit {
   }
 
   selected() {
+    this.isNewTemplate = true;
     this.auth.getUser().then((user) => {
       this.initUser();
       this.updateTemplatesList();
@@ -98,14 +99,14 @@ export class CITemplatesComponent implements OnInit {
   
         if (!regex.test(name)) {
             res.status = false;
-            res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+            res.msg = 'Template name is invalid. Please use: letters and numbers only'
         } else {
             res.status = true;
             res.msg = `Let's go`;  
         }
     } else {
       res.status = false;
-      res.msg = `Dependancy name can't be empty`;
+      res.msg = `Template name can't be empty`;
   }
 
   return res;
@@ -113,6 +114,11 @@ export class CITemplatesComponent implements OnInit {
 
   updateTemplate() {
     var name = this.settingsModel.template.name;
+
+    if (!this.settingsModel.template.yml_code) {
+      this.modal.alert("CI script is required for new template");
+      return;
+    }
 
     if (this.validateName(name).status) {
       this.modal.confirm(
@@ -127,7 +133,7 @@ export class CITemplatesComponent implements OnInit {
     ).then((res) => {
       this.api.update(`ci-templates/${this.settingsModel.template.id}`, this.settingsModel.template).then((resp) => {
       });
-  
+        this.modal.alert(`CI template ${name} was succesfully updated.`);  
       }, (err) => {
         this.modal.alert(err);
       })
@@ -153,6 +159,7 @@ export class CITemplatesComponent implements OnInit {
   ).then((res) => {
     this.api.remove(`ci-templates/${this.settingsModel.template.id}`).then((resp) => {
       this.cleanTemplateFields();
+      this.modal.alert(`CI template ${name} was succesfully removed.`);  
     });
     }, (err) => {
       this.modal.alert(err);
@@ -161,6 +168,11 @@ export class CITemplatesComponent implements OnInit {
 
   createTemplate() {
     var name = this.settingsModel.template.name;
+
+    if (!this.settingsModel.template.yml_code) {
+      this.modal.alert("CI script is required for new template");
+      return;
+    }
 
     if (this.validateName(name).status) {
       this.modal.confirm(
@@ -176,6 +188,7 @@ export class CITemplatesComponent implements OnInit {
       this.api.create(`ci-templates`, this.settingsModel.template).then((resp) => {
         this.updateServiceFields(resp);
         this.cleanTemplateFields();
+        this.modal.alert(`CI template ${name} was succesfully created. To proceed working with it selected it from list in the top of this page.`);  
       });  
   
       }, (err) => {

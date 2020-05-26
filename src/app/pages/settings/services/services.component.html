@@ -13,14 +13,20 @@
       <div *ngIf="settingsModel.service" class="form-group">
         <label for="service_name">Service name</label>
         <input [(ngModel)]="settingsModel.service.service_name" [(value)]="settingsModel.service.service_name" class="form-control" id="new_service_name" name="nservice_name" placeholder="Please enter name for new service">
+        <div *ngIf="!settingsModel.service.service_name">
+          <small class="form-text text-muted">Name is required</small>                    
+        </div>
       </div>     
     <div class="form-container">
       <h4>Service variables</h4>
       <div *ngFor="let item of settingsModel.service.variables let i = index" class="form-group repeated">
-        <input [(ngModel)]="settingsModel.service.variables[i].name"  class="form-control" id="service-name" name="service-name" placeholder="Enter variable key">
+        <input [(ngModel)]="settingsModel.service.variables[i].name"  class="form-control" (input)="variableNameChange(settingsModel.service.variables[i].name)" id="service-name" name="service-name" placeholder="Enter variable key">
         <input [(ngModel)]="settingsModel.service.variables[i].value" class="form-control" id="service-value" name="service-value" placeholder="Enter variable value">
         <span (click)="removeRepeatField(settingsModel.service.variables, i)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length > 1" class="text-danger remove-btn">Remove</span>
         <span (click)="cleanFields(settingsModel.service.variables)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length === 1 && settingsModel.service.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+      </div>
+      <div>
+        <span *ngIf="!isVariableUnique"style="color:red">Variable names should be unique</span>
       </div>
     <button (click)="addRepeatField(settingsModel.service.variables)" type="button" id="yellow-button">Add another variable</button>
     </div>
@@ -52,18 +58,24 @@
         <h4>Service setup script</h4>
       </div>
       <textarea [(ngModel)]="settingsModel.service.setup_script" [(value)]="settingsModel.service.setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <div *ngIf="!settingsModel.service.setup_script">
+        <small class="form-text text-muted">Setup script is required</small>                    
+      </div>
     </div>
     <div class="form-group">
       <h4>Service cleanup script</h4>
       <textarea [(ngModel)]="settingsModel.service.cleanup_script" [(value)]="settingsModel.service.cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
+      <div *ngIf="!settingsModel.service.cleanup_script">
+        <small class="form-text text-muted">Cleanup script is required</small>                    
+      </div>
     </div>
     <div class="form-group">
       <h4>Service documentation</h4>
       <div>
         Available keys: <br/>
-        project_name, app_name, app_port, custom_ssl_key, custom_ssl_crt, domain_name, environment, desc, server, automatic_cert, ci_template
+        server, custom_ssl_crt, domain_name, app_name, desc, project_name, ci_template, environment, automatic_cert, custom_ssl_key, app_port
       </div>
-      <textarea (change)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.service"></textarea>
+      <textarea (input)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.service"></textarea>
       <div *ngIf="settingsModel.jsonValidationMessage">
         <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
       </div>

@@ -37,6 +37,8 @@ export class ServicesComponent implements OnInit {
 
   isNewService: boolean = true;
 
+  isVariableUnique: boolean = true;
+
   constructor (
     private api: ApiService,
     private modal: ModalService,
@@ -51,6 +53,7 @@ export class ServicesComponent implements OnInit {
   }
 
   selected() {
+    this.isNewService = true;
     this.auth.getUser().then((user) => {
       this.updateServiceList();
       this.initUser();
@@ -102,7 +105,7 @@ export class ServicesComponent implements OnInit {
   }
 
   saveDocJson() {
-    if (this.settingsModel.doc_string.length) {
+    if (this.settingsModel.doc_string && this.settingsModel.doc_string.length) {
       this.settingsModel.service.doc = JSON.parse(this.settingsModel.doc_string);
     }
   }
@@ -115,29 +118,59 @@ export class ServicesComponent implements OnInit {
   
         if (!regex.test(name)) {
             res.status = false;
-            res.msg = 'Dependancy name is invalid. Please use: letters and numbers only'
+            res.msg = 'Service name is invalid. Please use: letters and numbers only'
         } else {
             res.status = true;
             res.msg = `Let's go`;  
         }
     } else {
       res.status = false;
-      res.msg = `Dependancy name can't be empty`;
+      res.msg = `Service name can't be empty`;
+    }
+
+    return res;
   }
 
-  return res;
-}
+  validateRequiredFields() {
+    var res = {status:true, msg:""};
+
+    if (!this.settingsModel.service.service_name) {
+        res.status = false;
+        res.msg = "Service name is required"
+    }
+    if (!this.settingsModel.service.setup_script) {
+        res.status = false;
+        res.msg = "Setup script is required"
+    }
+    if (!this.settingsModel.service.cleanup_script) {
+        res.status = false;
+        res.msg = "Cleanup script is required"
+    }
+
+    return res;
+  }
 
   updateService() {
     var name = this.settingsModel.service.service_name;
 
+    if (!this.isVariableUnique) {
+      this.modal.alert(`Variable names should be unique`);
+      return;
+    }
+
+
+    if (!this.validateRequiredFields().status) {
+      this.modal.alert(this.validateRequiredFields().msg);
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
-        `Confirm saving of updates of "${name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm saving of updates of "${name}" service`,
+        "Do you really want to save changes of service?<br>If yes, please input service name.",
         (value) => {
           if(value !== name )
-            return 'Template name is incorrect!';
+            return 'Service name is incorrect!';
         },
         'Yes, please save!',
         'Don`t save'
@@ -145,7 +178,7 @@ export class ServicesComponent implements OnInit {
       this.saveDocJson();
       this.api.update(`services/${this.settingsModel.service.id}`, this.settingsModel.service).then((resp) => {
       });
-  
+        this.modal.alert(`Service ${name} was succesfully updated.`);  
       }, (err) => {
         this.modal.alert(err);
       })
@@ -160,17 +193,18 @@ export class ServicesComponent implements OnInit {
       return;
     }
     this.modal.confirm(
-      `Confirm deletion of "${this.settingsModel.service.service_name}" template`,
-      "Do you really want to delete this template?<br>If yes, please input template name.",
+      `Confirm deletion of "${this.settingsModel.service.service_name}" service`,
+      "Do you really want to delete this service?<br>If yes, please input service name.",
       (value) => {
         if(value !== this.settingsModel.service.service_name)
-          return 'Template name is incorrect!';
+          return 'Service name is incorrect!';
       },
       'Yes, please remove!',
       'Don`t remove'
   ).then((res) => {
     this.api.remove(`services/${this.settingsModel.service.id}`).then((resp) => {
       this.cleanServiceFields();
+      this.modal.alert(`Service ${name} was succesfully removed.`);  
     });
     }, (err) => {
       this.modal.alert(err);
@@ -180,22 +214,34 @@ export class ServicesComponent implements OnInit {
   createService() {
     var name = this.settingsModel.service.service_name;
 
+    if (!this.isVariableUnique) {
+      this.modal.alert(`Variable names should be unique`);
+      return;
+    }
+
+
+    if (!this.validateRequiredFields().status) {
+      this.modal.alert(this.validateRequiredFields().msg);
+      return;
+    }
+
     if (this.validateName(name).status) {
       this.modal.confirm(
-        `Confirm creating of "${name}" script`,
-        "Do you really want to save changes of script?<br>If yes, please input template name.",
+        `Confirm creating of "${name}" service`,
+        "Do you really want to save changes of service?<br>If yes, please input service name.",
         (value) => {
           if (value !== name)
-            return 'Template name is incorrect!';
+            return 'Service name is incorrect!';
         },
-        'Yes, please save!',
-        'Don`t save'
+        'Yes, please create!',
+        'Don`t create'
     ).then((res) => {
       this.saveDocJson();
       console.log(this.settingsModel.service);
       this.api.create(`services`, this.settingsModel.service).then((resp) => {
         this.updateServiceFields(resp);
         this.cleanServiceFields();
+        this.modal.alert(`Service ${name} was succesfully created. To proceed working with it please select it from list in the top of page.`);  
       });  
   
       }, (err) => {
@@ -203,6 +249,22 @@ export class ServicesComponent implements OnInit {
       })    
     } else {
       this.modal.alert(this.validateName(name).msg);
+    }
+  }
+
+  variableNameChange(name) {
+    var count = 0;
+
+    for (let v of this.settingsModel.service.variables) {
+      if (v.name === name) {
+        count++;
+      }
+    }
+
+    if (count > 1) {
+      this.isVariableUnique = false;
+    } else {
+      this.isVariableUnique = true;
     }
   }
 
@@ -222,6 +284,10 @@ export class ServicesComponent implements OnInit {
 
   removeRepeatField(arr, key){
     arr.splice(key, 1);
+
+    for (let obj of arr) {
+      this.variableNameChange(obj.key);
+    }
   }
 
   cleanFields(arr){

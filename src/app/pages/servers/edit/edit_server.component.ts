@@ -34,8 +34,8 @@ export class EditServerComponent implements OnInit {
     errorMsg: ''
   };
   
-  serverModel: any = {server_dependency: [{value:""} ],
-                      custom_dependency: [ {value:""}],
+  serverModel: any = {server_dependency: [],
+                      custom_dependency: [],
                       platform: "",
                       ssh_key: {},
                       users: []
@@ -259,11 +259,15 @@ export class EditServerComponent implements OnInit {
   }
 
   removeRepeatField(arr, key){
-    arr.splice(key, 1);
+    if (arr.length === 1) {
+      arr[key] = {value:""};
+    } else {
+      arr.splice(key, 1);
+    }
   }
 
   cleanFields(arr){
-    arr[0] = null;
+    arr[0] = {value:""};
   }
 
   validateModel(model){
@@ -309,23 +313,22 @@ export class EditServerComponent implements OnInit {
     delete newModel.server_dependencies;
     newModel.server_dependencies = [];
     for (let obj of newModel.server_dependency) {
-      if(obj)
+      if(obj && obj.value !== "")
         newModel.server_dependencies.push(obj.value);
     }
 
     delete newModel.custom_dependencies;
     newModel.custom_dependencies = [];
     for (let obj of newModel.custom_dependency) {
-      if (obj)
+      if (obj && obj.value !== "")
         newModel.custom_dependencies.push(obj.value);
     }
 
     if(!newModel.ssh_key)
       delete newModel.ssh_key;
 
-    //Cleanup model fields
-    //delete newModel.server_dependency;
-    // delete newModel.custom_dependency;
+    delete newModel.custom_dependency;
+    delete newModel.server_dependency;
 
     return newModel;
   }
@@ -351,6 +354,18 @@ export class EditServerComponent implements OnInit {
     this.errorMsg = '';
     if (!this.serverModel.server_name) {
       this.errorMsg = 'Server name is required';
+      return false;
+    } else if (!this.serverModel.platform) {
+      this.errorMsg = 'Platform script is required';
+      return false;
+    } else if (!this.serverModel.ssh_ip) {
+      this.errorMsg = 'Server ip address is required';
+      return false;
+    } else if (!this.serverModel.ssh_username) {
+      this.errorMsg = 'Server user name is required';
+      return false;
+    } else if (!this.serverModel.ssh_key || !this.serverModel.ssh_key.name) {
+      this.errorMsg = 'Server pem key is required';
       return false;
     } else {
       const serverNameRegex = new RegExp('^[-_a-zA-Z0-9]+$', 'gm');

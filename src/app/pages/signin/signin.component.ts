@@ -28,8 +28,7 @@ export class SigninComponent implements OnInit {
     //Prepare signin form validation
     this.signinForm = this.formBuilder.group({
       identifier: [null, [Validators.required]],
-      password: [null, [Validators.required]],
-      remember: [false]
+      password: [null, [Validators.required]]
     });
   }
 

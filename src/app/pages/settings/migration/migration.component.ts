@@ -27,7 +27,7 @@ export class MigrationComponent implements OnInit {
   public uploader: MultipleFileUploaderService;
 
   isLoading: boolean
-  isInstalling = false;
+  isInstalling = null;
 
   constructor (
     private api: ApiService,
@@ -44,7 +44,7 @@ export class MigrationComponent implements OnInit {
   }
 
   selected () {
-    this.isInstalling = false;
+    this.isInstalling = true;
     this.isLoading = true;
     this.auth.user = null;//this is needed to get updated users after installing module
     this.auth.getUser().then((user) => {
@@ -100,7 +100,6 @@ export class MigrationComponent implements OnInit {
       return new Promise((rs, rj) => {
         //Timeout for fix multiple responses
         setTimeout(() => {
-          console.log("We are here!");
           rs();
   
         }, 250);
@@ -145,10 +144,10 @@ export class MigrationComponent implements OnInit {
 
   installModule(module) {
     if (module.module.length > 0) {
-      this.isInstalling = true;
+      this.isInstalling = module.identifier;
       this.api.get(`migrations/import/${module.module[0].hash}`)
       .then((resp) => {
-        this.isInstalling = false;
+        this.isInstalling = null;
         this.selected();
       });   
     }
@@ -156,11 +155,32 @@ export class MigrationComponent implements OnInit {
 
   uninstallModule(module) {
     if (module.module.length > 0) {
-      this.isInstalling = true;
-      this.api.get(`migrations/uninstall/${module.module[0].hash}`)
+      this.isInstalling = module.identifier;
+      this.api.get(`migrations/isused/${module.module[0].hash}`)
       .then((resp) => {
-        this.isInstalling = false;
-        this.selected();
+        if (resp.apps.length > 0) {
+          this.isInstalling = null;
+          var apps = "";
+          for (var a of resp.apps) {
+            apps += ` ${a.app_name},`;
+          }
+
+          this.modal.alert(`You may not delete this module as applications${apps} are still using some components of from this module. Please change componets from application first and then you can delete this module`);
+        } else if (resp.servers.length > 0) {
+          this.isInstalling = null;
+          var servers = "";
+          for (var s of resp.servers) {
+            servers += ` ${s.server_name},`;
+          }
+
+          this.modal.alert(`You may not delete this module as servers${servers} are still using some components of from this module. Please change componets from server first and then you can delete this module`);
+        } else {
+          this.api.get(`migrations/uninstall/${module.module[0].hash}`)
+          .then((resp) => {
+            this.isInstalling = null;
+            this.selected();
+          });       
+        }
       });   
     }
   }
