@@ -73,3 +73,18 @@
 .logout-btn:active {
   color: #fff;
 }
+
+.logo-cover{
+  position: relative;
+}
+.logo-cover .beta-version{
+  position: absolute;
+  top: 0px;
+  right: -25px;
+  display: block;
+  padding: 2px 7px;
+  background: rgb(214, 74, 74);
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+}
