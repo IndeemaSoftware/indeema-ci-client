@@ -1,47 +1,18 @@
-<app-header></app-header>
-<div class="container" style="min-height: calc(100vh - 40pt)">
-  <div class="row" style="background-color:white;margin-top:20pt; box-shadow: 0pt 1pt 15pt #45414E14;margin-bottom: 50pt;">
-    <div class="col-sm-12 col-md-12 col-lg-12"  style="margin: 10pt 10pt 10pt 10pt">
-      <div class="tab">
-        <button class="tablinks" (click)="maintenance.selected()" (click)="switchSetting('Maintenance')">    Maintenance pages</button>
-        <button class="tablinks" (click)="templates.selected()"   (click)="switchSetting('CI')">             CI Templates</button>
-        <button class="tablinks" (click)="serverDep.selected()"   (click)="switchSetting('Server-Dep')">     Server Dependencies</button>
-        <button class="tablinks" (click)="customDep.selected()"   (click)="switchSetting('Custom-Dep')">     Custom Dependencies</button>
-        <button class="tablinks" (click)="platforms.selected()"   (click)="switchSetting('Platforms')">      Platforms</button>
-        <button class="tablinks" (click)="services.selected()"    (click)="switchSetting('Services')">       Services</button>
-        <button class="tablinks" (click)="migration.selected()"   (click)="switchSetting('Modules')">      Modules</button>
-        <span style="color:lightgray">App version 0.9.4</span>
+<app-header-bottom></app-header-bottom>
+<div class="container">
+  <div class="ci__widget">
+    <div class="ci__widget-header">
+      <div class="ci__widget-title">
+        <h1>Settings</h1>
       </div>
-  
-      <div id="Maintenance" class="tabcontent">
-        <maintenance #maintenance></maintenance>
-      </div>
-
-      <div id="CI" class="tabcontent">
-        <ci-templates #templates></ci-templates>
-      </div>
-  
-      <div id="Server-Dep" class="tabcontent">
-        <server-dep #serverDep></server-dep>
-      </div>
-  
-      <div id="Custom-Dep" class="tabcontent">
-        <custom-dep #customDep></custom-dep>
-      </div>
-  
-      <div id="Platforms" class="tabcontent">
-        <platforms #platforms></platforms>
-      </div>
-  
-      <div id="Services" class="tabcontent">
-        <services #services></services>
-      </div>
-
-      <div id="Modules" class="tabcontent">
-        <migration #migration></migration>
-      </div>
-
     </div>
+    <!-- widget header end -->
+
+    <div class="ci__widget-body">
+      <router-outlet></router-outlet>
+    </div>
+    <!-- widget body end -->
+
   </div>
 </div>
-<app-footer></app-footer>
+

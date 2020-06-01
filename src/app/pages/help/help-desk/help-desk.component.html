@@ -1,0 +1,20 @@
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1>Lead your feedback or request here</h1>
+    </div>
+  </div>
+  <!-- widget header end -->
+
+  <div class="ci__widget-body">
+    <input [(ngModel)]="subject"  class="form-control" id="help-name" name="help-name" placeholder="Subject">
+    <textarea [(ngModel)]="desc"  class="form-control" id="help-desc" name="help-desc" placeholder="Describe your ticket"></textarea>
+    <input [(ngModel)]="email"  class="form-control" id="help-email" name="help-email" placeholder="Please enter your email">
+    <input [(ngModel)]="first_name"  class="form-control" id="help-first-name" name="help-first-name" placeholder="First name">
+    <input [(ngModel)]="last_name"  class="form-control" id="help-last-name" name="help-last-name" placeholder="Last name">
+
+    <button (click)="createTicket()" id="green-button">Submit</button>
+  </div>
+  <!-- widget body end -->
+
+</div>

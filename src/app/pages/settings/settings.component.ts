@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { ApiService } from '../../services/api.service';
-import { Router } from '@angular/router';
-import { ModalService } from '../../services/modal.service';
+import {Router, NavigationEnd} from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -11,43 +8,17 @@ import { ModalService } from '../../services/modal.service';
 })
 export class SettingsComponent implements OnInit {
 
-  server: null
-  new_server_name: null
-
-  constructor(
-    private api: ApiService,
-    private auth: AuthService,
-    private route: Router,
-    private modal: ModalService
-  ) { };
+  constructor(private router: Router) { };
 
   ngOnInit() {
-    this.auth.getUser().then((user) => {
-      this.switchSetting('Maintenance');
-    }, (err) => {
-      this.route.navigate(['signin']);
-    });
-  }
+    if(this.router.url === '/settings')
+      this.router.navigate(['settings/maintenance']);
 
-//Tab bar navigation
-//Start
-  switchSetting(page) {
-    // Declare all variables
-    var i, tabcontent, tablinks;
-  
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
-  
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-  
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(page).style.display = "block"; 
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if(this.router.url === '/settings')
+          this.router.navigate(['settings/maintenance']);
+      }
+    });
   }
 }

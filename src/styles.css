@@ -268,3 +268,62 @@ footer {
   width: 100%;
 }
 
+/*** CI HEADER BOTTOM CONTAINER ***/
+.ci__header-bottom{
+  display: block;
+  width: 100%;
+  background: white;
+}
+.ci__header-bottom-nav-container{
+
+}
+.ci__header-bottom-nav{
+
+}
+.ci__header-bottom-nav > ul{
+  width: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  display: table;
+}
+
+.ci__header-bottom-nav > ul > li{
+  display: inline-block;
+}
+.ci__header-bottom-nav > ul > li > a{
+  display: block;
+  height: 100%;
+  padding: 0 22px;
+  margin: 15px 0;
+  border-right: 2px solid #f3f6f9;
+  text-decoration: none;
+}
+.ci__header-bottom-nav > ul > li:first-child > a{
+  padding-left: 0;
+}
+.ci__header-bottom-nav > ul > li:last-child > a{
+  padding-right: 0;
+  border-right: none;
+}
+.ci__header-bottom-nav > ul > li > a .menu-title{
+  margin: 0;
+  color: #464e5f;
+  font-size: 16px;
+  transition: color 0.5s ease;
+}
+.ci__header-bottom-nav > ul > li > a .menu-desc{
+  margin: 0;
+  color: #b5b5c3;
+  font-weight: 500;
+  font-size: 12px;
+  transition: color 0.5s ease;
+}
+.ci__header-bottom-nav > ul > li.active > a .menu-title{
+  color: #0bb783;
+}
+.ci__header-bottom-nav > ul > li > a:hover .menu-title,
+.ci__header-bottom-nav > ul > li > a:hover .menu-desc{
+  color: #0bb783;
+}
+

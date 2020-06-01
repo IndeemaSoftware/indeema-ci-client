@@ -1,0 +1,5 @@
+.ci__fullwidth{
+  min-height: calc(100vh - 125px);
+  padding-bottom: 25px;
+  width: 100%;
+}

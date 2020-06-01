@@ -55,6 +55,13 @@ import { ResetPasswordComponent } from './pages/signin/reset-password/reset-pass
 import { PublicComponent } from './containers/public/public.component';
 import { TermsComponent } from './pages/terms/terms.component';
 import { PrivateComponent } from './containers/private/private.component';
+import { HeaderBottomComponent } from './pages/settings/header-bottom/header-bottom.component';
+import { PrivateFullwidthComponent } from './containers/private-fullwidth/private-fullwidth.component';
+import { DocumentationComponent } from './pages/help/documentation/documentation.component';
+import { CustomSetupComponent } from './pages/help/custom-setup/custom-setup.component';
+import { AccessConfigurationComponent } from './pages/help/access-configuration/access-configuration.component';
+import { HelpDeskComponent } from './pages/help/help-desk/help-desk.component';
+import { HelpHeaderBottomComponent } from './pages/help/help-header-bottom/help-header-bottom.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +91,14 @@ import { PrivateComponent } from './containers/private/private.component';
     ResetPasswordComponent,
     PublicComponent,
     TermsComponent,
-    PrivateComponent
+    PrivateComponent,
+    HeaderBottomComponent,
+    PrivateFullwidthComponent,
+    DocumentationComponent,
+    CustomSetupComponent,
+    AccessConfigurationComponent,
+    HelpDeskComponent,
+    HelpHeaderBottomComponent
   ],
   imports: [
     BrowserModule,
