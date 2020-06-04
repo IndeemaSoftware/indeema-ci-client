@@ -1,78 +1,99 @@
-<div class="container">
-    <h3>Platforms</h3>
-    <div class="form-group required">
-      <label for="platform">Platform setup script</label>
-      <select (change)="platformSelected(settingsModel.platform)" [(ngModel)]="settingsModel.platform" enabled class="form-control" name="platform" id="platform">
-        <option [ngValue]="newPlatform" (value)="newPlatform">Create new</option>
-        <optgroup label="_________"></optgroup>
-        <ng-container *ngFor="let item of settingsModel.platform_list let i = index">
-          <option [ngValue]="settingsModel.platform_list[i]">{{ item.platform_name}}</option>
-        </ng-container>
-      </select>
-      </div>
-      <div *ngIf="settingsModel.platform" class="form-group">
-        <label for="platform_name">Platform name</label>
-        <input [(ngModel)]="settingsModel.platform.platform_name" [(value)]="settingsModel.platform.platform_name" class="form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform">
-        <div *ngIf="!settingsModel.platform.platform_name">
-          <small class="form-text text-muted">Name is required</small>                    
-        </div>
-      </div>     
-    <div class="form-container">
-      <h4>Platform variables</h4>
-      <div *ngFor="let item of settingsModel.platform.variables let i = index" class="form-group repeated">
-        <input [(ngModel)]="settingsModel.platform.variables[i].name"  (input)="variableNameChange(settingsModel.platform.variables[i].name)" class="form-control" placeholder="Enter variable key">
-        <input [(ngModel)]="settingsModel.platform.variables[i].value" class="form-control" placeholder="Enter variable value">
-        <span (click)="removeRepeatField(settingsModel.platform.variables, i)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length > 1" class="text-danger remove-btn">Remove</span>
-        <span (click)="cleanFields(settingsModel.platform.variables)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length === 1 && settingsModel.platform.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
-      </div>
-      <div>
-        <span *ngIf="!isVariableUnique"style="color:red">Variable names should be unique</span>
-      </div>
-    <button (click)="addRepeatField(settingsModel.platform.variables)" type="button" id="yellow-button">Add another variable</button>
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1>Platforms</h1>
     </div>
-    <div class="form-group">
-      <div>
-        <div>
-          <br/>
-          <br/>
-          <br/>
-          Parameters to be provided when calling Setup script <br/>
-          $SERVER_NAME   - server name <br/>
-          $DESCRIPTION   - application description <br/>
-          $SSH_IP        - server ip address <br/>
-          $SSH_KEY       - server user ssh key <br/>
-          $SSH_USERNAME  - username to access server<br/>
-          $PORTS         - list of ports to be defined when seputing server <br/>
-          $SERVER_DEPENDENCIES - list of server dependencies. All the scripts are available with given name (pre_name and post_name) in the same folder with this specific script<br/>
-          $CUSTOM_DEPENDENCIES - list of custom dependencies. Scripts is available with given name in the same folder with this specific script<br/>
-          $PWD           - current path<br/>
-        </div>
-        <h4>Platform setup script</h4>
-      </div>
-      <textarea [(ngModel)]="settingsModel.platform.setup_script" [(value)]="settingsModel.platform.setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
-      <div *ngIf="!settingsModel.platform.setup_script">
-        <small class="form-text text-muted">Setup script is required</small>                    
-      </div>
-    </div>
-    <div class="form-group">
-      <h4>Platform cleanup script</h4>
-      <textarea [(ngModel)]="settingsModel.platform.cleanup_script" [(value)]="settingsModel.platform.cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
-      <div *ngIf="!settingsModel.platform.cleanup_script">
-        <small class="form-text text-muted">Cleanup script is required</small>                    
-      </div>
-    </div>
-    <div class="form-group">
-      <h4>Platform documentation</h4>
-      <div>
-        Available keys: <br/>
-        server_name, description, ssh_ip, ssh_key, ssh_username, ports, server_dependencies, custom_dependencies, platform
-      </div>
-      <textarea (input)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.platform"></textarea>
-      <div *ngIf="settingsModel.jsonValidationMessage">
-        <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
-      </div>
-    </div>
-    <button (click)="updatePlatform()" id="green-button" *ngIf="!isNewPlatform">Update</button>
-    <button (click)="createPlatform()" id="green-button" *ngIf="isNewPlatform">Create</button>
-    <button (click)="deletePlatform()" id="red-button" [disabled]="isNewPlatform">Delete</button>
   </div>
+  <!-- widget header end -->
+
+  <div class="ci__widget-body">
+
+    <div class="ci__form">
+
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="platform">Platform setup script</label>
+        <select (change)="platformSelected(settingsModel.platform)" [(ngModel)]="settingsModel.platform" class="ci__form-select form-control" name="platform" id="platform">
+          <option [ngValue]="newPlatform" (value)="newPlatform">Create new</option>
+          <optgroup label="_________"></optgroup>
+          <ng-container *ngFor="let item of settingsModel.platform_list">
+            <option [ngValue]="item">{{ item.platform_name }}</option>
+          </ng-container>
+        </select>
+      </div>
+      <div *ngIf="settingsModel.platform" class="ci__form-group form-group ci__form-group-required">
+        <label for="new_platform_name">Platform name</label>
+        <input [(ngModel)]="settingsModel.platform.platform_name" [(value)]="settingsModel.platform.platform_name" class="ci__form-input form-control" id="new_platform_name" name="new_platform_name" placeholder="Please enter name for new platform">
+        <div *ngIf="!settingsModel.platform.platform_name" class="ci__form-validation-text">
+          <small class="form-text text-muted">Name is required</small>
+        </div>
+      </div>
+      <div class="ci__form-group form-group">
+        <label>Platform variables</label>
+        <div *ngFor="let item of settingsModel.platform.variables let i = index" class="form-group repeated">
+          <input [(ngModel)]="settingsModel.platform.variables[i].name" (input)="variableNameChange(settingsModel.platform.variables[i].name)" class="ci__form-input form-control" placeholder="Enter variable key">
+          <input [(ngModel)]="settingsModel.platform.variables[i].value" class="ci__form-input form-control" placeholder="Enter variable value">
+          <span (click)="removeRepeatField(settingsModel.platform.variables, i)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length > 1" class="text-danger remove-btn">Remove</span>
+          <span (click)="cleanFields(settingsModel.platform.variables)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length === 1 && settingsModel.platform.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
+        </div>
+        <div *ngIf="!isVariableUnique" class="ci__form-validation-text">
+          <small class="form-text text-danger">Variable names should be unique</small>
+        </div>
+        <button (click)="addRepeatField(settingsModel.platform.variables)" type="button" id="yellow-button">Add another variable</button>
+      </div>
+      <br/>
+      <div class="ci__form-group form-group small">
+        Parameters to be provided when calling Setup script <br/>
+        $SERVER_NAME   - server name <br/>
+        $DESCRIPTION   - application description <br/>
+        $SSH_IP        - server ip address <br/>
+        $SSH_KEY       - server user ssh key <br/>
+        $SSH_USERNAME  - username to access server<br/>
+        $PORTS         - list of ports to be defined when seputing server <br/>
+        $SERVER_DEPENDENCIES - list of server dependencies. All the scripts are available with given name (pre_name and post_name) in the same folder with this specific script<br/>
+        $CUSTOM_DEPENDENCIES - list of custom dependencies. Scripts is available with given name in the same folder with this specific script<br/>
+        $PWD           - current path<br/>
+      </div>
+      <br/>
+      <div class="ci__form-group form-group">
+        <label for="script">Platform setup script</label>
+        <textarea [(ngModel)]="settingsModel.platform.setup_script" [(value)]="settingsModel.platform.setup_script" class="ci__form-textarea form-control" id="script" name="script" rows="10"></textarea>
+        <div *ngIf="!settingsModel.platform.setup_script" class="ci__form-validation-text">
+          <small class="form-text text-muted">Setup script is required</small>
+        </div>
+      </div>
+      <div class="ci__form-group form-group">
+        <label for="cleanup_script">Platform cleanup script</label>
+        <textarea [(ngModel)]="settingsModel.platform.cleanup_script" [(value)]="settingsModel.platform.cleanup_script" class="ci__form-textarea form-control" id="cleanup_script" name="cleanup_script" rows="10"></textarea>
+        <div *ngIf="!settingsModel.platform.cleanup_script" class="ci__form-validation-text">
+          <small class="form-text text-muted">Cleanup script is required</small>
+        </div>
+      </div>
+      <div class="ci__form-group form-group">
+        <label for="doc">Platform documentation</label>
+        <div class="small">
+          Available keys: <br/>
+          server_name, description, ssh_ip, ssh_key, ssh_username, ports, server_dependencies, custom_dependencies, platform
+        </div>
+        <textarea (input)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="ci__form-textarea form-control" id="doc" name="doc" rows="10" [disabled]="!settingsModel.platform"></textarea>
+        <div *ngIf="settingsModel.jsonValidationMessage" class="ci__form-validation-text">
+          <small class="form-text text-danger"> {{settingsModel.jsonValidationMessage}}</small>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- widget body end -->
+
+  <div class="ci__widget-footer">
+    <div class="ci__form-group form-group ci__form-group-required">
+      <div class="ci__form-btn-list">
+        <button (click)="updatePlatform()" class="ci__form-btn ci__form-btn-green" *ngIf="!isNewPlatform">Update</button>
+        <button (click)="createPlatform()" class="ci__form-btn ci__form-btn-green" *ngIf="isNewPlatform">Create</button>
+        <button (click)="deletePlatform()" class="ci__form-btn ci__form-btn-red" [disabled]="isNewPlatform">Delete</button>
+      </div>
+    </div>
+  </div>
+  <!-- widget footer end -->
+
+</div>

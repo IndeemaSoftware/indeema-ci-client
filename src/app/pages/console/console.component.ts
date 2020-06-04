@@ -220,14 +220,14 @@ export class ConsoleComponent implements OnInit {
 
   startCleanupScript() {
     if (this.projectId) {
-      this.api.remove(`apps/cleanup/${this.appId}`).then((resp) => {
+      this.api.remove(`apps/cleanup/${this.appId}`).then((res) => {
         this.cleanConsole();
       }, (err) => {
         this.modal.alert(err);
         this.route.navigate([`projects`]);
       });
     } else if (this.serverId) {
-      this.api.remove(`server/cleanup/${this.serverId}/`).then((resp) => {
+      this.api.remove(`server/cleanup/${this.serverId}/`).then((res) => {
         this.cleanConsole();
       }, (err) => {
         this.modal.alert(err);

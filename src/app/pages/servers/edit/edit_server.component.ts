@@ -100,8 +100,8 @@ export class EditServerComponent implements OnInit {
     this.api.get('/custom-dependencies')
         .then(data => this.custom_dependency_list = data, err => this.custom_dependency_list = []);
 
-    this.api.get(`platforms`).then((resp) => {
-      this.platform_list = resp;
+    this.api.get(`platforms`).then((res) => {
+      this.platform_list = res;
     });  
 
     this.serverModel.users = [];

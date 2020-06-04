@@ -7,14 +7,40 @@
   <!-- widget header end -->
 
   <div class="ci__widget-body">
-    <input [(ngModel)]="subject"  class="form-control" id="help-name" name="help-name" placeholder="Subject">
-    <textarea [(ngModel)]="desc"  class="form-control" id="help-desc" name="help-desc" placeholder="Describe your ticket"></textarea>
-    <input [(ngModel)]="email"  class="form-control" id="help-email" name="help-email" placeholder="Please enter your email">
-    <input [(ngModel)]="first_name"  class="form-control" id="help-first-name" name="help-first-name" placeholder="First name">
-    <input [(ngModel)]="last_name"  class="form-control" id="help-last-name" name="help-last-name" placeholder="Last name">
 
-    <button (click)="createTicket()" id="green-button">Submit</button>
+    <div class="ci__form">
+      <div class="ci__form-group form-group">
+        <label for="first_name">First name</label>
+        <input [(ngModel)]="first_name" class="ci__form-input form-control" id="first_name" name="first_name" placeholder="Please enter first name">
+      </div>
+      <div class="ci__form-group form-group">
+        <label for="last_name">Last name</label>
+        <input [(ngModel)]="last_name" class="ci__form-input form-control" id="last_name" name="last_name" placeholder="Please enter last name">
+      </div>
+      <div class="ci__form-group form-group">
+        <label for="email">Email</label>
+        <input [(ngModel)]="email" type="email" class="ci__form-input form-control" id="email" name="email" placeholder="Please enter your email">
+      </div>
+      <div class="ci__form-group form-group">
+        <label for="subject">Subject</label>
+        <input [(ngModel)]="subject" class="ci__form-input form-control" id="subject" name="subject" placeholder="Subject">
+      </div>
+      <div class="ci__form-group form-group">
+        <label for="desc">Description</label>
+        <textarea [(ngModel)]="desc" class="ci__form-textarea form-control" id="desc" name="desc" rows="5" placeholder="Describe your ticket"></textarea>
+      </div>
+    </div>
+
   </div>
   <!-- widget body end -->
+
+  <div class="ci__widget-footer">
+    <div class="ci__form-group form-group ci__form-group-required">
+      <div class="ci__form-btn-list">
+        <button (click)="createTicket()" class="ci__form-btn ci__form-btn-red">Submit</button>
+      </div>
+    </div>
+  </div>
+  <!-- widget footer end -->
 
 </div>

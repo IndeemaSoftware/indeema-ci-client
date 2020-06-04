@@ -137,8 +137,8 @@ export class EditComponent implements OnInit {
 
 
   updateMaintenanceList() {
-    this.api.get(`maintenances`).then((resp) => {
-      this.maintenances = resp;
+    this.api.get(`maintenances`).then((res) => {
+      this.maintenances = res;
       this.maintenanceSelected();
     }, (err) => {
       console.log(err);
@@ -178,8 +178,8 @@ export class EditComponent implements OnInit {
   }
 
   updateServiceList() {
-    this.api.get(`services`).then((resp) => {
-      this.services = resp;
+    this.api.get(`services`).then((res) => {
+      this.services = res;
       this.serviceChosen();
     });  
   }
@@ -217,8 +217,8 @@ export class EditComponent implements OnInit {
   }
 
   getTemplates() {
-    this.api.get(`ci-templates`).then((resp) => {
-      this.ci_template_list = resp;
+    this.api.get(`ci-templates`).then((res) => {
+      this.ci_template_list = res;
     });  
   }
 

@@ -24,8 +24,8 @@ export class MaintenancePreviewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.api.get(`maintenances/${this.id}`).then((resp) => {
-      this.data = this.sanitizer.bypassSecurityTrustHtml(resp.html_code);
+    this.api.get(`maintenances/${this.id}`).then((res) => {
+      this.data = this.sanitizer.bypassSecurityTrustHtml(res.html_code);
     });
   }
 }

@@ -58,8 +58,8 @@ export class MaintenanceComponent implements OnInit {
    * Update maintenance list for API
    */
   updateMaintenanceList() {
-    this.api.get(`maintenances`).then((resp) => {
-      this.settingsModel.maintenance_list = resp;
+    this.api.get(`maintenances`).then((res) => {
+      this.settingsModel.maintenance_list = res;
     });
   }
 
@@ -134,7 +134,7 @@ export class MaintenanceComponent implements OnInit {
    * Create maintenance action
    */
   createMaintenance() {
-    var name = this.settingsModel.maintenance.name;
+    const name = this.settingsModel.maintenance.name;
 
     if (!this.settingsModel.maintenance.html_code) {
       this.modal.alert("Maintenance page html code can't be empty");
@@ -152,8 +152,8 @@ export class MaintenanceComponent implements OnInit {
         'Yes, please save!',
         'Don`t save'
       ).then(() => {
-        this.api.create(`maintenances`, this.settingsModel.maintenance).then((resp) => {
-          this.updateServiceFields(resp);
+        this.api.create(`maintenances`, this.settingsModel.maintenance).then((res) => {
+          this.updateServiceFields(res);
           this.cleanMaintenanceFields();
 
           this.modal.alert(`Maintenance page ${name} was succesfully created. To proceed working with it, please selected it from list in the top of this page.`);
@@ -171,7 +171,7 @@ export class MaintenanceComponent implements OnInit {
    * Update maintenance action
    */
   updateMaintenance() {
-    var name = this.settingsModel.maintenance.name;
+    const name = this.settingsModel.maintenance.name;
 
     if (!this.settingsModel.maintenance.html_code) {
       this.modal.alert("Maintenance page html code can't be empty");
@@ -189,7 +189,7 @@ export class MaintenanceComponent implements OnInit {
         'Yes, please save!',
         'Don`t save'
       ).then(
-        () => this.api.update(`maintenances/${this.settingsModel.maintenance.id}`, this.settingsModel.maintenance).then((resp) => this.modal.alert(`Maintenance page ${name} was succesfully updated.`) ),
+        () => this.api.update(`maintenances/${this.settingsModel.maintenance.id}`, this.settingsModel.maintenance).then((res) => this.modal.alert(`Maintenance page ${name} was succesfully updated.`) ),
         (err) => this.modal.alert(err)
       );
     } else {
@@ -216,7 +216,7 @@ export class MaintenanceComponent implements OnInit {
       'Yes, please remove!',
       'Don`t remove'
     ).then(() => {
-      this.api.remove(`maintenances/${this.settingsModel.maintenance.id}`).then((resp) => {
+      this.api.remove(`maintenances/${this.settingsModel.maintenance.id}`).then((res) => {
         this.cleanMaintenanceFields();
         this.modal.alert(`Maintenance page ${name} was succesfully deleted.`);
       });

@@ -1,86 +1,106 @@
-<div class="container">
-    <h3>Services</h3>
-    <div class="form-group required">
-      <label for="service">Service setup script</label>
-      <select (change)="serviceSelected(settingsModel.service)" [(ngModel)]="settingsModel.service" enabled class="form-control" name="service" id="service">
-        <option [ngValue]="newService" (value)="newService">Create new</option>
-        <optgroup label="_________"></optgroup>
-        <ng-container *ngFor="let item of settingsModel.service_list let i = index">
-          <option [ngValue]="settingsModel.service_list[i]">{{ item.service_name}}</option>
-        </ng-container>
-      </select>
-      </div>
-      <div *ngIf="settingsModel.service" class="form-group">
-        <label for="service_name">Service name</label>
-        <input [(ngModel)]="settingsModel.service.service_name" [(value)]="settingsModel.service.service_name" class="form-control" id="new_service_name" name="nservice_name" placeholder="Please enter name for new service">
-        <div *ngIf="!settingsModel.service.service_name">
-          <small class="form-text text-muted">Name is required</small>                    
-        </div>
-      </div>     
-    <div class="form-container">
-      <h4>Service variables</h4>
-      <div *ngFor="let item of settingsModel.service.variables let i = index" class="form-group repeated">
-        <input [(ngModel)]="settingsModel.service.variables[i].name"  class="form-control" (input)="variableNameChange(settingsModel.service.variables[i].name)" id="service-name" name="service-name" placeholder="Enter variable key">
-        <input [(ngModel)]="settingsModel.service.variables[i].value" class="form-control" id="service-value" name="service-value" placeholder="Enter variable value">
-        <span (click)="removeRepeatField(settingsModel.service.variables, i)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length > 1" class="text-danger remove-btn">Remove</span>
-        <span (click)="cleanFields(settingsModel.service.variables)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length === 1 && settingsModel.service.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>
-      </div>
-      <div>
-        <span *ngIf="!isVariableUnique"style="color:red">Variable names should be unique</span>
-      </div>
-    <button (click)="addRepeatField(settingsModel.service.variables)" type="button" id="yellow-button">Add another variable</button>
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1>Services</h1>
     </div>
-    <div class="form-group">
-      <div>
-        <div>
-          <br/>
-          <br/>
-          <br/>
-          Parameters to be provided when calling Setup script <br/>
-          $PWD           - path to this script and all setup resources <br/>
-          $ENVIRONMENTS  - a list of environments defined in project <br/>
-          $ENVIRONMENT   - environments set for application and selected from avalible list from project <br/>
-          $MAINTENANCE   - path to maintenance html file use $PWD<br/>
-          $APP_STATUS    - setup status<br/>
-          $ISSECURE      - "true"|"false" value to know is use https or not<br/>
-          $AUTOMATIC_CERT - Use automatic certificates (self-signed certificates) checkbox status. If certificates are not attached then connection should insecure ("true"|"false")<br/>
-          $CUSTOM_SSL_KEY - ssl key file name located in the same folder with this script use $PWD<br/>
-          $CUSTOM_SSL_CRT - ssl crt file name located in the same folder with this script use $PWD<br/>
-          $CUSTOM_SSL_PEM - ssl pem file name located in the same folder with this script use $PWD<br/>
-          $APP_NAME      - application name <br/>
-          $APP_PORT      - selected application port  <br/>
-          $DESC          - application description <br/>
-          $DOMAIN_NAME   - domain name<br/>
-          $CI_TEMPLATE   - selected ci template name use $PWD<br/>
-          $__V           - version<br/>
-          $PROJECT_NAME  - project name<br/>
-        </div>
-        <h4>Service setup script</h4>
-      </div>
-      <textarea [(ngModel)]="settingsModel.service.setup_script" [(value)]="settingsModel.service.setup_script" class="form-control" id="script" name="script" rows="10"></textarea>
-      <div *ngIf="!settingsModel.service.setup_script">
-        <small class="form-text text-muted">Setup script is required</small>                    
-      </div>
-    </div>
-    <div class="form-group">
-      <h4>Service cleanup script</h4>
-      <textarea [(ngModel)]="settingsModel.service.cleanup_script" [(value)]="settingsModel.service.cleanup_script" class="form-control" id="script" name="script" rows="10"></textarea>
-      <div *ngIf="!settingsModel.service.cleanup_script">
-        <small class="form-text text-muted">Cleanup script is required</small>                    
-      </div>
-    </div>
-    <div class="form-group">
-      <h4>Service documentation</h4>
-      <div>
-        Available keys: <br/>
-        server, custom_ssl_crt, domain_name, app_name, desc, project_name, ci_template, environment, automatic_cert, custom_ssl_key, app_port
-      </div>
-      <textarea (input)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="form-control" id="script" name="script" rows="10" [disabled]="!settingsModel.service"></textarea>
-      <div *ngIf="settingsModel.jsonValidationMessage">
-        <label class="badge badge-danger" id="json-warning" name="json-warning"> {{settingsModel.jsonValidationMessage}}</label>
-      </div>
-    </div>
-    <button (click)="updateService()" id="green-button" *ngIf="!isNewService">Update</button>
-    <button (click)="createService()" id="green-button" *ngIf="isNewService">Create</button>
-    <button (click)="deleteService()" id="red-button" [disabled]="isNewService">Delete</button>
   </div>
+  <!-- widget header end -->
+
+  <div class="ci__widget-body">
+
+    <div class="ci__form">
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="service">Service setup script</label>
+        <select (change)="serviceSelected(settingsModel.service)" [(ngModel)]="settingsModel.service" class="ci__form-select form-control" name="service" id="service">
+          <option [ngValue]="newService" (value)="newService">Create new</option>
+          <optgroup label="_________"></optgroup>
+          <ng-container *ngFor="let item of settingsModel.service_list">
+            <option [ngValue]="item">{{ item.service_name}}</option>
+          </ng-container>
+        </select>
+      </div>
+      <div *ngIf="settingsModel.service" class="ci__form-group form-group ci__form-group-required">
+        <label for="new_service_name">Service name</label>
+        <input [(ngModel)]="settingsModel.service.service_name" [(value)]="settingsModel.service.service_name" class="ci__form-input form-control" id="new_service_name" name="new_service_name" placeholder="Please enter name for new service">
+        <div *ngIf="!settingsModel.service.service_name" class="ci__form-validation-text">
+          <small class="form-text text-muted">Name is required</small>
+        </div>
+      </div>
+      <div class="ci__form-group form-group">
+        <label>Service variables</label>
+        <div *ngFor="let item of settingsModel.service.variables let i = index" class="form-group repeated">
+          <input [(ngModel)]="settingsModel.service.variables[i].name" (input)="variableNameChange(settingsModel.service.variables[i].name)" class="ci__form-input form-control" id="service-name" name="service-name" placeholder="Enter variable key">
+          <input [(ngModel)]="settingsModel.service.variables[i].value" class="ci__form-input form-control" id="service-value" name="service-value" placeholder="Enter variable value">
+
+          <span (click)="removeRepeatField(settingsModel.service.variables, i)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length > 1" class="text-danger remove-btn">Remove</span>
+          <span (click)="cleanFields(settingsModel.service.variables)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length === 1" class="text-warning remove-btn">Reset</span>
+        </div>
+        <div *ngIf="!isVariableUnique" class="ci__form-validation-text">
+          <small class="form-text text-danger">Variable names should be unique</small>
+        </div>
+        <button (click)="addRepeatField(settingsModel.service.variables)" type="button" id="yellow-button">Add another variable</button>
+      </div>
+      <br/>
+      <div class="ci__form-group form-group small">
+        Parameters to be provided when calling Setup script <br/>
+        $PWD           - path to this script and all setup resources <br/>
+        $ENVIRONMENTS  - a list of environments defined in project <br/>
+        $ENVIRONMENT   - environments set for application and selected from avalible list from project <br/>
+        $MAINTENANCE   - path to maintenance html file use $PWD<br/>
+        $APP_STATUS    - setup status<br/>
+        $ISSECURE      - "true"|"false" value to know is use https or not<br/>
+        $AUTOMATIC_CERT - Use automatic certificates (self-signed certificates) checkbox status. If certificates are not attached then connection should insecure ("true"|"false")<br/>
+        $CUSTOM_SSL_KEY - ssl key file name located in the same folder with this script use $PWD<br/>
+        $CUSTOM_SSL_CRT - ssl crt file name located in the same folder with this script use $PWD<br/>
+        $CUSTOM_SSL_PEM - ssl pem file name located in the same folder with this script use $PWD<br/>
+        $APP_NAME      - application name <br/>
+        $APP_PORT      - selected application port  <br/>
+        $DESC          - application description <br/>
+        $DOMAIN_NAME   - domain name<br/>
+        $CI_TEMPLATE   - selected ci template name use $PWD<br/>
+        $__V           - version<br/>
+        $PROJECT_NAME  - project name<br/>
+      </div>
+      <br/>
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="script">Service setup script</label>
+        <textarea [(ngModel)]="settingsModel.service.setup_script" [(value)]="settingsModel.service.setup_script" class="ci__form-textarea form-control" id="script" name="script" rows="10"></textarea>
+        <div *ngIf="!settingsModel.service.setup_script" class="ci__form-validation-text">
+          <small class="form-text text-muted">Setup script is required</small>
+        </div>
+      </div>
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="cleanup_script">Service cleanup script</label>
+        <textarea [(ngModel)]="settingsModel.service.cleanup_script" [(value)]="settingsModel.service.cleanup_script" class="ci__form-textarea form-control" id="cleanup_script" name="cleanup_script" rows="10"></textarea>
+        <div *ngIf="!settingsModel.service.cleanup_script" class="ci__form-validation-text">
+          <small class="form-text text-muted">Cleanup script is required</small>
+        </div>
+      </div>
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="doc">Service documentation</label>
+        <div class="small">
+          Available keys: <br/>
+          server, custom_ssl_crt, domain_name, app_name, desc, project_name, ci_template, environment, automatic_cert, custom_ssl_key, app_port
+        </div>
+        <textarea (input)="docUpdated()"[(ngModel)]="settingsModel.doc_string" [(value)]="settingsModel.doc_string" class="ci__form-textarea form-control" id="doc" name="doc" rows="10" [disabled]="!settingsModel.service"></textarea>
+        <div *ngIf="settingsModel.jsonValidationMessage" class="ci__form-validation-text">
+          <small class="form-text text-danger"> {{settingsModel.jsonValidationMessage}}</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- widget body end -->
+
+  <div class="ci__widget-footer">
+    <div class="ci__form-group form-group ci__form-group-required">
+      <div class="ci__form-btn-list">
+        <button (click)="updateService()" class="ci__form-btn ci__form-btn-green" *ngIf="!isNewService">Update</button>
+        <button (click)="createService()" class="ci__form-btn ci__form-btn-green" *ngIf="isNewService">Create</button>
+        <button (click)="deleteService()" class="ci__form-btn ci__form-btn-red" [disabled]="isNewService">Delete</button>
+      </div>
+    </div>
+  </div>
+  <!-- widget footer end -->
+
+</div>

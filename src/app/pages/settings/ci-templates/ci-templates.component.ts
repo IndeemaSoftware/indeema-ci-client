@@ -96,8 +96,8 @@ export class CITemplatesComponent implements OnInit {
   }
 
   updateTemplatesList() {
-    this.api.get(`ci-templates`).then((resp) => {
-      this.settingsModel.template_list = resp;
+    this.api.get(`ci-templates`).then((res) => {
+      this.settingsModel.template_list = res;
     });  
   }
 
@@ -133,7 +133,7 @@ export class CITemplatesComponent implements OnInit {
    * Create new template
    */
   createTemplate() {
-    var name = this.settingsModel.template.name;
+    const name = this.settingsModel.template.name;
 
     if (!this.settingsModel.template.yml_code) {
       this.modal.alert("CI script is required for new template");
@@ -151,8 +151,8 @@ export class CITemplatesComponent implements OnInit {
         'Yes, please save!',
         'Don`t save'
       ).then(() => {
-        this.api.create(`ci-templates`, this.settingsModel.template).then((resp) => {
-          this.updateServiceFields(resp);
+        this.api.create(`ci-templates`, this.settingsModel.template).then((res) => {
+          this.updateServiceFields(res);
           this.cleanTemplateFields();
 
           this.modal.alert(`CI template ${name} was succesfully created. To proceed working with it selected it from list in the top of this page.`);
@@ -170,7 +170,7 @@ export class CITemplatesComponent implements OnInit {
    * Update template action
    */
   updateTemplate() {
-    var name = this.settingsModel.template.name;
+    const name = this.settingsModel.template.name;
 
     if (!this.settingsModel.template.yml_code) {
       this.modal.alert("CI script is required for new template");
@@ -216,7 +216,7 @@ export class CITemplatesComponent implements OnInit {
       'Yes, please remove!',
       'Don`t remove'
     ).then((res) => {
-      this.api.remove(`ci-templates/${this.settingsModel.template.id}`).then((resp) => {
+      this.api.remove(`ci-templates/${this.settingsModel.template.id}`).then((res) => {
         this.cleanTemplateFields();
         this.modal.alert(`CI template ${name} was succesfully removed.`);
       });

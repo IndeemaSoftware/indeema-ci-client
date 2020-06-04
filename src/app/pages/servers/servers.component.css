@@ -13,6 +13,12 @@ th {
     border:none;
     margin:0px;
 }
+.editable-table tbody th, .editable-table tbody td {
+    line-height: 22px;
+    overflow: hidden;
+    max-width: 165px;
+    text-overflow: ellipsis;
+}
 tr:nth-child(even) {
     background: #EFF4F9;
 }

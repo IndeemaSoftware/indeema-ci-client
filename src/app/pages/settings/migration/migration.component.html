@@ -1,40 +1,56 @@
-<div class="container">
-    <h3>Migration pages</h3>
-  <p>Custom migration</p>
-  <input (change)="addFile($event)" type="file" class="form-control" name="projectFile.name" placeholder="Upload SSH pem key">
-  <button (click)="import()" id="green-button" title="Import custom modules">Import</button>
-  <button (click)="export()" id="green-button" title="Export all your scripts and share it with others">Export</button>
-  <div style="height: 50pt;">
-    <p *ngIf="isLoading" class="loader"></p>
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1>Migration modules</h1>
+    </div>
   </div>
+  <!-- widget header end -->
 
-  <div *ngIf="modules" >
-    <p><br/><br/><br/>Available modules on market</p>
-    <table class="table editable-table">
-      <thead class="thead-transparent">
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Version</th>
-          <th scope="col">Author</th>
-          <th scope="col">Description</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let module of modules">
-          <th scope="row">{{ module.name?module.name:"No module name" }}</th>
-          <th scope="row">{{ module.version?module.version:"No module version" }}</th>
-          <th scope="row"><p id="description">{{ module.author?module.author:"No module author" }}</p></th>
-          <th scope="row"><p id="description">{{ module.description?module.description:"No module description" }}</p></th>
-          <th scope="row" style="width:100pt;">
-            <p *ngIf="isInstalling && isInstalling === module.identifier" class="loader"></p>
-            <div *ngIf="auth.user && auth.user.module">
-              <button *ngIf="(!isInstalling || isInstalling !== module.identifier) && !auth.user.module.includes(module.identifier)" (click)="installModule(module)" id="green-button" title="Install all scripts and templates">Install</button>
-              <button *ngIf="(!isInstalling || isInstalling !== module.identifier) && auth.user.module.includes(module.identifier)" (click)="uninstallModule(module)" id="red-button" title="Uninstall all scripts and templates">Uninstall</button>
-            </div>
-          </th>
-        </tr>
-      </tbody>
-    </table>
+  <div class="ci__widget-body">
+
+    <div class="ci__form">
+      <div class="ci__form-group form-group">
+        <label for="project_file_name">Custom migration</label>
+        <input (change)="addFile($event)" type="file" class="ci__form-file form-control" name="project_file_name" placeholder="Upload SSH pem key">
+      </div>
+      <button (click)="import()" id="green-button" title="Import custom modules">Import</button>
+      <button (click)="export()" id="green-button" title="Export all your scripts and share it with others">Export</button>
+      <div style="height: 50pt;">
+        <p *ngIf="isLoading" class="loader"></p>
+      </div>
+
+      <div *ngIf="modules" >
+        <p><br/><br/><br/>Available modules on market</p>
+        <table class="table editable-table">
+          <thead class="thead-transparent">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Version</th>
+            <th scope="col">Author</th>
+            <th scope="col">Description</th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let module of modules">
+            <th scope="row">{{ module.name?module.name:"No module name" }}</th>
+            <th scope="row">{{ module.version?module.version:"No module version" }}</th>
+            <th scope="row"><p id="description">{{ module.author?module.author:"No module author" }}</p></th>
+            <th scope="row"><p id="description">{{ module.description?module.description:"No module description" }}</p></th>
+            <th scope="row" style="width:100pt;">
+              <p *ngIf="isInstalling && isInstalling === module.identifier" class="loader"></p>
+              <div *ngIf="auth.user && auth.user.module">
+                <button *ngIf="(!isInstalling || isInstalling !== module.identifier) && !auth.user.module.includes(module.identifier)" (click)="installModule(module)" id="green-button" title="Install all scripts and templates">Install</button>
+                <button *ngIf="(!isInstalling || isInstalling !== module.identifier) && auth.user.module.includes(module.identifier)" (click)="uninstallModule(module)" id="red-button" title="Uninstall all scripts and templates">Uninstall</button>
+              </div>
+            </th>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
+  <!-- widget body end -->
+
 </div>

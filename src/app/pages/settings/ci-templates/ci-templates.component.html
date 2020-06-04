@@ -23,14 +23,14 @@
       <div *ngIf="settingsModel.template" class="ci__form-group form-group ci__form-group-required">
         <label for="new_template_name">Template page name</label>
         <input [(ngModel)]="settingsModel.template.name" [(value)]="settingsModel.template.name" class="ci__form-input form-control" id="new_template_name" name="new_template_name" placeholder="Please enter name for new template script">
-        <div *ngIf="!settingsModel.template.name">
+        <div *ngIf="!settingsModel.template.name" class="ci__form-validation-text">
           <small class="form-text text-muted">Name is required.</small>
         </div>
       </div>
       <div class="ci__form-group form-group ci__form-group-required">
         <label for="script">YML code</label>
         <textarea [(ngModel)]="settingsModel.template.yml_code" [(value)]="settingsModel.template.yml_code" class="ci__form-textarea form-control" id="script" name="script" rows="10"></textarea>
-        <div *ngIf="!settingsModel.template.yml_code">
+        <div *ngIf="!settingsModel.template.yml_code" class="ci__form-validation-text">
           <small class="form-text text-muted">Code is required.</small>
         </div>
       </div>

@@ -13,34 +13,34 @@ import { MultipleFileUploaderService } from '../../../services/multiple-file-upl
 })
 export class MigrationComponent implements OnInit {
 
-  isNewMaintenance: boolean = true;
   projectFile: null;
   errorMsg: "";
   api_url = environment.API_URL;
   modules: any = [{
-    name:"",
-    description:"",
-    version:""
+    name: "",
+    description: "",
+    version: ""
   }]
-
-  //file uploader 
-  public uploader: MultipleFileUploaderService;
 
   isLoading: boolean
   isInstalling = null;
+
+  public uploader: MultipleFileUploaderService;
 
   constructor (
     private api: ApiService,
     private auth: AuthService,
     private route: Router,
     private modal: ModalService
-  ) { 
-  };
+  ) {  }
 
   ngOnInit() {
     this.getMigrations();
   }
 
+  /**
+   * Get migration list
+   */
   getMigrations(){
     this.isInstalling = true;
     this.isLoading = true;
@@ -50,17 +50,22 @@ export class MigrationComponent implements OnInit {
       this.updateModules();
       this.isLoading = false;
     }, (err) => {
-      this.route.navigate(['signin']);
       this.isLoading = false;
     });
   }
 
+  /**
+   * Get modules list
+   */
   updateModules() {
-    this.api.get(`migrations`).then((resp) => {
-      this.modules = resp;
+    this.api.get(`migrations`).then((res) => {
+      this.modules = res;
     });  
   }
 
+  /**
+   * Setup upload module
+   */
   setupUpload() {
     const jwt = this.auth.getJWT();
 
@@ -84,36 +89,33 @@ export class MigrationComponent implements OnInit {
 
       response = JSON.parse(response);
       if (!response.length) {
-        // this.errorMsg = 'File not uploaded properly!';
         return;
       } else {
-        var hash = response[0].hash;
+        const hash = response[0].hash;
         this.api.get(`migrations/import/${hash}`)
-        .then((resp) => {
+        .then((res) => {
           this.isLoading = false;
           this.modal.alert(`Set ${response[0].name} was succesfully imported`);
         }); 
       }
 
       return new Promise((rs, rj) => {
-        //Timeout for fix multiple responses
         setTimeout(() => {
           rs();
-  
         }, 250);
       });
     }
 
     this.uploader.onWhenAddingFileFailed = (item: any, filter: any, options: any) => {
       this.isLoading = false;
-      console.log("Failed to upload");
     }
-
-    this.uploader.onProgressAll(progress =>{
-      console.log(progress);
-    });
   }
 
+  /**
+   * Add file to upload queue
+   *
+   * @param ev
+   */
   addFile(ev) {
     if (ev.target.files.length > 0) {
       this.projectFile = ev.target.files[0];
@@ -122,6 +124,9 @@ export class MigrationComponent implements OnInit {
     }
   }
 
+  /**
+   * Import new module
+   */
   import () {
     const files = [];
     files.push(this.projectFile);
@@ -129,52 +134,66 @@ export class MigrationComponent implements OnInit {
     this.uploader.addToQueue(files);
 
     this.isLoading = true;
+
     //Send files
     this.uploader.uploadAllFiles('files', 'POST');
   }
 
+  /**
+   * Export module
+   */
   export () {
     this.api.get(`migrations/export`)
-    .then((resp) => {
+    .then((res) => {
       window.open(environment.API_URL + `/migrations/download/${this.auth.user.id}`,'_blank');
     }); 
   }
 
+  /**
+   * Install modules from market
+   *
+   * @param module
+   */
   installModule(module) {
     if (module.module.length > 0) {
       this.isInstalling = module.identifier;
       this.api.get(`migrations/import/${module.module[0].hash}`)
-      .then((resp) => {
+      .then((res) => {
         this.isInstalling = null;
         this.getMigrations();
       });   
     }
   }
 
+  /**
+   * Uninstall module from market
+   *
+   * @param module
+   */
   uninstallModule(module) {
     if (module.module.length > 0) {
       this.isInstalling = module.identifier;
       this.api.get(`migrations/isused/${module.module[0].hash}`)
-      .then((resp) => {
-        if (resp.apps.length > 0) {
+      .then((res) => {
+        if (res.apps.length > 0) {
           this.isInstalling = null;
-          var apps = "";
-          for (var a of resp.apps) {
+          let apps = "";
+          for (let a of res.apps) {
             apps += ` ${a.app_name},`;
           }
 
           this.modal.alert(`You may not delete this module as applications${apps} are still using some components of from this module. Please change componets from application first and then you can delete this module`);
-        } else if (resp.servers.length > 0) {
+        } else if (res.servers.length > 0) {
           this.isInstalling = null;
-          var servers = "";
-          for (var s of resp.servers) {
+          let servers = "";
+          for (let s of res.servers) {
             servers += ` ${s.server_name},`;
           }
 
           this.modal.alert(`You may not delete this module as servers${servers} are still using some components of from this module. Please change componets from server first and then you can delete this module`);
         } else {
           this.api.get(`migrations/uninstall/${module.module[0].hash}`)
-          .then((resp) => {
+          .then((res) => {
             this.isInstalling = null;
             this.getMigrations();
           });       

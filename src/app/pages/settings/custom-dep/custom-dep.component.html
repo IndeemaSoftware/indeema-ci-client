@@ -1,35 +1,59 @@
-<div class="container">
-    <h3>Custom Dependencies</h3>
-    <div class="form-group required">
-      <label for="dependency">Custom dependency</label>
-      <select (change)="dependencySelected()" [(ngModel)]="settingsModel.dependency" enabled class="form-control" name="dependency" id="custom_dep">
-        <option [value]="newDependency">Create new</option>
-        <optgroup label="_________"></optgroup>
-        <ng-container *ngFor="let item of settingsModel.dependency_list let i = index">
-          <option [ngValue]="settingsModel.dependency_list[i]">{{ item.label}}</option>
-        </ng-container>
-      </select>
-
-      <h4>Name</h4>
-      <input [(ngModel)]="settingsModel.dependency.name"  class="form-control" id="custom-dep-name" name="custom-dep-name" placeholder="Enter name for dependancy with no whitespaces">
-      <div *ngIf="!settingsModel.dependency.name">
-        <small class="form-text text-muted">Name is required</small>                    
-      </div>
-
-      <h4>Label</h4>
-      <input [(ngModel)]="settingsModel.dependency.label"  class="form-control" id="custom-dep-label" name="custom-dep-label" placeholder="Enter label for dependancy">
-      <div *ngIf="!settingsModel.dependency.label">
-        <small class="form-text text-muted">Label is required</small>                    
-      </div>
-
-      <h4>Install script</h4>
-      <textarea  [(ngModel)]="settingsModel.dependency.install_script" [(value)]="settingsModel.install_script" class="form-control" id="script" name="script" rows="10" ></textarea>
-      <div *ngIf="!settingsModel.dependency.install_script">
-        <small class="form-text text-muted">Install script is required</small>                    
-      </div>
-
-      <button (click)="update()" id="green-button" *ngIf="!isNew">Update</button>
-      <button (click)="createNew()" id="green-button"  *ngIf="isNew" class="btn btn-danger">Create</button>  
-      <button (click)="delete()" id="red-button" [disabled]="isNew">Delete</button>
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1>Custom Dependencies</h1>
     </div>
+  </div>
+  <!-- widget header end -->
+
+  <div class="ci__widget-body">
+
+    <div class="ci__form">
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="dependency">Custom dependency</label>
+        <select (change)="dependencySelected()" [(ngModel)]="settingsModel.dependency" class="ci__form-select form-control" name="dependency" id="dependency">
+          <option [value]="newDependency">Create new</option>
+          <optgroup label="_________"></optgroup>
+          <ng-container *ngFor="let item of settingsModel.dependency_list let i = index">
+            <option [ngValue]="item">{{ item.label }}</option>
+          </ng-container>
+        </select>
+      </div>
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="custom-dep-name">Name</label>
+        <input [(ngModel)]="settingsModel.dependency.name" class="ci__form-input form-control" id="custom-dep-name" name="custom-dep-name" placeholder="Enter name for dependency with no whitespaces">
+        <div *ngIf="!settingsModel.dependency.name" class="ci__form-validation-text">
+          <small class="form-text text-muted">Name is required</small>
+        </div>
+      </div>
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="custom-dep-label">Label</label>
+        <input [(ngModel)]="settingsModel.dependency.label" class="ci__form-input form-control" id="custom-dep-label" name="custom-dep-label" placeholder="Enter label for dependency">
+        <div *ngIf="!settingsModel.dependency.label" class="ci__form-validation-text">
+          <small class="form-text text-muted">Label is required</small>
+        </div>
+      </div>
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="script">Install script</label>
+        <textarea  [(ngModel)]="settingsModel.dependency.install_script" [(value)]="settingsModel.install_script" class="ci__form-textarea form-control" id="script" name="script" rows="10" ></textarea>
+        <div *ngIf="!settingsModel.dependency.install_script" class="ci__form-validation-text">
+          <small class="form-text text-muted">Install script is required</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- widget body end -->
+
+  <div class="ci__widget-footer">
+    <div class="ci__form-group form-group ci__form-group-required">
+      <div class="ci__form-btn-list">
+        <button (click)="update()" class="ci__form-btn ci__form-btn-green" *ngIf="!isNew">Update</button>
+        <button (click)="create()" class="ci__form-btn ci__form-btn-green"  *ngIf="isNew">Create</button>
+        <button (click)="delete()" class="ci__form-btn ci__form-btn-red" [disabled]="isNew">Delete</button>
+      </div>
+    </div>
+  </div>
+  <!-- widget footer end -->
+
 </div>

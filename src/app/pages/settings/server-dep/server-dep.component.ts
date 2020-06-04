@@ -12,23 +12,23 @@ import { ModalService } from '../../../services/modal.service';
 export class ServerDepComponent implements OnInit {
 
   newDependency: {
-    name:"",
-    label:"",
-    package:"",
-    pre_install_script:"",
-    post_install_script:"",
-    is_new:true
+    name: "",
+    label: "",
+    package: "",
+    pre_install_script: "",
+    post_install_script: "",
+    is_new: true
   };
 
   settingsModel: any = {
-    dependency_list:[],
+    dependency_list: [],
     dependency: {
-      name:"",
+      name: "",
       users: [],
-      label:"",
-      package:"",
-      pre_install_script:"",
-      post_install_script:""
+      label: "",
+      package: "",
+      pre_install_script: "",
+      post_install_script: ""
     }
   } as any;
 
@@ -39,43 +39,71 @@ export class ServerDepComponent implements OnInit {
     private auth: AuthService,
     private route: Router,
     private modal: ModalService
-  ) { };
+  ) { }
 
   ngOnInit() {
     this.isNew = true;
     this.auth.getUser().then((user) => {
-      this.initUser();
+      this.prepareModel();
       this.updateList();
     });
   }
 
-  initUser() {
+  /**
+   * Prepare dependencies model
+   */
+  prepareModel() {
     this.settingsModel.dependency = {
-      name:"",
+      name: "",
       users: [this.auth.user.id],
-      label:"",
-      package:"",
-      pre_install_script:"",
-      post_install_script:"",
+      label: "",
+      package: "",
+      pre_install_script: "",
+      post_install_script: "",
     };
   }
 
+  /**
+   * Update server dependencies list
+   */
   updateList() {
-    this.api.get(`server-dependencies`).then((resp) => {
-      this.settingsModel.dependency_list = resp;
+    this.api.get(`server-dependencies`).then((res) => {
+      this.settingsModel.dependency_list = res;
     });
   }
 
-  cleanFields() {
-    this.initUser();
+  /**
+   * Dependency selected action
+   */
+  dependencySelected() {
+    if (this.settingsModel.dependency.name) {
+      this.isNew = false;
+    } else {
+      this.isNew = true;
+      this.prepareModel();
+    }
   }
 
+  /**
+   * Cleanup model
+   */
+  cleanFields() {
+    this.prepareModel();
+  }
+
+  /**
+   * Validate name field
+   *
+   * @param name
+   */
   validateName(name) {
-    var res = {status:true, msg:""};
+    var res = {
+      status: true,
+      msg: ""
+    };
 
     if (name) {
       const regex = new RegExp('^[0-9a-zA-Z_-]\.+$', 'gm');
-
       if (!regex.test(name)) {
         res.status = false;
         res.msg = 'Dependancy package name is invalid. Please use: letters and numbers only'
@@ -91,21 +119,30 @@ export class ServerDepComponent implements OnInit {
     return res;
   }
 
+  /**
+   * Validate all required fields
+   */
   validateRequiredFields() {
-    var res = {status:true, msg:""};
+    var res = {
+      status: true,
+      msg: ""
+    };
 
     if (!this.settingsModel.dependency.name) {
       res.status = false;
       res.msg = "Dependancy name is required"
     }
+
     if (!this.settingsModel.dependency.label) {
       res.status = false;
       res.msg = "Dependancy label is required"
     }
+
     if (!this.settingsModel.dependency.pre_install_script) {
       res.status = false;
       res.msg = "Dependancy install script is required"
     }
+
     if (!this.settingsModel.dependency.post_install_script) {
       res.status = false;
       res.msg = "Dependancy post install script is required"
@@ -114,9 +151,46 @@ export class ServerDepComponent implements OnInit {
     return res;
   }
 
-  update() {
-    var name = this.settingsModel.dependency.package;
+  /**
+   * Create new dependency
+   */
+  create() {
+    const name = this.settingsModel.dependency.package;
+    if (!this.validateRequiredFields().status) {
+      this.modal.alert(this.validateRequiredFields().msg);
+      return;
+    }
 
+    if (this.validateName(name).status) {
+      this.modal.confirm(
+        `Confirm creating of "${name}" dependency`,
+        "Do you really want to create this dependency?<br>If yes, please input dependency name.",
+        (value) => {
+          if(value !== name)
+            return 'Dependancy name is incorrect!';
+        },
+        'Yes, please create!',
+        'Don`t create'
+      ).then((res) => {
+        this.api.create(`server-dependencies`, this.settingsModel.dependency).then((res) => {
+          this.cleanFields();
+          this.updateList();
+
+          this.modal.alert(`Dependency ${name} was succesfully created. To proceed working with it please select it from list in the top of page.`);
+        });
+      }, (err) => {
+        this.modal.alert(err);
+      })
+    } else {
+      this.modal.alert(this.validateName(name).msg);
+    }
+  }
+
+  /**
+   * Update dependency
+   */
+  update() {
+    const name = this.settingsModel.dependency.package;
     if (!this.validateRequiredFields().status) {
       this.modal.alert(this.validateRequiredFields().msg);
       return;
@@ -125,15 +199,15 @@ export class ServerDepComponent implements OnInit {
     if (this.validateName(name).status) {
       this.modal.confirm(
         `Confirm updating of "${name}" Ddpendancy`,
-        "Do you really want to update this dependancy?<br>If yes, please input dependancy name.",
+        "Do you really want to update this dependency?<br>If yes, please input dependency name.",
         (value) => {
           if(value !== name)
-            return 'Dependancy name is incorrect!';
+            return 'Dependency name is incorrect!';
         },
         'Yes, please update!',
         'Don`t update'
       ).then((res) => {
-        this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((resp) => {
+        this.api.update(`server-dependencies/${this.settingsModel.dependency.id}`, this.settingsModel.dependency).then((res) => {
           this.updateList();
           this.modal.alert(`Dependency ${name} was succesfully updated.`);
         });
@@ -145,16 +219,19 @@ export class ServerDepComponent implements OnInit {
     }
   }
 
+  /**
+   * Delete dependency
+   */
   delete() {
-    var name = this.settingsModel.dependency.name;
+    const name = this.settingsModel.dependency.name;
     if (!name) {
-      this.modal.alert("You can't delete dependancy with no name");
+      this.modal.alert("You can't delete dependency with no name");
       return;
     }
 
     this.modal.confirm(
-      `Confirm deletion of "${name}" dependancy`,
-      "Do you really want to delete this dependancy?<br>If yes, please input dependancy name.",
+      `Confirm deletion of "${name}" dependency`,
+      "Do you really want to delete this dependency?<br>If yes, please input dependency name.",
       (value) => {
         if(value !== name)
           return 'Dependancy name is incorrect!';
@@ -162,54 +239,14 @@ export class ServerDepComponent implements OnInit {
       'Yes, please remove!',
       'Don`t remove'
     ).then((res) => {
-      this.api.remove(`server-dependencies/${this.settingsModel.dependency.id}`).then((resp) => {
+      this.api.remove(`server-dependencies/${this.settingsModel.dependency.id}`).then((res) => {
         this.updateList();
         this.cleanFields();
+
         this.modal.alert(`Dependency ${name} was succesfully removed.`);
       });
     }, (err) => {
       this.modal.alert(err);
     })
-  }
-
-  createNew() {
-    var name = this.settingsModel.dependency.package;
-
-    if (!this.validateRequiredFields().status) {
-      this.modal.alert(this.validateRequiredFields().msg);
-      return;
-    }
-
-    if (this.validateName(name).status) {
-      this.modal.confirm(
-        `Confirm creating of "${name}" dependancy`,
-        "Do you really want to create this dependancy?<br>If yes, please input dependancy name.",
-        (value) => {
-          if(value !== name)
-            return 'Dependancy name is incorrect!';
-        },
-        'Yes, please create!',
-        'Don`t create'
-      ).then((res) => {
-        this.api.create(`server-dependencies`, this.settingsModel.dependency).then((resp) => {
-          this.cleanFields();
-          this.updateList();
-          this.modal.alert(`Dependency ${name} was succesfully created. To proceed working with it please select it from list in the top of page.`);
-        });
-      }, (err) => {
-        this.modal.alert(err);
-      })
-    } else {
-      this.modal.alert(this.validateName(name).msg);
-    }
-  }
-
-  dependencySelected() {
-    if (this.settingsModel.dependency.name) {
-      this.isNew = false;
-    } else {
-      this.isNew = true;
-      this.initUser();
-    }
   }
 }

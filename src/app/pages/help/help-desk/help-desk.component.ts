@@ -17,14 +17,17 @@ export class HelpDeskComponent implements OnInit {
 
   constructor(
       private httpClient: HttpClient,
-      protected sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
+
   }
 
+  /**
+   * Create new ticket
+   */
   createTicket() {
-    let body = `<?xml version="1.0"?>\
+    const body = `<?xml version="1.0"?>\
         <ticket>\
           <issue>\
             <project_id>indeema-ci</project_id>\
@@ -48,9 +51,7 @@ export class HelpDeskComponent implements OnInit {
         'Access-Control-Allow-Credentials': 'true'
       })
     };
-    this.httpClient.post<any>('https://redmine.indeema.com/helpdesk/create_ticket.xml', body, httpOptions)
-        .subscribe(data => {
-        })
+    this.httpClient.post<any>('https://redmine.indeema.com/helpdesk/create_ticket.xml', body, httpOptions);
   }
 
 }

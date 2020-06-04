@@ -346,13 +346,18 @@ footer {
   display: table;
   width: 100%;
 }
+.ci__form-group {
+  display: table;
+  width: 100%;
+}
 .ci__form .ci__form-group.ci__form-group-required label:after{
   content: "*";
   color: red;
 }
 .ci__form-select,
 .ci__form-input,
-.ci__form-textarea{
+.ci__form-textarea,
+.ci__form-file{
   display: block;
   background: #F5F7FB;
   border: 1px solid #F5F7FB;
