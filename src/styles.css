@@ -331,6 +331,15 @@ footer {
 .ci__header-bottom-nav > ul > li > a:hover .menu-desc{
   color: #0bb783;
 }
+.ci__text-green{
+  color: rgba(77, 176, 91, 1);
+}
+.ci__text-red{
+  color: rgba(218, 49, 72, 1);
+}
+.ci__text-yellow{
+  color: rgba(254, 192, 46, 1);
+}
 
 /*** CI FORM ***/
 .ci__form{
@@ -372,13 +381,13 @@ footer {
   font-size: 16px;
 }
 .ci__form-btn.ci__form-btn-green{
-  background-color: #4DB05B;
+  background: rgba(77, 176, 91, 1);
 }
 .ci__form-btn.ci__form-btn-red{
-  background: #dd5757;
+  background: rgba(218, 49, 72, 1);
 }
 .ci__form-btn.ci__form-btn-yellow{
-  background: #f2f236;
+  background: rgba(254, 192, 46, 1);
   color: #212529;
 }
 .ci__form-btn:hover,

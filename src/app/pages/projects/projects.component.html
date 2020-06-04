@@ -62,13 +62,13 @@
                 <tr *ngFor="let app of project.apps" class="tr-apps">
                   <td class="tr-apps">
                     {{ app.app_name }} <br/>
-                    <span *ngIf="app.app_status === 'waiting'">&#9864; Created...</span>
-                    <span *ngIf="app.app_status === 'progress'">&#9864; In progress...</span>
-                    <span *ngIf="app.app_status === 'success'">&#9864; Setup success!</span>
-                    <span *ngIf="app.app_status === 'failed'">&#9864; Setup failed!</span>
-                    <span *ngIf="app.app_status === 'cleanup'">&#9864; Cleanup in progress...</span>
-                    <span *ngIf="app.app_status === 'cleanup_success'">&#9864; Cleanup success!</span>
-                    <span *ngIf="app.app_status === 'cleanup_failed'">&#9864; Cleanup failed!</span>
+                    <span *ngIf="app.app_status === 'waiting'" class="ci__text-green">&#9864; Created...</span>
+                    <span *ngIf="app.app_status === 'progress'" class="ci__text-yellow">&#9864; In progress...</span>
+                    <span *ngIf="app.app_status === 'success'" class="ci__text-green">&#9864; Setup success!</span>
+                    <span *ngIf="app.app_status === 'failed'" class="ci__text-red">&#9864; Setup failed!</span>
+                    <span *ngIf="app.app_status === 'cleanup'" class="ci__text-yellow">&#9864; Cleanup in progress...</span>
+                    <span *ngIf="app.app_status === 'cleanup_success'" class="ci__text-green">&#9864; Cleanup success!</span>
+                    <span *ngIf="app.app_status === 'cleanup_failed'" class="ci__text-red">&#9864; Cleanup failed!</span>
                   </td>
                   <td>
                     {{ app.ci_template ? app.ci_template.name : "No CI selected" }}
