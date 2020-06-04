@@ -188,7 +188,6 @@ footer {
 .ci__link:focus{
   outline: none !important;
 }
-
 .ci__input{
   display: block;
   background: transparent url(/src/assets/input_field.svg) 0% 0% no-repeat padding-box;
@@ -207,7 +206,6 @@ footer {
   border-color: rgba(255, 0, 0, 0.05) !important;
   color: red !important;
 }
-
 .ci_label{
   display: inline-block;
   margin: 5px 0 5px 10px;
@@ -266,6 +264,13 @@ footer {
 .ci__widget .ci__widget-body .ci__widget-action{
   display: table;
   width: 100%;
+}
+.ci__widget .ci__widget-footer{
+  display: table;
+  width: 100%;
+  height: auto;
+  padding-top: 20px;
+  border-top: 1px solid #EFF4F9;
 }
 
 /*** CI HEADER BOTTOM CONTAINER ***/
@@ -327,3 +332,77 @@ footer {
   color: #0bb783;
 }
 
+/*** CI FORM ***/
+.ci__form{
+  display: table;
+  width: 100%;
+}
+.ci__form .ci__form-group.ci__form-group-required label:after{
+  content: "*";
+  color: red;
+}
+.ci__form-select,
+.ci__form-input,
+.ci__form-textarea{
+  display: block;
+  background: #F5F7FB;
+  border: 1px solid #F5F7FB;
+  border-radius: 2px;
+  padding: 4pt 4pt 4pt 4pt;
+  opacity: 1;
+  font-size: 14px;
+  color: #141A21;
+}
+.ci__form-btn-list{
+
+}
+.ci__form-btn{
+  background-color: #aaaaaa;
+  border-radius: 60px;
+  opacity: 1;
+  border: none;
+  margin: 0;
+  padding: 10px 25px;
+  width: auto;
+  height: auto;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  color: #FFFFFF;
+  font-size: 16px;
+}
+.ci__form-btn.ci__form-btn-green{
+  background-color: #4DB05B;
+}
+.ci__form-btn.ci__form-btn-red{
+  background: #dd5757;
+}
+.ci__form-btn.ci__form-btn-yellow{
+  background: #f2f236;
+  color: #212529;
+}
+.ci__form-btn:hover,
+.ci__form-btn:active {
+  background-color: #322f41;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+.ci__form-btn:focus{
+  outline: none !important;
+}
+.ci__form-btn:disabled{
+  opacity: 0.5 !important;
+  background: grey !important;
+  cursor: default !important;
+  color: #fff !important;
+}
+.ci__form-btn-list .ci__form-btn{
+  display: inline-block;
+  margin: 0 5px;
+}
+.ci__form-btn-list .ci__form-btn:first-child{
+  margin-left: 0;
+}
+.ci__form-btn-list .ci__form-btn:last-child{
+  margin-right: 0;
+}

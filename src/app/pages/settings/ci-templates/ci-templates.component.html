@@ -1,29 +1,54 @@
-<div class="container">
-    <h3>Ci Templates</h3>
-    <div class="form-group required">
-      <label for="template">CI Template</label>
-      <select (change)="templateSelected(settingsModel.template)" [(ngModel)]="settingsModel.template" enabled class="form-control" name="template" id="template">
-        <option [ngValue]="newTemplate" (value)="newTemplate">Create new</option>
-        <optgroup label="_________"></optgroup>
-        <ng-container *ngFor="let item of settingsModel.template_list let i = index">
-          <option [ngValue]="settingsModel.template_list[i]">{{ item.name}}</option>
-        </ng-container>
-      </select>
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1>CI Templates</h1>
+    </div>
+  </div>
+  <!-- widget header end -->
+
+  <div class="ci__widget-body">
+    <div class="ci__form">
+
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="template">CI Template</label>
+        <select (change)="templateSelected(settingsModel.template)" [(ngModel)]="settingsModel.template" class="ci__form-select form-control" name="template" id="template">
+          <option [ngValue]="newTemplate" (value)="newTemplate">Create new</option>
+          <optgroup label="_________"></optgroup>
+          <ng-container *ngFor="let item of settingsModel.template_list">
+            <option [ngValue]="item">{{ item.name }}</option>
+          </ng-container>
+        </select>
       </div>
-      <div *ngIf="settingsModel.template" class="form-group">
-        <label for="name">Template page name</label>
-        <input [(ngModel)]="settingsModel.template.name" [(value)]="settingsModel.template.name" class="form-control" id="new_template_name" name="new_template_name" placeholder="Please enter name for new template script">
+
+      <div *ngIf="settingsModel.template" class="ci__form-group form-group ci__form-group-required">
+        <label for="new_template_name">Template page name</label>
+        <input [(ngModel)]="settingsModel.template.name" [(value)]="settingsModel.template.name" class="ci__form-input form-control" id="new_template_name" name="new_template_name" placeholder="Please enter name for new template script">
         <div *ngIf="!settingsModel.template.name">
-          <small class="form-text text-muted">Name is required.</small>                    
+          <small class="form-text text-muted">Name is required.</small>
         </div>
-      </div>     
-    <div class="form-group">
-      <textarea [(ngModel)]="settingsModel.template.yml_code" [(value)]="settingsModel.template.yml_code" class="form-control" id="script" name="script" rows="10"></textarea>
-      <div *ngIf="!settingsModel.template.yml_code">
-        <small class="form-text text-muted">Code is required.</small>                    
+      </div>
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="script">YML code</label>
+        <textarea [(ngModel)]="settingsModel.template.yml_code" [(value)]="settingsModel.template.yml_code" class="ci__form-textarea form-control" id="script" name="script" rows="10"></textarea>
+        <div *ngIf="!settingsModel.template.yml_code">
+          <small class="form-text text-muted">Code is required.</small>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- widget body end -->
+
+  <div class="ci__widget-footer">
+    <div class="ci__form-group form-group ci__form-group-required">
+      <div class="ci__form-btn-list">
+        <button (click)="updateTemplate()" *ngIf="!isNewTemplate" class="ci__form-btn ci__form-btn-green">Update</button>
+        <button (click)="createTemplate()" *ngIf="isNewTemplate" class="ci__form-btn ci__form-btn-green">Create</button>
+        <button (click)="deleteTemplate()" [disabled]="isNewTemplate" class="ci__form-btn ci__form-btn-red">Delete</button>
       </div>
     </div>
-    <button (click)="updateTemplate()" id="green-button" *ngIf="!isNewTemplate">Update</button>
-    <button (click)="createTemplate()" id="green-button" *ngIf="isNewTemplate">Create</button>
-    <button (click)="deleteTemplate()" id="red-button" [disabled]="isNewTemplate">Delete</button>
   </div>
+  <!-- widget footer end -->
+
+</div>

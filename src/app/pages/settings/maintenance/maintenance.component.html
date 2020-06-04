@@ -1,30 +1,53 @@
-<div class="container">
-    <h3>Maintenance pages</h3>
-    <div class="form-group required">
-      <label for="maintenance">Maintenance page template</label>
-      <select (change)="maintenanceSelected(settingsModel.maintenance)" [(ngModel)]="settingsModel.maintenance" enabled class="form-control" name="maintenance" id="maintenance">
-        <option [ngValue]="newMaintenance" (value)="newMaintenance">Create new</option>
-        <optgroup label="_________"></optgroup>
-        <ng-container *ngFor="let item of settingsModel.maintenance_list let i = index">
-          <option [ngValue]="settingsModel.maintenance_list[i]">{{ item.name}}</option>
-        </ng-container>
-      </select>
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1>Maintenance pages</h1>
+    </div>
+  </div>
+  <!-- widget header end -->
+
+  <div class="ci__widget-body">
+    <div class="ci__form">
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="maintenance">Maintenance page template</label>
+        <select (change)="maintenanceSelected(settingsModel.maintenance)" [(ngModel)]="settingsModel.maintenance" class="ci__form-select form-control" name="maintenance" id="maintenance">
+          <option [ngValue]="newMaintenance" (value)="newMaintenance">Create new</option>
+          <optgroup label="_________"></optgroup>
+          <ng-container *ngFor="let item of settingsModel.maintenance_list">
+            <option [ngValue]="item">{{ item.name}}</option>
+          </ng-container>
+        </select>
       </div>
-      <div *ngIf="settingsModel.maintenance" class="form-group">
-        <label for="name">Maintenance page name</label>
-        <input [(ngModel)]="settingsModel.maintenance.name" [(value)]="settingsModel.maintenance.name" class="form-control" id="new_maintenance_name" name="new_maintenance_name" placeholder="Please enter name for new maintenance page">
-        <div *ngIf="!settingsModel.maintenance.name">
-          <small class="form-text text-muted">Name is required.</small>                    
+      <div *ngIf="settingsModel.maintenance" class="ci__form-group form-group ci__form-group-required">
+        <label for="new_maintenance_name">Maintenance page name</label>
+        <input [(ngModel)]="settingsModel.maintenance.name" [(value)]="settingsModel.maintenance.name" class="ci__form-input form-control" id="new_maintenance_name" name="new_maintenance_name" placeholder="Please enter name for new maintenance page">
+        <div *ngIf="!settingsModel.maintenance.name" class="ci__form-validation-text">
+          <small class="form-text text-muted">Name is required.</small>
         </div>
-      </div>     
-    <div class="form-group">
-      <textarea [(ngModel)]="settingsModel.maintenance.html_code" [(value)]="settingsModel.maintenance.html_code" class="form-control" id="script" name="script" rows="10"></textarea>
-      <div *ngIf="!settingsModel.maintenance.html_code">
-        <small class="form-text text-muted">Maintenance html code is required</small>                    
+      </div>
+      <div class="ci__form-group form-group ci__form-group-required">
+        <label for="script">HTML</label>
+        <textarea [(ngModel)]="settingsModel.maintenance.html_code" [(value)]="settingsModel.maintenance.html_code" class="ci__form-textarea form-control" id="script" name="script" rows="10"></textarea>
+        <div *ngIf="!settingsModel.maintenance.html_code" class="ci__form-validation-text">
+          <small class="form-text text-muted">Maintenance html code is required</small>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- widget body end -->
+
+  <div class="ci__widget-footer">
+    <div class="ci__form-group form-group ci__form-group-required">
+      <div class="ci__form-btn-list">
+        <button (click)="updateMaintenance()" class="ci__form-btn ci__form-btn-green" *ngIf="!isNewMaintenance">Update</button>
+        <button (click)="createMaintenance()" class="ci__form-btn ci__form-btn-green" *ngIf="isNewMaintenance">Create</button>
+        <button (click)="deleteMaintenance()" class="ci__form-btn ci__form-btn-red" [disabled]="isNewMaintenance">Delete</button>
+        <button (click)="preview()" class="ci__form-btn ci__form-btn-yellow" [disabled]="isNewMaintenance">Preview</button>
       </div>
     </div>
-    <button (click)="updateMaintenance()" id="green-button" *ngIf="!isNewMaintenance">Update</button>
-    <button (click)="createMaintenance()" id="green-button" *ngIf="isNewMaintenance">Create</button>
-    <button (click)="deleteMaintenance()" id="red-button" [disabled]="isNewMaintenance">Delete</button>
-    <button (click)="preview()" id="yellow-button" [disabled]="isNewMaintenance">Preview</button>
   </div>
+  <!-- widget footer end -->
+
+</div>
