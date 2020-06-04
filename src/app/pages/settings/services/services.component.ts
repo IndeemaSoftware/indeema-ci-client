@@ -43,20 +43,13 @@ export class ServicesComponent implements OnInit {
     private api: ApiService,
     private modal: ModalService,
     private auth: AuthService,
-  ) { 
-  };
+  ) { }
 
   ngOnInit() {
-    if (this.settingsModel.service_list.length === 0) {
-      this.selected();
-    }
-  }
-
-  selected() {
     this.isNewService = true;
-    this.auth.getUser().then((user) => {
-      this.updateServiceList();
+    this.auth.getUser().then(() => {
       this.initUser();
+      this.updateServiceList();
     });
   }
 

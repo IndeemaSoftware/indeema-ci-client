@@ -44,22 +44,12 @@ export class PlatformsComponent implements OnInit {
     private modal: ModalService,
     private auth: AuthService,
     private route: Router
-  ) { 
-  };
+  ) { }
 
   ngOnInit() {
-    if (this.settingsModel.platform_list.length === 0) {
-      this.selected();
-    }      
-  }
-
-  selected() {
     this.isNewPlatform = true;
-    this.auth.getUser().then((user) => {
-      this.updatePlatformList();
+    this.auth.getUser().then(() => {
       this.cleanPlatformFields();
-      }, (err) => {
-      this.route.navigate(['signin']);
     });
   }
 

@@ -38,16 +38,14 @@ export class MigrationComponent implements OnInit {
   };
 
   ngOnInit() {
-    if (this.modules.length === 0) {
-      this.selected();
-    }      
+    this.getMigrations();
   }
 
-  selected () {
+  getMigrations(){
     this.isInstalling = true;
     this.isLoading = true;
-    this.auth.user = null;//this is needed to get updated users after installing module
-    this.auth.getUser().then((user) => {
+
+    this.auth.getUser(true).then((user) => {
       this.setupUpload();
       this.updateModules();
       this.isLoading = false;
@@ -148,7 +146,7 @@ export class MigrationComponent implements OnInit {
       this.api.get(`migrations/import/${module.module[0].hash}`)
       .then((resp) => {
         this.isInstalling = null;
-        this.selected();
+        this.getMigrations();
       });   
     }
   }
@@ -178,7 +176,7 @@ export class MigrationComponent implements OnInit {
           this.api.get(`migrations/uninstall/${module.module[0].hash}`)
           .then((resp) => {
             this.isInstalling = null;
-            this.selected();
+            this.getMigrations();
           });       
         }
       });   

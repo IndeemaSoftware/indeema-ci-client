@@ -37,18 +37,10 @@ export class CITemplatesComponent implements OnInit {
   };
 
   ngOnInit() {
-    if (this.settingsModel.template_list.length === 0) {
-      this.selected();
-    }            
-  }
-
-  selected() {
     this.isNewTemplate = true;
-    this.auth.getUser().then((user) => {
+    this.auth.getUser().then(() => {
       this.initUser();
       this.updateTemplatesList();
-    }, (err) => {
-      this.route.navigate(['signin']);
     });
   }
 

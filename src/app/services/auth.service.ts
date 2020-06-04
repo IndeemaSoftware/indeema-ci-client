@@ -32,11 +32,12 @@ export class AuthService {
   /**
    * Get user account
    *
+   * @param force boolean - if true - script update user anyway
    * @return {Promise}
    */
-  getUser(): Promise<any> {
+  getUser(force = false): Promise<any> {
     return new Promise((resolve, reject) => {
-      if(this.user && this.user._id){
+      if(this.user && this.user._id && !force){
         resolve(this.user);
         return;
       }
