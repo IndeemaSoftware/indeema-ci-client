@@ -14,7 +14,8 @@ export class ServicesComponent implements OnInit {
     service_name: "",
     variables: [{
       key: "",
-      value: ""
+      value: "",
+      name: ""
     }],
     doc_string: "", 
     jsonValidationMessage: ""
@@ -26,7 +27,8 @@ export class ServicesComponent implements OnInit {
       service_name: "",
       variables: [{
         key: "",
-        value: ""
+        value: "",
+        name: ""
       }],
       doc_string: "", 
       jsonValidationMessage: ""
@@ -59,7 +61,8 @@ export class ServicesComponent implements OnInit {
       users: [this.auth.user.id],
       variables: [{
         key: "",
-        value: ""
+        value: "",
+        name: ""
       }],
       doc_string: "", 
       jsonValidationMessage: ""
