@@ -1,8 +1,7 @@
-<app-header></app-header>
-<div class="container" style="min-height: calc(100vh - 40pt)">
-  <div class="row" style="margin-bottom: 50pt;">
-    <div class="col-sm-12 col-md-12 col-lg-12 center-content-item">
-      <h2  style="margin-top: 1rem">
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1>
         <div class="action">
           <span *ngIf="consoleLive" id="status-success">&#9864; Online</span>
           <span *ngIf="!consoleLive && consoleLive !== null" id="status-fail">&#9864; Offline</span>
@@ -10,24 +9,41 @@
 
           <span *ngIf="project && app && !isCleanup">Setuping {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}</span>
           <span *ngIf="project && app && isCleanup">Cleanning {{ project.project_name }}/{{ app.app_name }} on {{app.server.server_name}}</span>
-
-          <button *ngIf="enableDownloadBtn && !hideDownloadBtn" (click)="downloadTemplate()" type="button" class="btn btn-success" id="menu-button">Download CI template</button>
-          <button (click)="reloadScript()" type="button" class="btn btn-danger" id="menu-button">Reload script</button>
-          <button (click)="disableConsole()" type="button" class="btn btn-warning" id="menu-button">Back to setup</button>
-          <button (click)="cleanConsole()" type="button" class="btn" id="menu-button-back">Clear</button>
         </div>
-      </h2>
-      <h2 *ngIf="server" style="margin-top: 1rem; font-size: small;">
-        Setuping {{server.server_name}}
-      </h2>
-      <div class="console">
-        <div id="consoleOutput">
-          <p *ngFor="let item of consoleOutput" class="{{ item.type || 'message' }}">
-            <span style="display:inline-block; white-space:nowrap;">runner@server:~$</span> {{ item.value}} {{ item.progress}} 
-          </p>
+      </h1>
+    </div>
+  </div>
+  <!-- widget header end -->
+
+  <div class="ci__widget-body">
+
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-12 center-content-item">
+        <h2 *ngIf="server" style="margin-top: 1rem; font-size: small;">
+          Setuping {{server.server_name}}
+        </h2>
+        <div class="console">
+          <div id="consoleOutput">
+            <p *ngFor="let item of consoleOutput" class="{{ item.type || 'message' }}">
+              <span style="display:inline-block; white-space:nowrap;">runner@server:~$</span> {{ item.value}} {{ item.progress}}
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <!-- widget body end -->
+
+  <div class="ci__widget-footer">
+    <div class="ci__form-group form-group ci__form-group-required">
+      <div class="ci__form-btn-list">
+        <button *ngIf="enableDownloadBtn && !hideDownloadBtn" (click)="downloadTemplate()" type="button" class="ci__form-btn ci__form-btn-green">Download CI template</button>
+        <button (click)="reloadScript()" type="button" class="ci__form-btn ci__form-btn-red">Reload script</button>
+        <button (click)="disableConsole()" type="button" class="ci__form-btn ci__form-btn-yellow">Back to setup</button>
+        <button (click)="cleanConsole()" type="button" class="ci__form-btn">Clear</button>
+      </div>
+    </div>
+  </div>
+  <!-- widget footer end -->
+
 </div>
-<app-footer></app-footer>

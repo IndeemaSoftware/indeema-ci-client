@@ -135,16 +135,19 @@ export class EditComponent implements OnInit {
     });
   }
 
-
+  /**
+   * Update maintenance list
+   */
   updateMaintenanceList() {
     this.api.get(`maintenances`).then((res) => {
       this.maintenances = res;
       this.maintenanceSelected();
-    }, (err) => {
-      console.log(err);
-    });  
+    });
   }
 
+  /**
+   * Update maintenances when selected
+   */
   maintenanceSelected() {
     var app;
     for (let a of this.projectModel.apps) {
@@ -163,6 +166,9 @@ export class EditComponent implements OnInit {
     }
   }
 
+  /**
+   * Env update action
+   */
   environmentsUpdated() {
     this.jsonValidationMessage = "";
 
@@ -177,6 +183,9 @@ export class EditComponent implements OnInit {
     }
   }
 
+  /**
+   * Update service list
+   */
   updateServiceList() {
     this.api.get(`services`).then((res) => {
       this.services = res;
@@ -184,6 +193,9 @@ export class EditComponent implements OnInit {
     });  
   }
 
+  /**
+   * When service selected action
+   */
   serviceChosen() {
     var app;
     for (let a of this.projectModel.apps) {
@@ -202,6 +214,11 @@ export class EditComponent implements OnInit {
     }
   }
 
+  /**
+   * Get server details by app
+   *
+   * @param app
+   */
   getServerDetails(app) {
     //getting list of templates for selected script
     if (app && app.server) {
@@ -216,12 +233,18 @@ export class EditComponent implements OnInit {
     }
   }
 
+  /**
+   * Get templates list
+   */
   getTemplates() {
     this.api.get(`ci-templates`).then((res) => {
       this.ci_template_list = res;
     });  
   }
 
+  /**
+   * Get servers list
+   */
   getServers(){
     this.api.get('server').then((servers) => {
       this.servers = servers;
@@ -237,6 +260,9 @@ export class EditComponent implements OnInit {
     })
   }
 
+  /**
+   * Action when server is chosen
+   */
   serverChosen() {
     var app;
     for (let a of this.projectModel.apps) {
@@ -261,6 +287,11 @@ export class EditComponent implements OnInit {
     }
   }
 
+  /**
+   * Action for chosing port
+   *
+   * @param port
+   */
   portSelected(port) {
     for (let a of this.projectModel.apps) {
       if (a.id === this.activeTab) {
@@ -271,6 +302,9 @@ export class EditComponent implements OnInit {
     }
   }
 
+  /**
+   * Prepare model for edit
+   */
   prepareToEdit() {
     this.projectModel = _.cloneDeep(this.project.plain());
     this.modelApi = {};
@@ -326,6 +360,9 @@ export class EditComponent implements OnInit {
     }
   }
 
+  /**
+   * Setup project action
+   */
   setupProject(){
     //Prepare form model
     if (!this.isNew) {
@@ -428,14 +465,28 @@ export class EditComponent implements OnInit {
     };
   }
 
+  /**
+   * Helper for ngFor
+   *
+   * @param index
+   * @param app
+   */
   trackByFn(index, app) {
     return app.id || app.id || index;
   }
 
+  /**
+   * Trigger download of template
+   *
+   * @param app
+   */
   downloadTemplate(app){
     window.open(environment.API_URL + `/app/download/yml/${app.id}`,'_blank');
   }
 
+  /**
+   * Attach new app to project
+   */
   addNewApp() {
     const newApp = _.cloneDeep(this.modelDefault);
     newApp.id = 'project-app-' + (this.projectModel.apps.length + 1) + new Date().getTime();
@@ -448,6 +499,11 @@ export class EditComponent implements OnInit {
     this.openTab(newApp.id);
   }
 
+  /**
+   * Remove app from project
+   *
+   * @param i
+   */
   removeApp(i){
     if(this.projectModel.apps[i].id === this.activeTab || this.projectModel.apps[i].id === this.activeTab){
       if(this.projectModel.apps[0] && this.projectModel.apps[0].id)
@@ -460,34 +516,71 @@ export class EditComponent implements OnInit {
     this.projectModel.apps.splice(i, 1);
   }
 
+  /**
+   * Add ssl file to model
+   *
+   * @param ev
+   * @param model
+   */
   addKeySSLFile(ev, model){
     model.custom_ssl_key = ev.target.files[0];
   }
 
+  /**
+   * Add crt file to model
+   *
+   * @param ev
+   * @param model
+   */
   addCrtSSLFile(ev, model){
     model.custom_ssl_crt = ev.target.files[0];
   }
 
+  /**
+   * Add pem file to model
+   *
+   * @param ev
+   * @param model
+   */
   addPemSSLFile(ev, model){
     model.custom_ssl_pem = ev.target.files[0];
   }
 
+  /**
+   * Add repeated filed
+   *
+   * @param arr
+   */
   addRepeatField(arr){
     arr.push({value: null});
   }
 
+  /**
+   * Remove repeated field
+   *
+   * @param arr
+   * @param key
+   */
   removeRepeatField(arr, key){
     arr.splice(key, 1);
   }
 
+  /**
+   * Reset repeated field value
+   *
+   * @param arr
+   */
   cleanFields(arr){
     arr[0].value = null;
   }
 
+  /**
+   * Validate project model
+   *
+   * @param model
+   */
   validateModel(model) {
 
-    console.log("apps");
-    console.log(model);
     if (!model.service) {
       return 'Service script is required';
     } else if (!model.app_name) {
@@ -504,7 +597,6 @@ export class EditComponent implements OnInit {
         !model.app_port
         || this.missing_port
     ) {
-      console.log(model);
       return 'Please input all required fields.';
     } else if (!this.server.ports || this.server.ports.length == 0) {
       return 'You may not use this server as it doesn\'t have any open ports';
@@ -573,6 +665,11 @@ export class EditComponent implements OnInit {
     return false;
   }
 
+  /**
+   * Prepare model files
+   *
+   * @param model
+   */
   prepareModel(model){
     const newModel = _.cloneDeep(model);
 
@@ -593,6 +690,9 @@ export class EditComponent implements OnInit {
     return newModel;
   }
 
+  /**
+   * Check if needs to launch uploader
+   */
   isFileUploaded(){
     let hasFiles = false;
 
@@ -617,6 +717,11 @@ export class EditComponent implements OnInit {
     return hasFiles;
   }
 
+  /**
+   * Make update of project
+   *
+   * @param start
+   */
   proceedToUpdate(start = false) {
     //Validate models
     let hasErrors = false;
@@ -701,6 +806,9 @@ export class EditComponent implements OnInit {
     return false;
   }
 
+  /**
+   * Upload files with certs for project
+   */
   uploadFiles() {
     //If models finish
     if (!this.modelApi.apps[this.uploadModelIndex])

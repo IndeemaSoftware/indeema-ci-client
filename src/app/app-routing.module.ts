@@ -45,10 +45,35 @@ const routes: Routes = [
         pathMatch: 'full'
       },
       {
+        path: 'projects/:id',
+        component: EditComponent,
+        pathMatch: 'full'
+      },
+      {
         path: 'servers',
         component: ServersComponent,
         pathMatch: 'full'
-      }
+      },
+      {
+        path: 'servers/:id',
+        component: EditServerComponent,
+        pathMatch: 'full'
+      },
+      {
+        path: 'console/:id/:app_id',
+        component: ConsoleComponent,
+        pathMatch: 'full'
+      },
+      {
+        path: 'console/server/:id',
+        component: ConsoleComponent,
+        pathMatch: 'full'
+      },
+      // {
+      //   path: 'users',
+      //   component: UsersComponent,
+      //   pathMatch: 'full'
+      // },
     ]
   },
   {
@@ -178,26 +203,6 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: 'projects/:id',
-    component: EditComponent
-  },
-  {
-    path: 'console/:id/:app_id',
-    component: ConsoleComponent
-  },
-  {
-    path: 'console/server/:id',
-    component: ConsoleComponent
-  },
-  {
-    path: 'users',
-    component: UsersComponent
-  },
-  {
-    path: 'servers/:id',
-    component: EditServerComponent
   },
   {
     path: 'preview',

@@ -6,7 +6,6 @@ import { ApiService } from '../../../services/api.service';
 import { MultipleFileUploaderService } from '../../../services/multiple-file-uploader.service';
 import * as _ from 'lodash';
 import { ModalService} from '../../../services/modal.service';
-import { ConsoleComponent } from '../../console/console.component';
 
 @Component({
   selector: 'edit_server',
@@ -34,12 +33,13 @@ export class EditServerComponent implements OnInit {
     errorMsg: ''
   };
   
-  serverModel: any = {server_dependency: [],
-                      custom_dependency: [],
-                      platform: "",
-                      ssh_key: {},
-                      users: []
-                      };
+  serverModel: any = {
+    server_dependency: [],
+    custom_dependency: [],
+    platform: "",
+    ssh_key: {},
+    users: []
+  };
   platform_list: any = [];
   modelApi: any = {};
 
@@ -108,6 +108,9 @@ export class EditServerComponent implements OnInit {
     this.serverModel.users.push(this.auth.user.id);
   }
 
+  /**
+   * Update prots list
+   */
   portsUpdated() {
     this.jsonValidationMessage = "";
 
@@ -122,6 +125,9 @@ export class EditServerComponent implements OnInit {
     }
   }
 
+  /**
+   * Prot selected action
+   */
   platformSelected() {
     for (let p of this.platform_list) {
       if (this.serverModel.platform === p.id) {
@@ -131,6 +137,9 @@ export class EditServerComponent implements OnInit {
     }  
   }
 
+  /**
+   * Prepare model to edit
+   */
   prepareToEdit() {
     this.serverModel = _.cloneDeep(this.server);
     this.modelApi = {};
@@ -175,7 +184,9 @@ export class EditServerComponent implements OnInit {
     }
   }
 
-
+  /**
+   * Create new server
+   */
   async createServer() {
     return new Promise((rs, rj) => {
       this.api.create(`server`, {}).then((server) => {
@@ -186,15 +197,19 @@ export class EditServerComponent implements OnInit {
     })
   }
 
+  /**
+   * Setup server action
+   */
   async setupServer() {
     //Prepare form model
     if (!this.isNew) {
       this.prepareToEdit();
     } else {
-      this.serverModel= { server_dependency: [{value:""}],
-                          custom_dependency: [ {value:""} ],
-                          platform: ""
-                        };
+      this.serverModel= {
+        server_dependency: [{value:""}],
+        custom_dependency: [ {value:""} ],
+        platform: ""
+      };
     }
     
     const jwt = this.auth.getJWT();
@@ -249,15 +264,32 @@ export class EditServerComponent implements OnInit {
     };
   }
 
+  /**
+   * Attach pem file to model
+   *
+   * @param ev
+   * @param model
+   */
   addPemFile(ev, model){
     model.ssh_key = ev.target.files[0];
     this.server.ssh_key = null;
   }
 
+  /**
+   * Attach repeated field
+   *
+   * @param arr
+   */
   addRepeatField(arr) {
     arr.push({value:""});
   }
 
+  /**
+   * Remove repeated field
+   *
+   * @param arr
+   * @param key
+   */
   removeRepeatField(arr, key){
     if (arr.length === 1) {
       arr[key] = {value:""};
@@ -266,10 +298,20 @@ export class EditServerComponent implements OnInit {
     }
   }
 
+  /**
+   * Reset field value
+   *
+   * @param arr
+   */
   cleanFields(arr){
     arr[0] = {value:""};
   }
 
+  /**
+   * Make model validation
+   *
+   * @param model
+   */
   validateModel(model){
     if(
         !model.server_name
@@ -302,8 +344,13 @@ export class EditServerComponent implements OnInit {
       if(!model.ssh_key)
         return 'Please input all required fields.';
     }
-  }   
+  }
 
+  /**
+   * Prepare model for request
+   *
+   * @param model
+   */
   prepareModel(model){
     const newModel = _.cloneDeep(model);
 
@@ -333,6 +380,9 @@ export class EditServerComponent implements OnInit {
     return newModel;
   }
 
+  /**
+   * Check if file is attached for upload
+   */
   isFileUploaded(){
     let hasFiles = false;
 
@@ -343,6 +393,11 @@ export class EditServerComponent implements OnInit {
     return hasFiles;
   }
 
+  /**
+   * Send update or create request
+   *
+   * @param start
+   */
   async proceedToUpdate(start = false){
     //Validate models
     let hasErrors = false;
@@ -355,16 +410,24 @@ export class EditServerComponent implements OnInit {
     if (!this.serverModel.server_name) {
       this.errorMsg = 'Server name is required';
       return false;
-    } else if (!this.serverModel.platform) {
+    } else
+
+    if (!this.serverModel.platform) {
       this.errorMsg = 'Platform script is required';
       return false;
-    } else if (!this.serverModel.ssh_ip) {
+    } else
+
+    if (!this.serverModel.ssh_ip) {
       this.errorMsg = 'Server ip address is required';
       return false;
-    } else if (!this.serverModel.ssh_username) {
+    } else
+
+    if (!this.serverModel.ssh_username) {
       this.errorMsg = 'Server user name is required';
       return false;
-    } else if (!this.serverModel.ssh_key || !this.serverModel.ssh_key.name) {
+    } else
+
+    if (!this.serverModel.ssh_key || !this.serverModel.ssh_key.name) {
       this.errorMsg = 'Server pem key is required';
       return false;
     } else {
@@ -403,6 +466,12 @@ export class EditServerComponent implements OnInit {
     return false;
   }
 
+  /**
+   * Update server request
+   *
+   * @param model
+   * @param proceed_setup
+   */
   updateServer(model, proceed_setup = false) {
     //Update server
     this.api.update(`server/${this.serverId}`, model).then((server) => {
@@ -417,6 +486,9 @@ export class EditServerComponent implements OnInit {
     });
   }
 
+  /**
+   * Upload file request
+   */
   uploadFiles(){
     //If models finish
     if(!this.modelApi)

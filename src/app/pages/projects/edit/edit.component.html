@@ -1,253 +1,274 @@
-<app-header></app-header>
-<div class="container" style="min-height: calc(100vh - 40pt)">
-  <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-6 center-content-item">
-      <h2 *ngIf="project && !isNew">
-        {{ project.project_name }}
-      </h2>
-      <form (submit)="proceedToUpdate(false)">
-        <div class="form-container">
-          <h3>Project config:</h3>
-          <div class="form-group required">
-            <label for="project_name">Project name</label>
-            <input [(ngModel)]="projectModel.project_name"  type="text" class="form-control" name="project_name" placeholder="Enter project name">
-            <div  *ngIf="service && service.doc && service.doc.project_name">
-              <small class="form-text text-muted">{{service.doc.project_name}}</small>                    
-            </div>      
-          </div>
-          <div class="form-group">
-            <label for="desc">Project description</label>
-            <textarea [(ngModel)]="projectModel.desc" class="form-control" id="desc" name="desc" rows="3"></textarea>
-            <div>
-              <small class="form-text text-muted">Please provide detailed description of this project, so anybody can understand what it's about after reading this text</small>                    
-            </div>  
-          </div>
-          <div class="form-group required">
-            <label for="env">Project environments</label>
-            <input (change)="environmentsUpdated()" [(ngModel)]="environments" type="text" class="form-control" name="environments" placeholder="Enter project environment names">
-            <div *ngIf="jsonValidationMessage">
-              <label class="badge badge-danger" id="json-warning" name="json-warning"> {{jsonValidationMessage}}</label>
-            </div>
-            <div>
-              <small class="form-text text-muted">Provide list of environments devided by comma with no spaces. Example: DEV,PROD,STAGE</small>                    
-            </div>      
-          </div>
-        </div>
-        <div class="form-container">
-          <h3>Project apps:</h3>
-          <div class="app-tabs">
-            <div class="app-control">
-              <div *ngFor="let model of projectModel.apps; let i = index">
-                <a (click)="openTab(model.id || model.id)" [ngClass]="{'active': activeTab === model.id || activeTab === model.id}" href="javascript:void(0)">
-                  {{ model.app_name || 'App #' + (i + 1) }} <span *ngIf="model.errorMsg" class="text-danger">(validation error)</span>
-                </a>
-                <button *ngIf="projectModel.apps.length > 1 && !model.id" (click)="removeApp(i)" type="button" class="btn btn-outline-danger">Remove</button>
-              </div>
-              <div>
-                <a (click)="addNewApp()" href="javascript:void(0)" class="action-tab">
-                  + Create new app
-                </a>
-              </div>
-            </div>
-            <div  *ngFor="let model of projectModel.apps; let pId = index; trackBy: trackByFn" class="app-tab-body {{ model.id || model.id }}" [ngClass]="{'visible': activeTab === model.id || activeTab === model.id}">
-
-              <div *ngIf="model.errorMsg" class="alert alert-danger text-center">{{ model.errorMsg }}</div>
-              <div class="form-container">
-                <div class="form-group required">
-                  <label for="app_name">App service</label>
-                  <select (change)="serviceChosen()" [(ngModel)]="projectModel.apps[pId].service" class="form-control" name="service{{ pId }}">
-                    <option [value]="null" disabled>Please choose service</option>
-                    <ng-container *ngFor="let item of services">
-                      <option [value]="item.id">{{ item.service_name }}</option>
-                    </ng-container>
-                  </select>
-                  <div>
-                    <small class="form-text text-muted">Please select service script. It will automatically upload description of all fields for this page</small>                    
-                  </div>
-                </div>
-
-                <div class="form-group required">
-                  <label for="app_name">App name</label>
-                  <input [(ngModel)]="model.app_name" type="text" class="form-control" name="app_name{{ pId }}" placeholder="Enter app name">
-                  <div  *ngIf="service && service.doc && service.doc.app_name">
-                    <small class="form-text text-muted">{{service.doc.app_name}}</small>                    
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="maintenance">Maintenance page template</label>
-                  <select (change)="maintenanceSelected()" [(ngModel)]="projectModel.apps[pId].maintenance" enabled class="form-control" name="maintenance{{ pId }}">
-                    <ng-container *ngFor="let item of maintenances">
-                      <option [ngValue]="item.id">{{ item.name}}</option>
-                    </ng-container>
-                  </select>
-                  </div>
-                <div class="form-group">
-                  <label for="desc{{ pId }}">App description</label>
-                  <textarea [(ngModel)]="model.desc" class="form-control" id="desc{{ pId }}" name="desc{{ pId }}" rows="3"></textarea>
-                  <div  *ngIf="service && service.doc && service.doc.desc">
-                    <small class="form-text text-muted">{{service.doc.desc}}</small>                    
-                  </div>
-                </div>
-                <div class="form-group required">
-                  <label for="template">Template</label>
-                  <div  *ngIf="service && service.doc && service.doc.ci_script">
-                    <small class="form-text text-muted">{{service.doc.ci_script}}</small>                    
-                  </div>
-                  <select [(ngModel)]="projectModel.apps[pId].ci_template" enabled class="form-control" name="ci_template{{ pId }}">
-                    <option [value]="null"  disabled>Chose CI template</option>
-                    <ng-container *ngFor="let item of ci_template_list">
-                      <option [value]="item.id">{{ item.name }}</option>
-                    </ng-container>
-                  </select>    
-                  <div  *ngIf="service && service.doc && service.doc.ci_template">
-                    <small class="form-text text-muted">{{service.doc.ci_template}}</small>                    
-                  </div>      
-                </div>
-                <div class="form-group required">
-                  <label for="environment">App environment</label>
-                  <select [(ngModel)]="model.environment" class="form-control" name="environment{{ pId }}">
-                    <ng-container *ngFor="let item of projectModel.environments">
-                      <option [value]="item">{{ item }}</option>
-                    </ng-container>
-                  </select>
-                  <div  *ngIf="service && service.doc && service.doc.environment">
-                    <small class="form-text text-muted">{{service.doc.environment}}</small>                    
-                  </div>
-                </div>
-                <div *ngIf="servers" class="form-group required border-top">
-                  <label for="server">Server</label>
-                  <select (change)="serverChosen()" [(ngModel)]="projectModel.apps[pId].server" class="form-control" name="server{{ pId }}">
-                    <option [value]="null" disabled>Please choose server</option>
-                    <ng-container *ngFor="let item of servers">
-                      <option *ngIf="item.server_status !== success" [value]="item.id" disabled>{{ item.server_name }} ({{item.server_status}})</option>
-                      <option *ngIf="item.server_status === success" [value]="item.id">{{ item.server_name }} ({{item.server_status}}) {{item.ssh_ip}}</option>
-                    </ng-container>
-                  </select>
-                  <div  *ngIf="service && service.doc && service.doc.server">
-                    <small class="form-text text-muted">{{service.doc.server}}</small>                    
-                  </div>
-
-                  <form *ngIf="server && (server.server_dependencies || server.custom_dependencies || server.ports)" name="warning-form">
-                    <div *ngIf="!server.server_dependencies || server.server_dependencies.length === 0">
-                      <label class="badge badge-danger">No server dependencies installed </label> 
-                      <br/>
-                    </div>
-                    <div *ngIf="!server.custom_dependencies || server.custom_dependencies.length === 0">
-                      <label class="badge badge-danger">No custom dependencies installed </label>
-                      <br/>
-                    </div>
-                    <div *ngIf="!server.ports || server.ports.length == 0"v>
-                      <label class="badge badge-danger">No ports opened </label>   
-                      <br/>                   
-                    </div>
-                    <div *ngIf="missing_port">
-                      <label class="badge badge-danger">Please update port for app</label>
-                      <br/>
-                    </div>
-                  </form>    
-
-                  <div *ngIf="server && server.server_dependencies && server.server_dependencies.length > 0" class="form-group">
-                    <label>Installed server dependencies</label>
-                    <div>
-                      <label *ngFor="let dep of server.server_dependencies; let i = index" class="badge badge-success">
-                        {{dep.label}} 
-                      </label>
-                    </div>
-                  </div>
-                  
-                  <div *ngIf="server && server.custom_dependencies && server.custom_dependencies.length > 0" class="form-group">
-                    <label>Installed custom dependencies</label>
-                    <div>
-                      <label *ngFor="let dep of server.custom_dependencies; let i = index" class="badge badge-success">
-                        {{dep.label}} 
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div *ngIf="server && server.ports && server.ports.length > 0" class="form-group">
-                  <label for="app_port">Avaliable ports</label>
-                  <div>
-                    <form  name="port-form" *ngFor="let port of server.ports; let i = index">
-                      <label>
-                        <input [(ngModel)]="app_port" (change)="portSelected(port)" name="server-port" type="radio" [value]="port"> {{port}}
-                    </label><br/>
-                    </form>
-                    <div  *ngIf="service && service.doc && service.doc.app_port">
-                      <small class="form-text text-muted">{{service.doc.app_port}}</small>                    
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-container">
-                <h3>Domain and HTTPS setttings:</h3>
-                <div class="form-group" [ngClass]="{'required': model.automatic_cert}">
-                  <label for="domain_name">Domain name</label>
-                  <input [(ngModel)]="model.domain_name" type="text" class="form-control" name="domain_name{{ pId }}" placeholder="Enter domain name">
-                  <div  *ngIf="service && service.doc && service.doc.domain_name">
-                    <small class="form-text text-muted">{{service.doc.domain_name}}</small>                    
-                  </div>              
-              </div>
-                <div class="form-check">
-                  <input [(ngModel)]="model.isSecure" class="form-check-input" type="checkbox" name="isSecure{{ pId }}">
-                  <label class="form-check-label" for="defaultCheck">
-                    Use https connection?
-                  </label>          
-                </div>
-                <div *ngIf="model.isSecure">
-                  <div class="form-group">
-                    <div class="form-check">
-                      <input [(ngModel)]="model.automatic_cert" class="form-check-input" type="checkbox" name="automatic_cert{{ pId }}">
-                      <label class="form-check-label" for="defaultCheck1">
-                        Use automatic certificates (self-signed certificates)
-                      </label>
-                      <div  *ngIf="service && service.doc && service.doc.automatic_cert">
-                        <small class="form-text text-muted">{{service.doc.automatic_cert}}</small>                    
-                      </div>              
-                    </div>
-                  </div>
-                  <div *ngIf="!model.automatic_cert">
-                    <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
-                      <label for="custom_ssl_key">SSL Key file</label>
-                      <input (change)="addKeySSLFile($event, model)" type="file" accept=".key" class="form-control" name="custom_ssl_key{{ pId }}" placeholder="Upload SSL Key file">
-                      <small *ngIf="custom_ssl_key && custom_ssl_key.name" class="form-text text-muted">SSL Key: {{ custom_ssl_key.name }} <a target="_blank" href="{{api_url}}{{ custom_ssl_key.url }}">Download</a></small>
-                      <small></small>
-                      <div *ngIf="service && service.doc && service.doc.custom_ssl_key">
-                        <small class="form-text text-muted">{{service.doc.custom_ssl_key}}</small>                    
-                      </div>                
-                    </div>
-                    <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
-                      <label for="custom_ssl_crt">SSL Crt file</label>
-                      <input (change)="addCrtSSLFile($event, model)" type="file" class="form-control" name="custom_ssl_crt{{ pId }}" placeholder="Upload SSL Crt file">
-                      <small *ngIf="custom_ssl_crt && custom_ssl_crt.name" class="form-text text-muted">SSL Crt: {{ custom_ssl_crt.name }} <a target="_blank" href="{{api_url}}{{ custom_ssl_crt.url }}">Download</a></small>
-                      <div *ngIf="service && service.doc && service.doc.custom_ssl_crt">
-                        <small class="form-text text-muted">{{service.doc.custom_ssl_crt}}</small>                    
-                      </div>   
-                    </div>
-                    <div class="form-group" [ngClass]="{'required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem}">
-                      <label for="custom_ssl_key">SSL Pem file</label>
-                      <input (change)="addPemSSLFile($event, model)" type="file" class="form-control" name="custom_ssl_pem{{ pId }}" placeholder="Upload SSL Pem file">
-                      <small *ngIf="custom_ssl_pem && custom_ssl_pem.name" class="form-text text-muted">SSL Pem: {{ custom_ssl_pem.name }} <a target="_blank" href="{{api_url}}{{ custom_ssl_pem.url }}">Download</a></small>
-                      <div *ngIf="service && service.doc && service.doc.custom_ssl_pem">
-                        <small class="form-text text-muted">{{service.doc.custom_ssl_pem}}</small>                    
-                      </div>   
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <button *ngIf="projectModel.apps[pId].app_status === 'success'" (click)="downloadTemplate(projectModel.apps[pId])" style="margin-left: 5px;" type="button" class="btn btn-success">Download CI template</button>
-
-            </div>
-          </div>
-        </div>
-        <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>
-        <button *ngIf="!isNew" (click)="proceedToUpdate(false)" type="button" class="btn btn-warning">Update</button>
-        <button *ngIf="isNew" (click)="proceedToUpdate(false)" type="button" class="btn btn-warning">Create</button>
-      </form>
+<div class="ci__widget">
+  <div class="ci__widget-header">
+    <div class="ci__widget-title">
+      <h1 *ngIf="isNew">Create new project</h1>
+      <h1 *ngIf="project && !isNew">{{ project.project_name }}</h1>
     </div>
   </div>
+  <!-- widget header end -->
+
+  <div class="ci__widget-body">
+
+    <div class="ci__form">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-10 center-content-item">
+          <form (submit)="proceedToUpdate(false)">
+            <div class="form-container">
+              <h3>Project config:</h3>
+              <div class="ci__form-group form-group ci__form-group-required">
+                <label for="project_name">Project name</label>
+                <input [(ngModel)]="projectModel.project_name"  type="text" class="ci__form-input form-control" name="project_name" placeholder="Enter project name">
+                <div *ngIf="service && service.doc && service.doc.project_name">
+                  <small class="form-text text-muted">{{service.doc.project_name}}</small>
+                </div>
+              </div>
+              <div class="ci__form-group form-group">
+                <label for="desc">Project description</label>
+                <textarea [(ngModel)]="projectModel.desc" class="ci__form-textarea form-control" id="desc" name="desc" rows="3"></textarea>
+                <div>
+                  <small class="form-text text-muted">Please provide detailed description of this project, so anybody can understand what it's about after reading this text</small>
+                </div>
+              </div>
+              <div class="ci__form-group form-group ci__form-group-required">
+                <label for="env">Project environments</label>
+                <input (change)="environmentsUpdated()" [(ngModel)]="environments" type="text" class="ci__form-input form-control" name="environments" placeholder="Enter project environment names">
+                <div *ngIf="jsonValidationMessage">
+                  <label class="badge badge-danger" id="json-warning" name="json-warning"> {{jsonValidationMessage}}</label>
+                </div>
+                <div>
+                  <small class="form-text text-muted">Provide list of environments devided by comma with no spaces. Example: DEV,PROD,STAGE</small>
+                </div>
+              </div>
+            </div>
+            <div class="form-container">
+              <h3>Project apps:</h3>
+              <div class="app-tabs">
+                <div class="app-control">
+                  <div *ngFor="let model of projectModel.apps; let i = index">
+                    <a (click)="openTab(model.id || model.id)" [ngClass]="{'active': activeTab === model.id || activeTab === model.id}" href="javascript:void(0)">
+                      {{ model.app_name || 'App #' + (i + 1) }} <span *ngIf="model.errorMsg" class="text-danger">(validation error)</span>
+                    </a>
+                    <button *ngIf="projectModel.apps.length > 1 && !model.id" (click)="removeApp(i)" type="button" class="btn btn-outline-danger">Remove</button>
+                  </div>
+                  <div>
+                    <a (click)="addNewApp()" href="javascript:void(0)" class="action-tab">
+                      + Create new app
+                    </a>
+                  </div>
+                </div>
+                <div  *ngFor="let model of projectModel.apps; let pId = index; trackBy: trackByFn" class="app-tab-body {{ model.id || model.id }}" [ngClass]="{'visible': activeTab === model.id || activeTab === model.id}">
+
+                  <div *ngIf="model.errorMsg" class="alert alert-danger text-center">{{ model.errorMsg }}</div>
+                  <div class="form-container">
+                    <div class="ci__form-group form-group ci__form-group-required">
+                      <label for="app_name">App service</label>
+                      <select (change)="serviceChosen()" [(ngModel)]="projectModel.apps[pId].service" class="ci__form-select form-control" name="service{{ pId }}">
+                        <option [value]="null" disabled>Please choose service</option>
+                        <ng-container *ngFor="let item of services">
+                          <option [value]="item.id">{{ item.service_name }}</option>
+                        </ng-container>
+                      </select>
+                      <div>
+                        <small class="form-text text-muted">Please select service script. It will automatically upload description of all fields for this page</small>
+                      </div>
+                    </div>
+
+                    <div class="ci__form-group form-group ci__form-group-required">
+                      <label for="app_name">App name</label>
+                      <input [(ngModel)]="model.app_name" type="text" class="ci__form-input form-control" name="app_name{{ pId }}" placeholder="Enter app name">
+                      <div  *ngIf="service && service.doc && service.doc.app_name">
+                        <small class="form-text text-muted">{{service.doc.app_name}}</small>
+                      </div>
+                    </div>
+                    <div class="ci__form-group form-group">
+                      <label for="maintenance">Maintenance page template</label>
+                      <select (change)="maintenanceSelected()" [(ngModel)]="projectModel.apps[pId].maintenance" enabled class="ci__form-select form-control" name="maintenance{{ pId }}">
+                        <ng-container *ngFor="let item of maintenances">
+                          <option [ngValue]="item.id">{{ item.name}}</option>
+                        </ng-container>
+                      </select>
+                      </div>
+                    <div class="ci__form-group form-group">
+                      <label for="desc{{ pId }}">App description</label>
+                      <textarea [(ngModel)]="model.desc" class="ci__form-textarea form-control" id="desc{{ pId }}" name="desc{{ pId }}" rows="3"></textarea>
+                      <div  *ngIf="service && service.doc && service.doc.desc">
+                        <small class="form-text text-muted">{{service.doc.desc}}</small>
+                      </div>
+                    </div>
+                    <div class="ci__form-group form-group ci__form-group-required">
+                      <label for="template">Template</label>
+                      <div  *ngIf="service && service.doc && service.doc.ci_script">
+                        <small class="form-text text-muted">{{service.doc.ci_script}}</small>
+                      </div>
+                      <select [(ngModel)]="projectModel.apps[pId].ci_template" enabled class="ci__form-select form-control" name="ci_template{{ pId }}">
+                        <option [value]="null"  disabled>Chose CI template</option>
+                        <ng-container *ngFor="let item of ci_template_list">
+                          <option [value]="item.id">{{ item.name }}</option>
+                        </ng-container>
+                      </select>
+                      <div  *ngIf="service && service.doc && service.doc.ci_template">
+                        <small class="form-text text-muted">{{service.doc.ci_template}}</small>
+                      </div>
+                    </div>
+                    <div class="ci__form-group form-group ci__form-group-required">
+                      <label for="environment">App environment</label>
+                      <select [(ngModel)]="model.environment" class="ci__form-select form-control" name="environment{{ pId }}">
+                        <ng-container *ngFor="let item of projectModel.environments">
+                          <option [value]="item">{{ item }}</option>
+                        </ng-container>
+                      </select>
+                      <div  *ngIf="service && service.doc && service.doc.environment">
+                        <small class="form-text text-muted">{{service.doc.environment}}</small>
+                      </div>
+                    </div>
+                    <div *ngIf="servers" class="ci__form-group form-group ci__form-group-required border-top">
+                      <label for="server">Server</label>
+                      <select (change)="serverChosen()" [(ngModel)]="projectModel.apps[pId].server" class="ci__form-select form-control" name="server{{ pId }}">
+                        <option [value]="null" disabled>Please choose server</option>
+                        <ng-container *ngFor="let item of servers">
+                          <option *ngIf="item.server_status !== success" [value]="item.id" disabled>{{ item.server_name }} ({{item.server_status}})</option>
+                          <option *ngIf="item.server_status === success" [value]="item.id">{{ item.server_name }} ({{item.server_status}}) {{item.ssh_ip}}</option>
+                        </ng-container>
+                      </select>
+                      <div  *ngIf="service && service.doc && service.doc.server">
+                        <small class="form-text text-muted">{{service.doc.server}}</small>
+                      </div>
+
+                      <form *ngIf="server && (server.server_dependencies || server.custom_dependencies || server.ports)" name="warning-form">
+                        <div *ngIf="!server.server_dependencies || server.server_dependencies.length === 0">
+                          <label class="badge badge-danger">No server dependencies installed </label>
+                          <br/>
+                        </div>
+                        <div *ngIf="!server.custom_dependencies || server.custom_dependencies.length === 0">
+                          <label class="badge badge-danger">No custom dependencies installed </label>
+                          <br/>
+                        </div>
+                        <div *ngIf="!server.ports || server.ports.length == 0"v>
+                          <label class="badge badge-danger">No ports opened </label>
+                          <br/>
+                        </div>
+                        <div *ngIf="missing_port">
+                          <label class="badge badge-danger">Please update port for app</label>
+                          <br/>
+                        </div>
+                      </form>
+
+                      <div *ngIf="server && server.server_dependencies && server.server_dependencies.length > 0" class="ci__form-group form-group">
+                        <label>Installed server dependencies</label>
+                        <div>
+                          <label *ngFor="let dep of server.server_dependencies; let i = index" class="badge badge-success">
+                            {{dep.label}}
+                          </label>
+                        </div>
+                      </div>
+
+                      <div *ngIf="server && server.custom_dependencies && server.custom_dependencies.length > 0" class="ci__form-group form-group">
+                        <label>Installed custom dependencies</label>
+                        <div>
+                          <label *ngFor="let dep of server.custom_dependencies; let i = index" class="badge badge-success">
+                            {{dep.label}}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div *ngIf="server && server.ports && server.ports.length > 0" class="ci__form-group form-group">
+                      <label for="app_port">Avaliable ports</label>
+                      <div>
+                        <form  name="port-form" *ngFor="let port of server.ports; let i = index">
+                          <label>
+                            <input [(ngModel)]="app_port" (change)="portSelected(port)" name="server-port" type="radio" [value]="port"> {{port}}
+                        </label><br/>
+                        </form>
+                        <div  *ngIf="service && service.doc && service.doc.app_port">
+                          <small class="form-text text-muted">{{service.doc.app_port}}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-container">
+                    <h3>Domain and HTTPS setttings:</h3>
+                    <div class="ci__form-group form-group" [ngClass]="{'ci__form-group-required': model.automatic_cert}">
+                      <label for="domain_name">Domain name</label>
+                      <input [(ngModel)]="model.domain_name" type="text" class="ci__form-input form-control" name="domain_name{{ pId }}" placeholder="Enter domain name">
+                      <div  *ngIf="service && service.doc && service.doc.domain_name">
+                        <small class="form-text text-muted">{{service.doc.domain_name}}</small>
+                      </div>
+                  </div>
+                    <div class="form-check">
+                      <input [(ngModel)]="model.isSecure" class="form-check-input" type="checkbox" name="isSecure{{ pId }}">
+                      <label class="form-check-label" for="defaultCheck">
+                        Use https connection?
+                      </label>
+                    </div>
+                    <div *ngIf="model.isSecure">
+                      <div class="ci__form-group form-group">
+                        <div class="form-check">
+                          <input [(ngModel)]="model.automatic_cert" class="form-check-input" type="checkbox" name="automatic_cert{{ pId }}">
+                          <label class="form-check-label" for="defaultCheck1">
+                            Use automatic certificates (self-signed certificates)
+                          </label>
+                          <div  *ngIf="service && service.doc && service.doc.automatic_cert">
+                            <small class="form-text text-muted">{{service.doc.automatic_cert}}</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="!model.automatic_cert">
+                        <div class="ci__form-group form-group" [ngClass]="{'ci__form-group-required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
+                          <label for="custom_ssl_key">SSL Key file</label>
+                          <input (change)="addKeySSLFile($event, model)" type="file" accept=".key" class="ci__form-file form-control" name="custom_ssl_key{{ pId }}" placeholder="Upload SSL Key file">
+                          <small *ngIf="custom_ssl_key && custom_ssl_key.name" class="form-text text-muted">SSL Key: {{ custom_ssl_key.name }} <a target="_blank" href="{{api_url}}{{ custom_ssl_key.url }}">Download</a></small>
+                          <small></small>
+                          <div *ngIf="service && service.doc && service.doc.custom_ssl_key">
+                            <small class="form-text text-muted">{{service.doc.custom_ssl_key}}</small>
+                          </div>
+                        </div>
+                        <div class="ci__form-group form-group" [ngClass]="{'ci__form-group-required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_key}">
+                          <label for="custom_ssl_crt">SSL Crt file</label>
+                          <input (change)="addCrtSSLFile($event, model)" type="file" class="ci__form-file form-control" name="custom_ssl_crt{{ pId }}" placeholder="Upload SSL Crt file">
+                          <small *ngIf="custom_ssl_crt && custom_ssl_crt.name" class="form-text text-muted">SSL Crt: {{ custom_ssl_crt.name }} <a target="_blank" href="{{api_url}}{{ custom_ssl_crt.url }}">Download</a></small>
+                          <div *ngIf="service && service.doc && service.doc.custom_ssl_crt">
+                            <small class="form-text text-muted">{{service.doc.custom_ssl_crt}}</small>
+                          </div>
+                        </div>
+                        <div class="ci__form-group form-group" [ngClass]="{'ci__form-group-required': model.custom_ssl_key || model.custom_ssl_crt || model.custom_ssl_pem}">
+                          <label for="custom_ssl_key">SSL Pem file</label>
+                          <input (change)="addPemSSLFile($event, model)" type="file" class="ci__form-file form-control" name="custom_ssl_pem{{ pId }}" placeholder="Upload SSL Pem file">
+                          <small *ngIf="custom_ssl_pem && custom_ssl_pem.name" class="form-text text-muted">SSL Pem: {{ custom_ssl_pem.name }} <a target="_blank" href="{{api_url}}{{ custom_ssl_pem.url }}">Download</a></small>
+                          <div *ngIf="service && service.doc && service.doc.custom_ssl_pem">
+                            <small class="form-text text-muted">{{service.doc.custom_ssl_pem}}</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button *ngIf="projectModel.apps[pId].app_status === 'success'" (click)="downloadTemplate(projectModel.apps[pId])" style="margin-left: 5px;" type="button" class="btn btn-success">Download CI template</button>
+
+                </div>
+              </div>
+            </div>
+            <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- widget body end -->
+
+  <div class="ci__widget-footer">
+    <div class="ci__form-group form-group ci__form-group-required">
+      <div class="ci__form-btn-list">
+        <button *ngIf="!isNew" (click)="proceedToUpdate(false)" type="button" class="ci__form-btn ci__form-btn-yellow">Update</button>
+        <button *ngIf="isNew" (click)="proceedToUpdate(false)" type="button" class="ci__form-btn ci__form-btn-success">Create</button>
+      </div>
+    </div>
+  </div>
+  <!-- widget footer end -->
+
 </div>
-<app-footer></app-footer>
+
 

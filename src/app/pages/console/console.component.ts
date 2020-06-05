@@ -110,6 +110,9 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Setup console env
+   */
   prepareConsole() {
     if (this.projectId) {
       this.hideDownloadBtn = false;;
@@ -175,6 +178,9 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Launch setup script
+   */
   startSetupScript() {
     if (this.projectId) {
       this.api.create(`/apps/setup/${this.appId}`, {}).then(() => {
@@ -191,17 +197,26 @@ export class ConsoleComponent implements OnInit {
         this.route.navigate([`servers`]);
       })
     }
-  }  
+  }
 
+  /**
+   * Trigger download template
+   */
   downloadTemplate(){
     window.open(environment.API_URL + `/app/download/yml/${this.appId}`,'_blank');
   }
 
+  /**
+   * Clear console output
+   */
   cleanConsole(){
     this.consoleOutput = [];
     this.consoleTitle = 'Proccess is running... Please wait.';
   }
 
+  /**
+   * Return to projects/servers view
+   */
   disableConsole(){
     if (this.projectId) {
       this.route.navigate([`projects/${this.projectId}`]);
@@ -210,6 +225,9 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Reload console script
+   */
   reloadScript() {
     if (this.isCleanup) {
       this.startCleanupScript();
@@ -218,6 +236,9 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Start console cleanup script
+   */
   startCleanupScript() {
     if (this.projectId) {
       this.api.remove(`apps/cleanup/${this.appId}`).then((res) => {
@@ -236,6 +257,12 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Add message to console output
+   *
+   * @param type
+   * @param msg
+   */
   addMessage(type, msg){
     msg = msg.replace('\"', '');
     msg = msg.replace('\\t', '');
@@ -272,6 +299,11 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
+  /**
+   * Contect to WebSocket topics
+   *
+   * @param channel
+   */
   connectToChannel(channel) {
     //Remove all listeners
     this.socket.removeAllListeners();
