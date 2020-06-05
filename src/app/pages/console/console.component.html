@@ -37,7 +37,7 @@
   <div class="ci__widget-footer">
     <div class="ci__form-group form-group ci__form-group-required">
       <div class="ci__form-btn-list">
-        <button *ngIf="enableDownloadBtn && !hideDownloadBtn" (click)="downloadTemplate()" type="button" class="ci__form-btn ci__form-btn-green">Download CI template</button>
+        <button *ngIf="enableDownloadBtn && !hideDownloadBtn && appId" (click)="downloadTemplate()" type="button" class="ci__form-btn ci__form-btn-green">Download CI template</button>
         <button (click)="reloadScript()" type="button" class="ci__form-btn ci__form-btn-red">Reload script</button>
         <button (click)="disableConsole()" type="button" class="ci__form-btn ci__form-btn-yellow">Back to setup</button>
         <button (click)="cleanConsole()" type="button" class="ci__form-btn">Clear</button>
