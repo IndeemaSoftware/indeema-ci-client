@@ -182,7 +182,7 @@ export class ProjectsComponent implements OnInit {
             if(value !== app.app_name)
               return 'App name is incorrect!';
           }
-        ).then((res) => this.deleteProjectAndUpdate(project));
+        ).then((res) => this.deleteProjectAppAndUpdate(project, app));
       }
     } else {
       if(!this.isAppsNeedToCleanup(project)){
@@ -198,6 +198,15 @@ export class ProjectsComponent implements OnInit {
         this.modal.alert('Please first cleanup all apps in project', 'Important!', 'I understand!');
       }
     }
+  }
+
+  /**
+   * Delete project app request and update
+   * @param project
+   */
+  deleteProjectAppAndUpdate(project, app){
+    this.api.remove(`projects/${project.id}/${app.id}`).then(() => this.getProjects());
+    setTimeout(() => this.getProjects(), 1000);
   }
 
   /**
