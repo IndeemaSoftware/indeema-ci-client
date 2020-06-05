@@ -350,7 +350,7 @@ footer {
   display: table;
   width: 100%;
 }
-.ci__form .ci__form-group.ci__form-group-required label:after{
+.ci__form .ci__form-group.ci__form-group-required > label:after{
   content: "*";
   color: red;
 }

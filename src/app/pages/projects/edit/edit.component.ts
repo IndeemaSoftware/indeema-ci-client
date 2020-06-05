@@ -492,6 +492,7 @@ export class EditComponent implements OnInit {
     newApp.id = 'project-app-' + (this.projectModel.apps.length + 1) + new Date().getTime();
 
     this.app_port = '';
+    this.server = {};
 
     this.projectModel.apps.push(newApp);
 
@@ -845,5 +846,6 @@ export class EditComponent implements OnInit {
    */
   openTab(name) {
     this.activeTab = name;
+    this.serverChosen();
   }
 }
