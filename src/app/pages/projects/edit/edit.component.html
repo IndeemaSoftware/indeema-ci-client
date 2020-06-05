@@ -45,10 +45,10 @@
               <div class="app-tabs">
                 <div class="app-control">
                   <div *ngFor="let model of projectModel.apps; let i = index">
-                    <a (click)="openTab(model.id || model.id)" [ngClass]="{'active': activeTab === model.id || activeTab === model.id}" href="javascript:void(0)">
+                    <a (click)="openTab(model.id)" [ngClass]="{'active': activeTab === model.id || activeTab === model.id}" href="javascript:void(0)">
                       {{ model.app_name || 'App #' + (i + 1) }} <span *ngIf="model.errorMsg" class="text-danger">(validation error)</span>
                     </a>
-                    <button *ngIf="projectModel.apps.length > 1 && !model.id" (click)="removeApp(i)" type="button" class="btn btn-outline-danger">Remove</button>
+                    <button *ngIf="projectModel.apps.length > 1" (click)="removeApp(i)" type="button" class="btn btn-outline-danger">Remove</button>
                   </div>
                   <div>
                     <a (click)="addNewApp()" href="javascript:void(0)" class="action-tab">
@@ -188,7 +188,7 @@
                   </div>
 
                   <div class="form-container">
-                    <h3>Domain and HTTPS setttings:</h3>
+                    <h3>Domain and HTTPS settings:</h3>
                     <div class="ci__form-group form-group" [ngClass]="{'ci__form-group-required': model.automatic_cert}">
                       <label for="domain_name">Domain name</label>
                       <input [(ngModel)]="model.domain_name" type="text" class="ci__form-input form-control" name="domain_name{{ pId }}" placeholder="Enter domain name">
