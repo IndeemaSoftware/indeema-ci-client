@@ -172,7 +172,7 @@ export class ProjectsComponent implements OnInit {
    */
   deleteProject(project, app = null) {
     if (app) {
-      if(app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed'){
+      if(app.app_status !== 'cleanup_success' && app.app_status !== 'cleanup_failed' && app.app_status !== 'waiting'){
         this.modal.alert('Before delete app, please cleanup this app!', 'Important!', 'I understand!');
       } else {
         this.modal.confirm(
