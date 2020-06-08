@@ -30,7 +30,7 @@
       <div class="ci__form-group form-group">
         <label>Platform variables</label>
         <div *ngFor="let item of settingsModel.platform.variables let i = index" class="form-group repeated">
-          <input [(ngModel)]="settingsModel.platform.variables[i].name" (input)="variableNameChange(settingsModel.platform.variables[i].name)" class="ci__form-input form-control" placeholder="Enter variable key">
+          <input [(ngModel)]="settingsModel.platform.variables[i].name" (input)="checkIfVariableUnique(settingsModel.platform.variables[i].name)" class="ci__form-input form-control" placeholder="Enter variable key">
           <input [(ngModel)]="settingsModel.platform.variables[i].value" class="ci__form-input form-control" placeholder="Enter variable value">
           <span (click)="removeRepeatField(settingsModel.platform.variables, i)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length > 1" class="text-danger remove-btn">Remove</span>
           <span (click)="cleanFields(settingsModel.platform.variables)" *ngIf="settingsModel.platform.variables && settingsModel.platform.variables.length === 1 && settingsModel.platform.variables[0].value !== null" style="right: -50px" class="text-warning remove-btn">Reset</span>

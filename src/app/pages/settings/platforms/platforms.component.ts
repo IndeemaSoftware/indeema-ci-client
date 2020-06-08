@@ -293,10 +293,15 @@ export class PlatformsComponent implements OnInit {
   checkIfVariableUnique(name) {
     this.isVariableUnique = true;
 
+    let sameName = true;
     for (let item of this.settingsModel.platform.variables) {
       if (item.name === name) {
-        this.isVariableUnique = false;
-        return;
+        if(!sameName){
+          this.isVariableUnique = false;
+          return;
+        }
+
+        sameName = false;
       }
     }
   }

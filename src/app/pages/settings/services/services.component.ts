@@ -298,10 +298,15 @@ export class ServicesComponent implements OnInit {
   checkIfVariableUnique(name) {
     this.isVariableUnique = true;
 
-    for (let item of this.settingsModel.platform.variables) {
+    let sameName = true;
+    for (let item of this.settingsModel.service.variables) {
       if (item.name === name) {
-        this.isVariableUnique = false;
-        return;
+        if(!sameName){
+          this.isVariableUnique = false;
+          return;
+        }
+
+        sameName = false;
       }
     }
   }

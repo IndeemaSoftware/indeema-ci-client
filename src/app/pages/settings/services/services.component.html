@@ -29,7 +29,7 @@
       <div class="ci__form-group form-group">
         <label>Service variables</label>
         <div *ngFor="let item of settingsModel.service.variables let i = index" class="form-group repeated">
-          <input [(ngModel)]="settingsModel.service.variables[i].name" (input)="variableNameChange(settingsModel.service.variables[i].name)" class="ci__form-input form-control" id="service-name" name="service-name" placeholder="Enter variable key">
+          <input [(ngModel)]="settingsModel.service.variables[i].name" (input)="checkIfVariableUnique(settingsModel.service.variables[i].name)" class="ci__form-input form-control" id="service-name" name="service-name" placeholder="Enter variable key">
           <input [(ngModel)]="settingsModel.service.variables[i].value" class="ci__form-input form-control" id="service-value" name="service-value" placeholder="Enter variable value">
 
           <span (click)="removeRepeatField(settingsModel.service.variables, i)" *ngIf="settingsModel.service.variables && settingsModel.service.variables.length > 1" class="text-danger remove-btn">Remove</span>
