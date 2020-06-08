@@ -341,13 +341,18 @@ export class EditServerComponent implements OnInit {
    *
    * @param arr
    * @param key
+   * @param type
    */
-  removeRepeatField(arr, key){
-    if (arr.length === 1) {
-      arr[key] = {value:""};
-    } else {
-      arr.splice(key, 1);
-    }
+  removeRepeatField(arr, key, type){
+    const newArr = _.cloneDeep(arr);
+
+    newArr.splice(key, 1);
+
+    if(type === 'server')
+      this.serverModel.server_dependency = newArr;
+
+    if(type === 'custom')
+      this.serverModel.custom_dependency = newArr;
   }
 
   /**

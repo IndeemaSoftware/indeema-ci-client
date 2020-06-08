@@ -37,7 +37,7 @@
 
                 <div *ngIf="platform_list" class="ci__form-group form-group ci__form-group-required">
                   <label for="platform">Platform</label>
-                  <select (change)="platformSelected()" [(ngModel)]="serverModel.platform" class="ci__form-select form-control" name="platform{{ pId }}">
+                  <select (change)="platformSelected()" [(ngModel)]="serverModel.platform" class="ci__form-select form-control" name="platform">
                     <option [value]="null"  disabled>Chose platform setup script</option>
                     <ng-container *ngFor="let item of platform_list">
                       <option [ngValue]="item.id">{{ item.platform_name }}</option>
@@ -49,7 +49,7 @@
                   </div>
                 <div class="ci__form-group form-group">
                   <label for="serverModel.ports">List ports to open by firewall</label>
-                  <input (change)="portsUpdated()" [(ngModel)]="ports" type="text" class="ci__form-input form-control" name="ports{{ pId }}" placeholder="Enter avaliable ports">
+                  <input (change)="portsUpdated()" [(ngModel)]="ports" type="text" class="ci__form-input form-control" name="ports" placeholder="Enter avaliable ports">
                   <div *ngIf="platform && platform.doc && platform.doc.ports">
                     <small class="form-text text-muted">{{platform.doc.ports}}</small>
                   </div>
@@ -62,21 +62,21 @@
                 <h3>Server credentials:</h3>
                 <div class="ci__form-group form-group ci__form-group-required">
                   <label for="ssh_host">SSH host or IP address</label>
-                  <input [(ngModel)]="serverModel.ssh_ip" type="text" class="ci__form-input form-control" name="ssh_ip{{ pId }}" placeholder="Enter SSH host or IP address">
+                  <input [(ngModel)]="serverModel.ssh_ip" type="text" class="ci__form-input form-control" name="ssh_ip" placeholder="Enter SSH host or IP address">
                   <div *ngIf="platform && platform.doc && platform.doc.ssh_ip">
                     <small class="form-text text-muted">{{platform.doc.ssh_ip}}</small>
                   </div>
                 </div>
                 <div class="ci__form-group form-group ci__form-group-required">
                   <label for="ssh_username">SSH username</label>
-                  <input [(ngModel)]="serverModel.ssh_username" type="text" class="ci__form-input form-control" name="ssh_username{{ pId }}" placeholder="SSH username">
+                  <input [(ngModel)]="serverModel.ssh_username" type="text" class="ci__form-input form-control" name="ssh_username" placeholder="SSH username">
                   <div *ngIf="platform && platform.doc && platform.doc.ssh_username">
                     <small class="form-text text-muted">{{platform.doc.ssh_username}}</small>
                   </div>
                 </div>
                 <div class="ci__form-group form-group ci__form-group-required">
                   <label for="ssh_pem">SSH pem key</label>
-                  <input (change)="addPemFile($event, serverModel)" type="file" class="ci__form-file form-control" name="ssh_pem{{ pId }}" placeholder="Upload SSH pem key">
+                  <input (change)="addPemFile($event, serverModel)" type="file" class="ci__form-file form-control" name="ssh_pem" placeholder="Upload SSH pem key">
                   <small *ngIf="serverModel.ssh_key && serverModel.ssh_key.name" class="form-text text-muted">SSH Pem: {{ serverModel.ssh_key.name }} <a target="_blank" href="{{api_url}}{{ serverModel.ssh_key.url }}">Download</a></small>
                   <div *ngIf="platform && platform.doc && platform.doc.ssh_key">
                     <small class="form-text text-muted">{{platform.doc.ssh_key}}</small>
@@ -86,11 +86,11 @@
               <div class="form-container">
                 <h3>Server dependencies:</h3>
                 <div *ngFor="let item of serverModel.server_dependency; let i = index" class="ci__form-group form-group repeated">
-                  <select *ngIf="serverModel.server_dependency" [(ngModel)]="serverModel.server_dependency[i].value" class="ci__form-select form-control" name="server_dependency[{{ pId }}{{ i }}]">
+                  <select *ngIf="serverModel.server_dependency" [(ngModel)]="serverModel.server_dependency[i].value" class="ci__form-select form-control" name="server_dependency[{{ i }}]">
                     <option [value]="null"  disabled>Chose dependency for server</option>
                     <option *ngFor="let item of server_dependency_list" [ngValue]="item.id">{{ item.label }}</option>
                   </select>
-                  <span (click)="removeRepeatField(serverModel.server_dependency, i)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length > 1" class="text-danger remove-btn">Remove</span>
+                  <span (click)="removeRepeatField(serverModel.server_dependency, i, 'server')" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length > 1" class="text-danger remove-btn">Remove</span>
                   <span (click)="cleanFields(serverModel.server_dependency)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length === 1 && serverModel.server_dependency[0].value !== ''" style="right: -50px" class="text-warning remove-btn">Reset</span>
                 </div>
                 <button (click)="addRepeatField(serverModel.server_dependency, 'server')" type="button" class="btn btn-warning">Add another dependency</button>
@@ -102,11 +102,11 @@
               <div class="form-container">
                 <h3>Custom dependencies:</h3>
                 <div *ngFor="let item of serverModel.custom_dependency; let i = index" class="ci__form-group form-group repeated">
-                  <select *ngIf="serverModel.custom_dependency" [(ngModel)]="serverModel.custom_dependency[i].value" class="ci__form-select form-control" name="custom_dependency[{{ pId }}{{ i }}]">
+                  <select *ngIf="serverModel.custom_dependency" [(ngModel)]="serverModel.custom_dependency[i].value" class="ci__form-select form-control" name="custom_dependency[{{ i }}]">
                     <option [value]="null" disabled>Chose custom dependancies for server</option>
-                    <option *ngFor="let item of custom_dependency_list" [value]="item.id">{{ item.label }}</option>
+                    <option *ngFor="let item of custom_dependency_list;" [value]="item.id">{{ item.label }}</option>
                   </select>
-                  <span (click)="removeRepeatField(serverModel.custom_dependency, i)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length > 1" class="text-danger remove-btn">Remove</span>
+                  <span (click)="removeRepeatField(serverModel.custom_dependency, i, 'custom')" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length > 1" class="text-danger remove-btn">Remove</span>
                   <span (click)="cleanFields(serverModel.custom_dependency)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length === 1 && serverModel.custom_dependency[0].value !== ''" style="right: -50px" class="text-warning remove-btn">Reset</span>
                 </div>
                 <button (click)="addRepeatField(serverModel.custom_dependency, 'custom')" type="button" class="btn btn-warning">Add another dependency</button>
