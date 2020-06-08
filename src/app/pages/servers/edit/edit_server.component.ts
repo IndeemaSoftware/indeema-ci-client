@@ -61,6 +61,9 @@ export class EditServerComponent implements OnInit {
 
   isNew = false as boolean;
 
+  serverDepsError = "";
+  customDepsError = "";
+
   constructor(
       private api: ApiService,
       private auth: AuthService,
@@ -102,10 +105,12 @@ export class EditServerComponent implements OnInit {
 
     this.api.get(`platforms`).then((res) => {
       this.platform_list = res;
-    });  
+    });
 
     this.serverModel.users = [];
-    this.serverModel.users.push(this.auth.user.id);
+    this.auth.getUser().then((user) => {
+      this.serverModel.users.push(this.auth.user.id);
+    });
   }
 
   /**
@@ -276,12 +281,59 @@ export class EditServerComponent implements OnInit {
   }
 
   /**
+   * Validate dependencies list
+   *
+   * @param arr
+   * @param withoutCheckingEmpty
+   */
+  validateDependencies(arr, withoutCheckingEmpty = false){
+    let result: any = true;
+
+    for(let item of arr) {
+      if(!withoutCheckingEmpty){
+        if (typeof item.value !== 'undefined' && !item.value) {
+          result = "You already have empty field, please choose any dependency then you can add one more";
+          break;
+        }
+      }
+
+      let sameValue = true;
+      for (let verifyItem of arr) {
+        if (item.value === verifyItem.value) {
+          if (!sameValue) {
+            result = "All dependecies must be unique";
+            break;
+          }
+
+          sameValue = false;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
    * Attach repeated field
    *
    * @param arr
+   * @param typeError
    */
-  addRepeatField(arr) {
-    arr.push({value:""});
+  addRepeatField(arr, typeError) {
+    const isValid = this.validateDependencies(arr);
+
+    if (isValid === true){
+      this.serverDepsError = "";
+      this.customDepsError = "";
+
+      arr.push({value: ""});
+    }else{
+      if (typeError === 'server')
+        this.serverDepsError = isValid;
+
+      if (typeError === 'custom')
+        this.customDepsError = isValid;
+    }
   }
 
   /**
@@ -439,6 +491,21 @@ export class EditServerComponent implements OnInit {
     }
 
     this.validateModel(this.serverModel);
+
+    this.serverDepsError = "";
+    this.customDepsError = "";
+
+    const isServerDepValid = this.validateDependencies(this.serverModel.server_dependency, true);
+    if(isServerDepValid !== true){
+      this.errorMsg = isServerDepValid;
+      return false;
+    }
+
+    const isCustomDepValid = this.validateDependencies(this.serverModel.custom_dependency, true);
+    if(isCustomDepValid !== true){
+      this.errorMsg = isCustomDepValid;
+      return false;
+    }
 
     if (this.isNew) {
       await this.createServer();

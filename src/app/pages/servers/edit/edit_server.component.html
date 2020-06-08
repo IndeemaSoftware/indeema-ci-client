@@ -93,11 +93,12 @@
                   <span (click)="removeRepeatField(serverModel.server_dependency, i)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length > 1" class="text-danger remove-btn">Remove</span>
                   <span (click)="cleanFields(serverModel.server_dependency)" *ngIf="serverModel.server_dependency && serverModel.server_dependency.length === 1 && serverModel.server_dependency[0].value !== ''" style="right: -50px" class="text-warning remove-btn">Reset</span>
                 </div>
-                <button (click)="addRepeatField(serverModel.server_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
+                <button (click)="addRepeatField(serverModel.server_dependency, 'server')" type="button" class="btn btn-warning">Add another dependency</button>
                 <div *ngIf="platform && platform.doc && platform.doc.server_dependencies">
                   <small class="form-text text-muted">{{platform.doc.server_dependencies}}</small>
                 </div>
               </div>
+              <div *ngIf="serverDepsError" class="alert alert-danger text-center">{{ serverDepsError }}</div>
               <div class="form-container">
                 <h3>Custom dependencies:</h3>
                 <div *ngFor="let item of serverModel.custom_dependency; let i = index" class="ci__form-group form-group repeated">
@@ -108,11 +109,12 @@
                   <span (click)="removeRepeatField(serverModel.custom_dependency, i)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length > 1" class="text-danger remove-btn">Remove</span>
                   <span (click)="cleanFields(serverModel.custom_dependency)" *ngIf="serverModel.custom_dependency && serverModel.custom_dependency.length === 1 && serverModel.custom_dependency[0].value !== ''" style="right: -50px" class="text-warning remove-btn">Reset</span>
                 </div>
-                <button (click)="addRepeatField(serverModel.custom_dependency)" type="button" class="btn btn-warning">Add another dependency</button>
+                <button (click)="addRepeatField(serverModel.custom_dependency, 'custom')" type="button" class="btn btn-warning">Add another dependency</button>
                 <div *ngIf="platform && platform.doc && platform.doc.custom_dependencies">
                   <small class="form-text text-muted">{{platform.doc.custom_dependencies}}</small>
                 </div>
               </div>
+              <div *ngIf="customDepsError" class="alert alert-danger text-center">{{ customDepsError }}</div>
             </div>
             <div *ngIf="errorMsg" class="alert alert-danger text-center">{{ errorMsg }}</div>
           </form>
