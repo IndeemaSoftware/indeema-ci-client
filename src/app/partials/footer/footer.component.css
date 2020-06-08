@@ -10,6 +10,7 @@
     width: 100%;
     background-color: #2C2E3E;
     padding: 15px 30px;
+    min-width: 1040px;
 }
 .footer-title{
     color: #fff;

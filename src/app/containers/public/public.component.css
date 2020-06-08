@@ -31,3 +31,33 @@ html, body {
   position: relative;
   background-color: white;
 }
+.logo-mobile{
+  position: absolute;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+  width: 125px;
+  top: 10px;
+  left: 50%;
+  display: none;
+}
+.logo-mobile img{
+  width: 100%;
+  height: auto;
+}
+
+@media screen and (max-width: 996px) {
+  .logo{
+    display: none;
+  }
+  .public-container {
+    width: 100%;
+  }
+  .logo-mobile{
+    display: block;
+  }
+}
+@media screen and (max-height: 690px) {
+  .logo-mobile{
+    width: 100px;
+  }
+}
