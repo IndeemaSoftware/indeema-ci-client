@@ -163,7 +163,8 @@ export class ModalService {
     return new Promise((rs, rj) => {
       Swal.fire(params).then((res) => {
         if(res.dismiss){
-          rj(res.dismiss)
+          if(res.dismiss !== 'cancel' && res.dismiss !== 'backdrop')
+            rj(res.dismiss)
         }else{
           rs(res.value || res);
         }
