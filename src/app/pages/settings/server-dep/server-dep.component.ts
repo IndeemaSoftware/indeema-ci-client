@@ -223,9 +223,9 @@ export class ServerDepComponent implements OnInit {
    * Delete dependency
    */
   delete() {
-    const name = this.settingsModel.dependency.name;
+    const name = this.settingsModel.dependency.package;
     if (!name) {
-      this.modal.alert("You can't delete dependency with no name");
+      this.modal.alert("You can't delete dependency with no package name");
       return;
     }
 
