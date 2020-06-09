@@ -1,0 +1,26 @@
+@media (max-width: 1311px) {
+  .ci__header-bottom-nav > ul > li > a {
+    padding: 0 10px;
+    margin: 8px 0;
+  }
+}
+@media (max-width: 1200px) {
+  .ci__header-bottom-nav > ul > li > a .menu-title {
+    font-size: 14px;
+  }
+  .ci__header-bottom-nav > ul > li > a .menu-desc {
+    font-size: 11px;
+  }
+}
+@media (max-width: 1083px) {
+  .ci__header-bottom-nav > ul > li > a {
+    padding: 0 6px;
+    margin: 6px 0;
+  }
+  .ci__header-bottom-nav > ul > li > a .menu-title {
+    font-size: 12px;
+  }
+  .ci__header-bottom-nav > ul > li > a .menu-desc {
+    font-size: 10px;
+  }
+}

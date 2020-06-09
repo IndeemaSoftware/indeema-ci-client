@@ -19,6 +19,15 @@
     margin-top: 0pt;
     position: relative;
 }
+.version{
+    color: #fff;
+    margin-bottom: 0pt;
+    margin-top: auto;
+    font-size: 9pt;
+    line-height: 30px;
+    position: absolute;
+    left: 0;
+}
 .copyright{
     color: #fff;
     margin-bottom: 0pt;
