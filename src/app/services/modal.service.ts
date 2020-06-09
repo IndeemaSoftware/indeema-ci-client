@@ -30,7 +30,7 @@ export class ModalService {
    * @param buttonTitle
    * @param icon
    */
-  alert(html, title = 'Alert!', buttonTitle = 'Okey', icon = 'warning'): Promise<void>{
+  alert(html, title = 'Alert!', buttonTitle = 'Okay', icon = 'warning'): Promise<void>{
     const params = {
       title: title,
       html: html,

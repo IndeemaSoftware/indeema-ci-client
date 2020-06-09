@@ -51,6 +51,7 @@ export class HelpDeskComponent implements OnInit {
         'Access-Control-Allow-Credentials': 'true'
       })
     };
+
     this.httpClient.post<any>('https://redmine.indeema.com/helpdesk/create_ticket.xml', body, httpOptions);
   }
 

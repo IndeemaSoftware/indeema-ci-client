@@ -140,11 +140,11 @@ const routes: Routes = [
             component: AccessConfigurationComponent,
             pathMatch: 'full'
           },
-          {
-            path: 'help-desk',
-            component: HelpDeskComponent,
-            pathMatch: 'full'
-          },
+          // {
+          //   path: 'help-desk',
+          //   component: HelpDeskComponent,
+          //   pathMatch: 'full'
+          // },
         ]
       }
     ]
