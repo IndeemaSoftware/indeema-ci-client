@@ -2,7 +2,7 @@ Indeema CI Web Client: Your personal online DevOps
 ########################################
 
 This solution was created for web developers and DevOps to automize and speedup server setup process.
-Client is compatible with Indeema CI `Indeema CI <https://ci.indeema.com/>`_
+Client is compatible with `Indeema CI <https://ci.indeema.com/>`_
 
 Main features
 =============
