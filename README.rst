@@ -97,7 +97,7 @@ Launch
 
 .. code-block:: bash
 
-    $ ng start
+    $ ng serve
     
     
 
