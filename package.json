@@ -1,6 +1,7 @@
 {
-  "name": "connect-runner-app",
-  "version": "0.0.0",
+  "name": "indeema-ci-client",
+  "description": "Indeema CI tools for automate and optimize time on setting up new servers for software development and creating scripts for continuous integration solutions.",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -51,5 +52,25 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~2.9.2"
-  }
+  },
+  "author": {
+    "email": "support@indeema.com",
+    "name": "Indeema Software Inc",
+    "url": "https://indeema.com"
+  },
+  "maintainers": [
+    {
+        "email": "support@indeema.com",
+        "name": "Indeema Software Inc",
+        "url": "https://indeema.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/IndeemaSoftware/indeema-ci-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IndeemaSoftware/indeema-ci-client/issues"
+  },
+  "license": "LGPL"
 }
