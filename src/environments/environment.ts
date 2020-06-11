@@ -3,11 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 export const environment = {
   production: false,
-  API_URL: 'http://198.199.125.240:1338',
-  // API_URL: 'http://localhost:1338',
+  API_URL: 'http://localhost:1338',
   AUTH_KEY: 'connect-runner::app-auth-key',
-  SOCKET: 'http://198.199.125.240:2338'
-  // SOCKET: 'http://localhost:2338'
+  SOCKET: 'http://localhost:2338'
 };
 /*
  * For easier debugging in development mode, you can import the following file

@@ -177,7 +177,7 @@
                       <div>
                         <form  name="port-form" *ngFor="let port of server.ports; let i = index">
                           <label>
-                            <input [(ngModel)]="app_port" (change)="portSelected(port)" name="server-port" type="radio" [value]="port"> {{port}}
+                            <input [(ngModel)]="projectModel.apps[pId].app_port" (change)="portSelected(port)" name="server-port" type="radio" [value]="port"> {{port}}
                         </label><br/>
                         </form>
                         <div  *ngIf="service && service.doc && service.doc.app_port">

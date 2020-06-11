@@ -27,12 +27,6 @@
   }
 }
 
-/*** FIX LONG TEXT GLOBAL ***/
-.swal2-title{
-  word-break: break-all !important;
-}
-
-
 html, body {
   background-color: #EFF4F9;
   height: 100%; 

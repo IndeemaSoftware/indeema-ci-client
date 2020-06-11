@@ -165,16 +165,20 @@ export class PlatformsComponent implements OnInit {
     };
 
     if (!this.settingsModel.platform.platform_name) {
-        res.status = false;
-        res.msg = "Platform name is required"
+      res.status = false;
+      res.msg = "Platform name is required"
     }
     if (!this.settingsModel.platform.setup_script) {
-        res.status = false;
-        res.msg = "Setup script is required"
+      res.status = false;
+      res.msg = "Setup script is required"
     }
     if (!this.settingsModel.platform.cleanup_script) {
-        res.status = false;
-        res.msg = "Cleanup script is required"
+      res.status = false;
+      res.msg = "Cleanup script is required"
+    }
+    if(!this.docUpdated()){
+      res.status = false;
+      res.msg = "Platform documentation is invalid"
     }
 
     return res;
@@ -314,8 +318,10 @@ export class PlatformsComponent implements OnInit {
 
     try {
       JSON.parse(this.settingsModel.doc_string)
+      return true;
     } catch (e) {
       this.settingsModel.jsonValidationMessage = "Json is invalid";
+      return false;
     }
   }
 

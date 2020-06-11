@@ -175,6 +175,10 @@ export class ServicesComponent implements OnInit {
         res.status = false;
         res.msg = "Cleanup script is required"
     }
+    if(!this.docUpdated()){
+      res.status = false;
+      res.msg = "Service documentation is invalid"
+    }
 
     return res;
   }
@@ -318,9 +322,11 @@ export class ServicesComponent implements OnInit {
     this.settingsModel.jsonValidationMessage = "";
 
     try {
-      JSON.parse(this.settingsModel.doc_string)
+      JSON.parse(this.settingsModel.doc_string);
+      return true;
     } catch (e) {
       this.settingsModel.jsonValidationMessage = "Json is invalid";
+      return false;
     }
   }
 

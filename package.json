@@ -60,9 +60,9 @@
   },
   "maintainers": [
     {
-        "email": "support@indeema.com",
-        "name": "Indeema Software Inc",
-        "url": "https://indeema.com"
+      "email": "support@indeema.com",
+      "name": "Indeema Software Inc",
+      "url": "https://indeema.com"
     }
   ],
   "repository": {
