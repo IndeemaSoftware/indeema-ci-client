@@ -1,8 +1,8 @@
-Indeema CI Web Client: Your personal online DevOps
+Indeema tambo Web Client: Your personal online DevOps
 ########################################
 
 This solution was created for web developers and DevOps to automize and speedup server setup process.
-Client is compatible with `Indeema CI <https://ci.indeema.com/>`_
+Client is compatible with `Indeema tambo <https://tambo.indeema.com/>`_
 
 Main features
 =============
@@ -104,7 +104,7 @@ Launch
 Admin panel URL
 ===========
 
-After installing and launch, you able to sign in into Indeema CI web client:
+After installing and launch, you able to sign in into Indeema tambo web client:
 
 .. code-block:: bash
 
@@ -114,7 +114,7 @@ After installing and launch, you able to sign in into Indeema CI web client:
 Project structure
 ==============
 
-By default, Indeema CI client usign Angular 6 framework, so project structure is similar to this framework:
+By default, Indeema tambo client usign Angular 6 framework, so project structure is similar to this framework:
 
 =================   =====================================================
 ``src/app``         Contains main logic of front-end-end part
@@ -130,11 +130,11 @@ Please use the following support channels:
 
 * `GitHub issues <https://github.com/IndeemaSoftware/indeema-ci-client/issues>`_
   for bug reports and feature requests.
-* `Indeema CI <https://ci.indeema.com>`_
+* `Indeema tambo <https://tambo.indeema.com>`_
   to ask questions, discuss features, and for general discussion.
 * `StackOverflow <https://stackoverflow.com>`_
   to ask questions (please make sure to use the
-  `indeema-ci-web <https://stackoverflow.com/questions/tagged/indeema-ci-web>`_ tag).
+  `indeema-ci-web <https://stackoverflow.com/questions/tagged/indeema-tambo>`_ tag).
 * You can also send email directly to `<mailto:support@indeema.com>`_.
 
 
